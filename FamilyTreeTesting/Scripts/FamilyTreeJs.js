@@ -74,11 +74,11 @@ function init() {
     // GraphObject.make(type, initializers)
 
     var partProperties =
-    {
-        locationSpot: go.Spot.Center,
-        isLayoutPositioned: false,
-        zOrder: 0
-    }
+        {
+            locationSpot: go.Spot.Center,
+            isLayoutPositioned: false,
+            zOrder: 0
+        }
 
     var adornmentTemplateForFreeDraw = GO(go.Adornment, "Vertical", GO(go.Placeholder, { margin: -1 }), createDeleteBtn(deleteCommit, "刪除", 50))
 
@@ -93,13 +93,13 @@ function init() {
 
     //orginally we use null for fill, but i cant  select node anymore if i use transparent
     var shapeOfFreeDraw = GO(go.Shape,
-         { name: "SHAPE", fill: "transparent", strokeWidth: 1.5 },
-         new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
-         new go.Binding("angle").makeTwoWay(),
-         new go.Binding("geometryString", "geo").makeTwoWay(),
-         //new go.Binding("fill"),
-         //new go.Binding("stroke"),
-         new go.Binding("strokeWidth"))
+        { name: "SHAPE", fill: "transparent", strokeWidth: 1.5 },
+        new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
+        new go.Binding("angle").makeTwoWay(),
+        new go.Binding("geometryString", "geo").makeTwoWay(),
+        //new go.Binding("fill"),
+        //new go.Binding("stroke"),
+        new go.Binding("strokeWidth"))
 
 
     var freeDrawPart = GO(go.Part, partProperties, new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify), adornmentForFreeDraw, shapeOfFreeDraw)
@@ -125,7 +125,7 @@ function init() {
             },
             new go.Binding("figure"),
             new go.Binding("fill")
-       )
+        )
     var containGen =
         GO(
             go.Shape,
@@ -140,7 +140,7 @@ function init() {
             },
             new go.Binding("fill", "color"),
             new go.Binding("visible", "color_visible")
-       )
+        )
     var deadSymbol =
         GO(
             go.Shape,
@@ -155,7 +155,7 @@ function init() {
             },
             new go.Binding("figure", "status"),
             new go.Binding("visible")
-       )
+        )
     var pregnantText =
         GO(
             go.TextBlock,
@@ -164,33 +164,51 @@ function init() {
                 font: "10pt sans-serif ",
                 visible: true
             },
-           new go.Binding("text", "pregnancy"),
-           new go.Binding("stroke", "stroke-pregnancy")
-       )
+            new go.Binding("text", "pregnancy"),
+            new go.Binding("stroke", "stroke-pregnancy")
+        )
 
     var panelForObjects =
         GO(
-           go.Panel,
-           "Spot",
-           {
-               name: "PANEL"
-           },
-           defaultObject,
-           containGen,
-           deadSymbol,
-           pregnantText,
-           // four small named ports, one on each side: 
-           makePort("T", go.Spot.Top, false, true),
-           makePort("L", go.Spot.Left, true, true),
-           makePort("R", go.Spot.Right, true, true),
-           makePort("B", go.Spot.Bottom, true, false)
-       )
+            go.Panel,
+            "Spot",
+            {
+                name: "PANEL"
+            },
+            defaultObject,
+            containGen,
+            deadSymbol,
+            pregnantText,
+            // four small named ports, one on each side: 
+            makePort("T", go.Spot.Top, false, true),
+            makePort("L", go.Spot.Left, true, true),
+            makePort("R", go.Spot.Right, true, true),
+            makePort("B", go.Spot.Bottom, true, false)
+        )
 
-    var textPanel = GO(go.Panel, "Table", { name: "PANEL", margin: new go.Margin(0, 0, 0, 0) }, createTextBlock(0, 0, 10, "text"),
-        createTextBlock(1, 0, 8, "noteOne"), createTextBlock(1, 1, 8, "noteTwo"), createTextBlock(1, 2, 8, "noteThree"))
+    var textPanel =
+        GO(
+            go.Panel,
+            "Table",
+            { name: "PANEL", margin: new go.Margin(0, 0, 0, 0) },
+            createTextBlock(0, 0, 10, "text"),
+            createTextBlock(1, 0, 8, "noteOne"),
+            createTextBlock(1, 1, 8, "noteTwo"),
+            createTextBlock(1, 2, 8, "noteThree")
+        )
 
     // this Adornment has a rectangular blue Shape around the selected node
-    var mainPanelForAdm = GO(go.Panel, "Auto", GO(go.Shape, "Circle", { fill: null, stroke: "blue", strokeWidth: 3 }), GO(go.Placeholder))
+    var mainPanelForAdm =
+        GO(
+            go.Panel,
+            "Auto",
+            GO(
+                go.Shape,
+                "Circle",
+                { fill: null, stroke: "blue", strokeWidth: 3 }
+            ),
+            GO(go.Placeholder) //placeHolder is magic
+        )
 
     var hroizontalPnlInsideVerticalPnl =
         GO(
@@ -227,56 +245,100 @@ function init() {
             createDeleteBtn(deleteNode, "刪　除", 80)
         )
 
-    var leftVerticalPanel = GO(go.Panel, "Vertical",
-               { alignment: go.Spot.Left, alignmentFocus: go.Spot.Right }, createBtn(changeColor, "相同疾病", "#FFBD9D", 80), createBtn(changeGene, "帶基因者", "#FFBD9D", 80),
-               createBtn(changePregnancy, "懷   孕", "#FFBD9D", 80), createBtn(editIndividual, "多個體", "#FFBD9D", 80), createBtn(changeStatus, "死   亡", "#FFBD9D", 80),
-               createBtn(editReason, "註   解", "#FFBD9D", 80))
+    var leftVerticalPanel =
+        GO(
+            go.Panel,
+            "Vertical",
+            { alignment: go.Spot.Left, alignmentFocus: go.Spot.Right },
+            createBtn(changeColor, "相同疾病", "#FFBD9D", 80),
+            createBtn(changeGene, "帶基因者", "#FFBD9D", 80),
+            createBtn(changePregnancy, "懷   孕", "#FFBD9D", 80),
+            createBtn(editIndividual, "多個體", "#FFBD9D", 80),
+            createBtn(changeStatus, "死   亡", "#FFBD9D", 80),
+            createBtn(editReason, "註   解", "#FFBD9D", 80)
+        )
 
 
-    var adornmentProps = GO(go.Adornment, "Spot", mainPanelForAdm, rightVerticalPanel, horizontalPanel, leftVerticalPanel)
+    var adornmentProps =
+        GO(
+            go.Adornment,
+            "Spot",
+            mainPanelForAdm,
+            rightVerticalPanel,
+            horizontalPanel,
+            leftVerticalPanel
+        )
 
     myDiagram.nodeTemplate =
-     GO(go.Node, "Vertical", { locationSpot: go.Spot.Center, movable: false },
-        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify), panelForObjects, textPanel,
-       {
-           selectionAdornmentTemplate: adornmentProps
-       })
+        GO(
+            go.Node,
+            "Vertical",
+            { locationSpot: go.Spot.Center, movable: false },
+            new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+            panelForObjects, textPanel,
+            {
+                selectionAdornmentTemplate: adornmentProps
+            }
+        )
 
 
     // ********************** comment box ********************* //
 
-    var textBlockForComment = GO(go.TextBlock,
-        {
-            margin: 5,
-            maxSize: new go.Size(200, NaN),
-            wrap: go.TextBlock.WrapFit,
-            textAlign: "center",
-            editable: true,
-            font: "12pt Helvetica, Arial, sans-serif",
-            stroke: "#000000",
-        },
-        new go.Binding("text").makeTwoWay(),
-        new go.Binding("stroke", "stroke"),
-        new go.Binding("font"),
-        new go.Binding("bold"),
-        new go.Binding("fontsize"),
-        new go.Binding("Italic"),
-        new go.Binding("isUnderline"),
-        new go.Binding("isStrikethrough")
+    var textBlockForComment =
+        GO(
+            go.TextBlock,
+            {
+                margin: 5,
+                maxSize: new go.Size(200, NaN),
+                wrap: go.TextBlock.WrapFit,
+                textAlign: "center",
+                editable: true,
+                font: "12pt Helvetica, Arial, sans-serif",
+                stroke: "#000000",
+            },
+            new go.Binding("text").makeTwoWay(),
+            new go.Binding("stroke", "stroke"),
+            new go.Binding("font"),
+            new go.Binding("bold"),
+            new go.Binding("fontsize"),
+            new go.Binding("Italic"),
+            new go.Binding("isUnderline"),
+            new go.Binding("isStrikethrough")
         )
 
-    var admShapeForComment = GO(go.Shape, { fill: null, stroke: "blue", strokeWidth: 3, maxSize: new go.Size(100, 50) })
+    var admShapeForComment =
+        GO(
+            go.Shape,
+            { fill: null, stroke: "blue", strokeWidth: 3, maxSize: new go.Size(100, 50) }
+        )
 
-    var commentPanel = GO(go.Panel, "Horizontal", { alignment: go.Spot.Bottom, alignmentFocus: go.Spot.Top }, createDeleteBtn(deleteCommit, "刪除", 50))
+    var commentPanel =
+        GO(
+            go.Panel,
+            "Horizontal",
+            { alignment: go.Spot.Bottom, alignmentFocus: go.Spot.Top }, createDeleteBtn(deleteCommit, "刪除", 50)
+        )
 
-    var admForComment = GO(go.Adornment, "Spot", admShapeForComment, GO(go.Placeholder, { margin: -1 }), commentPanel)
+    var admForComment =
+        GO(
+            go.Adornment,
+            "Spot",
+            admShapeForComment,
+            GO(go.Placeholder, { margin: -1 }),
+            commentPanel
+        )
 
     myDiagram.nodeTemplateMap.add("Comment",
-    GO(go.Node, "Auto", nodeStyle(), textBlockForComment,
-        {
-            selectionAdornmentTemplate: admForComment
-        }
-    ));
+        GO(
+            go.Node,
+            "Auto",
+            nodeStyle(),
+            textBlockForComment,
+            {
+                selectionAdornmentTemplate: admForComment
+            }
+        )
+    );
 
     // *********************** caretaker definition ************************* //
 
@@ -322,44 +384,44 @@ function init() {
     //************************ objClick / backgroundClick / change selection  *****************//
 
     myDiagram.addDiagramListener("ObjectSingleClicked",
-    function (e) {
-        var part = e.subject.part
-        if (part.data.sex === "M" || part.data.sex === "F" || part.data.sex === "Baby" || part.data.sex === "Unknown") {
-            tempKey = part.data.key
-            preloadGenderType(part.data.sex);
-            noteOnNode(part);
-            pregnancyCheck(part);
-        }
-        if (part.data.category === "Comment")
-            setDefaultNaviBar(part)
-    });
+        function (e) {
+            var part = e.subject.part
+            if (part.data.sex === "M" || part.data.sex === "F" || part.data.sex === "Baby" || part.data.sex === "Unknown") {
+                tempKey = part.data.key
+                preloadGenderType(part.data.sex);
+                noteOnNode(part);
+                pregnancyCheck(part);
+            }
+            if (part.data.category === "Comment")
+                setDefaultNaviBar(part)
+        });
 
     myDiagram.addDiagramListener("ChangedSelection",
-    function (e) {
-        var currentObjIdx = findCurrentIndex(tempKey)
-        if (jQuery.type(myDiagram.model.nodeDataArray[currentObjIdx]) !== "undefined" && myDiagram.model.nodeDataArray[currentObjIdx].category === "Comment") {
-            if (myDiagram.model.nodeDataArray[currentObjIdx].text === "") {
-                myDiagram.model.nodeDataArray[currentObjIdx].text = "請輸入文字"
-                myDiagram.rebuildParts();
+        function (e) {
+            var currentObjIdx = findCurrentIndex(tempKey)
+            if (jQuery.type(myDiagram.model.nodeDataArray[currentObjIdx]) !== "undefined" && myDiagram.model.nodeDataArray[currentObjIdx].category === "Comment") {
+                if (myDiagram.model.nodeDataArray[currentObjIdx].text === "") {
+                    myDiagram.model.nodeDataArray[currentObjIdx].text = "請輸入文字"
+                    myDiagram.rebuildParts();
+                }
             }
-        }
 
-    });
+        });
 
     myDiagram.addDiagramListener("BackgroundSingleClicked",
-    function (e) {
+        function (e) {
 
-        disableClickOnNaviBarForTextBlock();
+            disableClickOnNaviBarForTextBlock();
 
-        if (jQuery.type(myDiagram.model.nodeDataArray[currentComment]) !== "undefined") {
-            var currentComment = findCurrentIndex(tempKey)
-            if (myDiagram.model.nodeDataArray[currentComment].text === "") {
-                myDiagram.model.nodeDataArray[currentComment].text = "請輸入文字";
-                myDiagram.rebuildParts();
+            if (jQuery.type(myDiagram.model.nodeDataArray[currentComment]) !== "undefined") {
+                var currentComment = findCurrentIndex(tempKey)
+                if (myDiagram.model.nodeDataArray[currentComment].text === "") {
+                    myDiagram.model.nodeDataArray[currentComment].text = "請輸入文字";
+                    myDiagram.rebuildParts();
+                }
             }
-        }
 
-    });
+        });
 
     function editReason(e, obj) {
         var tempIndex = findCurrentIndex(tempKey)
@@ -402,62 +464,84 @@ function init() {
     // **************************************************************** //
     function nodeStyle() {
         return [
-        // The Node.location comes from the "loc" property of the node data, 
-        // converted by the Point.parse static method. 
-        // If the Node.location is changed, it updates the "loc" property of the node data,
-        // converting back using the Point.stringify static method. 
-        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
-        {
-            // the Node.location is at the center of each node 
-            locationSpot: go.Spot.Center,
-            //isShadowed: true, 
-            //shadowColor: "#888", 
-            // handle mouse enter/leave events to show/hide the ports 
-            //mouseEnter: function (e, obj) { showPorts(obj.part, true); }, 
-            //mouseLeave: function (e, obj) { showPorts(obj.part, false); } 
-        }
+            // The Node.location comes from the "loc" property of the node data, 
+            // converted by the Point.parse static method. 
+            // If the Node.location is changed, it updates the "loc" property of the node data,
+            // converting back using the Point.stringify static method. 
+            new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+            {
+                // the Node.location is at the center of each node 
+                locationSpot: go.Spot.Center,
+                //isShadowed: true, 
+                //shadowColor: "#888", 
+                // handle mouse enter/leave events to show/hide the ports 
+                //mouseEnter: function (e, obj) { showPorts(obj.part, true); }, 
+                //mouseLeave: function (e, obj) { showPorts(obj.part, false); } 
+            }
         ];
     }
 
     // ************************* LinkLabel definition(label node on the horizontal line) **************************** //
-    var labelNodeShape = GO(go.Shape, "Circle",
-          {
-              width: 1, height: 1, stroke: "black", strokeWidth: 2,
-              portId: "", fromLinkable: false, toLinkable: false,
-              angle: 315, visible: false
-          },
-          new go.Binding("figure", "adopt"),
-          new go.Binding("visible"),
-          new go.Binding("width"),
-          new go.Binding("height"),
-          new go.Binding("angle")
-          )
+    var labelNodeShape =
+        GO(
+            go.Shape,
+            "Circle",
+            {
+                width: 1, height: 1, stroke: "black", strokeWidth: 2,
+                portId: "", fromLinkable: false, toLinkable: false,
+                angle: 315, visible: false
+            },
+            new go.Binding("figure", "adopt"),
+            new go.Binding("visible"),
+            new go.Binding("width"),
+            new go.Binding("height"),
+            new go.Binding("angle")
+        )
 
-    var labelNode = GO(go.Node, "Spot",
-        {
-            selectable: false, avoidable: false,
-            layerName: "Foreground"
-        },
-        labelNodeShape,
-        makePort("B", go.Spot.Bottom, true, false))
+    var labelNode =
+        GO(
+            go.Node,
+            "Spot",
+            {
+                selectable: false, avoidable: false,
+                layerName: "Foreground"
+            },
+            labelNodeShape,
+            makePort("B", go.Spot.Bottom, true, false)
+        )
 
     myDiagram.nodeTemplateMap.add("LinkLabel", labelNode);
 
     // **************************** link(line) definition ********************************* //
 
-    var admForLine = GO(go.Adornment, "Spot",
-        GO(go.Panel, "Horizontal",
-            { alignment: go.Spot.Top, alignmentFocus: go.Spot.Bottom }, createBtn(marriage, "結婚", null, 70), createBtn(divorce, "離婚", null, 70),
-            createBtn(separate, "分居", null, 70), createBtn(liveTogether, "同居", null, 70))
+    var admForLine =
+        GO(
+            go.Adornment,
+            "Spot",
+            GO(
+                go.Panel,
+                "Horizontal",
+                { alignment: go.Spot.Top, alignmentFocus: go.Spot.Bottom },
+                createBtn(marriage, "結婚", null, 70),
+                createBtn(divorce, "離婚", null, 70),
+                createBtn(separate, "分居", null, 70),
+                createBtn(liveTogether, "同居", null, 70)
+            )
         )
 
     myDiagram.linkTemplate = linkDef(admForLine)
 
     // ******************** link to link definiation ****************** //
-    var linkToLinkAdm = GO(go.Adornment, "Spot",
-        GO(go.Panel, "Vertical",
-            { alignment: go.Spot.Right, alignmentFocus: go.Spot.Left, segmentIndex: -1, segmentFraction: 0.1 },
-            createBtn(editborn, "領養", null, 70))
+    var linkToLinkAdm =
+        GO(
+            go.Adornment,
+            "Spot",
+            GO(
+                go.Panel,
+                "Vertical",
+                { alignment: go.Spot.Right, alignmentFocus: go.Spot.Left, segmentIndex: -1, segmentFraction: 0.1 },
+                createBtn(editborn, "領養", null, 70)
+            )
         )
 
     myDiagram.linkTemplateMap.add("linkToLink", linkDef(linkToLinkAdm, "Orthogonal"));
@@ -465,14 +549,16 @@ function init() {
     // ******************* Node on link *********************** //
     // GraphLinksModel support for link label nodes requires specifying two properties.
     myDiagram.model =
-      GO(go.GraphLinksModel,
-        { linkLabelKeysProperty: "labelKeys" });
+        GO(
+            go.GraphLinksModel,
+            { linkLabelKeysProperty: "labelKeys" }
+        );
 
 
 
     /*-------------------------產生新的線時，將線上結點存入數據------------------------------*/
     myDiagram.toolManager.linkingTool.archetypeLabelNodeData =
-      { category: "LinkLabel" };
+        { category: "LinkLabel" };
 
 
     // ******************************* not sure function that might can be delete ******************* //
@@ -610,21 +696,50 @@ function init() {
             admShape = "Circle"
         }
 
-        var adm = GO(go.Adornment, "Spot", GO(go.Shape, admShape, { fill: null, stroke: "blue", strokeWidth: 3 }),
-                  GO(go.Panel, "Auto", GO(go.Placeholder)),
-                  GO(go.Panel, "Horizontal", { alignment: go.Spot.Bottom, alignmentFocus: go.Spot.Top }, createDeleteBtn(deleteCommit, "刪除", 50)))
+        var adm =
+            GO(
+                go.Adornment,
+                "Spot",
+                GO(
+                    go.Shape,
+                    admShape,
+                    { fill: null, stroke: "blue", strokeWidth: 3 }
+                ),
+                GO(
+                    go.Panel,
+                    "Auto",
+                    GO(go.Placeholder)
+                ),
+                GO(
+                    go.Panel,
+                    "Horizontal",
+                    { alignment: go.Spot.Bottom, alignmentFocus: go.Spot.Top },
+                    createDeleteBtn(deleteCommit, "刪除", 50)
+                )
+            )
 
-        caretakerNode = GO(go.Node, "Vertical", nodeStyle(),
-	        GO(go.Shape, shapeForNode, { fill: "white", stroke: "black", strokeWidth: 3, maxSize: new go.Size(50, 50) }),
-	        GO(go.TextBlock, "",
-	            {
-	                margin: new go.Margin(5, 0, 0, 0),
-	                font: "8pt serif"
-	            },
-	        new go.Binding("text")),
-	            {
-	                selectionAdornmentTemplate: adm
-	            }
+        caretakerNode =
+            GO(
+                go.Node,
+                "Vertical",
+                nodeStyle(),
+                GO(
+                    go.Shape,
+                    shapeForNode,
+                    { fill: "white", stroke: "black", strokeWidth: 3, maxSize: new go.Size(50, 50) }
+                ),
+                GO(
+                    go.TextBlock,
+                    "",
+                    {
+                        margin: new go.Margin(5, 0, 0, 0),
+                        font: "8pt serif"
+                    },
+                    new go.Binding("text")
+                ),
+                {
+                    selectionAdornmentTemplate: adm
+                }
             )
         return caretakerNode
     }
@@ -635,18 +750,21 @@ function init() {
     // control whether the user can draw links from or to the port.
     function makePort(name, spot, output, input) {
         // the port is basically just a small transparent square
-        return GO(go.Shape, "Circle",
-                 {
-                     fill: null,  // not seen, by default; set to a translucent gray by showSmallPorts, defined below
-                     stroke: null,
-                     desiredSize: new go.Size(1, 1),
-                     alignment: spot,  // align the port on the main Shape
-                     alignmentFocus: spot,  // just inside the Shape
-                     portId: name,  // declare this object to be a "port"
-                     fromSpot: spot, toSpot: spot,  // declare where links may connect at this port
-                     fromLinkable: output, toLinkable: input,  // declare whether the user may draw links to/from here
-                     cursor: "pointer"  // show a different cursor to indicate potential link point
-                 });
+        return GO(
+            go.Shape,
+            "Circle",
+            {
+                fill: null,  // not seen, by default; set to a translucent gray by showSmallPorts, defined below
+                stroke: null,
+                desiredSize: new go.Size(1, 1),
+                alignment: spot,  // align the port on the main Shape
+                alignmentFocus: spot,  // just inside the Shape
+                portId: name,  // declare this object to be a "port"
+                fromSpot: spot, toSpot: spot,  // declare where links may connect at this port
+                fromLinkable: output, toLinkable: input,  // declare whether the user may draw links to/from here
+                cursor: "pointer"  // show a different cursor to indicate potential link point
+            }
+        );
     }
 
     function linkDef(selectionAdmStyle, routingStyle) {
@@ -657,30 +775,33 @@ function init() {
         else
             inputRoutingStyle = "None"
 
-        linkSetUp = GO(go.Link,  // the whole link panel
-        //{ relinkableFrom: false, relinkableTo: false },
-        {
-            selectable: true,
-            //routing: go.Link.AvoidsNodes,  // but this is changed to go.Link.Orthgonal when the Link is reshaped
-            adjusting: go.Link.End,
-            cursor: "pointer",
-            curve: go.Link.JumpOver,
-            corner: 0,
-            routing: inputRoutingStyle,
-            //toShortLength: -10, // distance to the node
-            mouseEnter: function (e, link) { link.findObject("HIGHLIGHT").stroke = "#227700"; },
-            mouseLeave: function (e, link) { link.findObject("HIGHLIGHT").stroke = "#000000"; }
-        },
-        new go.Binding("points").makeTwoWay(),
-        // remember the Link.routing too
-        new go.Binding("routing", "routing", go.Binding.parseEnum(go.Link, go.Link.AvoidsNodes)).makeTwoWay(go.Binding.toString),
-        GO(go.Shape,
-          { isPanelMain: true, strokeWidth: 5, strokeDashArray: [0, 0], stroke: "#000000", name: "HIGHLIGHT" },
-          new go.Binding("strokeDashArray")),
-          {
-              selectionAdornmentTemplate: inputAdmStyle
-          }
-        );
+        linkSetUp =
+            GO(
+                go.Link,  // the whole link panel
+                //{ relinkableFrom: false, relinkableTo: false },
+                {
+                    selectable: true,
+                    //routing: go.Link.AvoidsNodes,  // but this is changed to go.Link.Orthgonal when the Link is reshaped
+                    adjusting: go.Link.End,
+                    cursor: "pointer",
+                    curve: go.Link.JumpOver,
+                    corner: 0,
+                    routing: inputRoutingStyle,
+                    //toShortLength: -10, // distance to the node
+                    mouseEnter: function (e, link) { link.findObject("HIGHLIGHT").stroke = "#227700"; },
+                    mouseLeave: function (e, link) { link.findObject("HIGHLIGHT").stroke = "#000000"; }
+                },
+                new go.Binding("points").makeTwoWay(),
+                // remember the Link.routing too
+                new go.Binding("routing", "routing", go.Binding.parseEnum(go.Link, go.Link.AvoidsNodes)).makeTwoWay(go.Binding.toString),
+                GO(
+                    go.Shape,
+                    { isPanelMain: true, strokeWidth: 5, strokeDashArray: [0, 0], stroke: "#000000", name: "HIGHLIGHT" },
+                    new go.Binding("strokeDashArray")),
+                {
+                    selectionAdornmentTemplate: inputAdmStyle
+                }
+            );
         return linkSetUp
     }
 
@@ -695,7 +816,9 @@ function init() {
         var fontDef = "bold " + fontSize + "pt" + " serif"
         var inputDataBound = dataBoundTo;
 
-        textBlock = GO(go.TextBlock, "",
+        textBlock = GO(
+            go.TextBlock,
+            "",
             {
                 column: inputColum, row: inputRow,
                 textAlign: 'center',
@@ -715,19 +838,26 @@ function init() {
         var inputEvent = event;
         var inputText = btnText;
         var inputWidth = btnWidth;
-        deleteBtn = GO("Button",
-                    {
-                        margin: 5,
-                        width: inputWidth,
-                        height: 30,
-                        "ButtonBorder.fill": "#FF2D2D",
-                        "ButtonBorder.stroke": null,
-                        "ButtonBorder.figure": "RoundedRectangle",
-                        "_buttonFillOver": "#FF2D2D",
-                        "_buttonStrokeOver": null,
-                        click: inputEvent
-                    },
-                   GO(go.TextBlock, inputText, { font: "10pt sans-serif ", stroke: "white" }))
+        deleteBtn =
+            GO(
+                "Button",
+                {
+                    margin: 5,
+                    width: inputWidth,
+                    height: 30,
+                    "ButtonBorder.fill": "#FF2D2D",
+                    "ButtonBorder.stroke": null,
+                    "ButtonBorder.figure": "RoundedRectangle",
+                    "_buttonFillOver": "#FF2D2D",
+                    "_buttonStrokeOver": null,
+                    click: inputEvent
+                },
+                GO(
+                    go.TextBlock,
+                    inputText,
+                    { font: "10pt sans-serif ", stroke: "white" }
+                )
+            )
         return deleteBtn
     }
 
@@ -741,19 +871,26 @@ function init() {
         if (width != null)
             inputWidth = width
 
-        var createdBtn = GO("Button",
-            {
-                margin: 2.5,
-                width: inputWidth,
-                height: 30,
-                "ButtonBorder.fill": inputBtnColor,
-                "ButtonBorder.stroke": null,
-                "ButtonBorder.figure": "RoundedRectangle",
-                "_buttonFillOver": inputBtnColor,
-                "_buttonStrokeOver": null,
-                click: inputEvent
-            },
-            GO(go.TextBlock, inputText, { font: "bold 10pt sans-serif" }))
+        var createdBtn =
+            GO(
+                "Button",
+                {
+                    margin: 2.5,
+                    width: inputWidth,
+                    height: 30,
+                    "ButtonBorder.fill": inputBtnColor,
+                    "ButtonBorder.stroke": null,
+                    "ButtonBorder.figure": "RoundedRectangle",
+                    "_buttonFillOver": inputBtnColor,
+                    "_buttonStrokeOver": null,
+                    click: inputEvent
+                },
+                GO(
+                    go.TextBlock,
+                    inputText,
+                    { font: "bold 10pt sans-serif" }
+                )
+            )
         return createdBtn
     }
 
