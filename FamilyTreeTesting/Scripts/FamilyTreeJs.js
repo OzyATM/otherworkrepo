@@ -2,8 +2,12 @@
 var tempObj;
 var globalLocX = -470;
 var globalLocY = -190;
+
+var globalState = {
+    tool: null,
+}
+
 function init() {
-    var tool;
     var GO = go.GraphObject.make;  // for conciseness in defining templates
 
     // ********************* graph set up ************************************ //
@@ -781,6 +785,7 @@ function freeDraw() {
     tool.isBackgroundOnly = false;
     // install as last mouse-move-tool
     myDiagram.toolManager.mouseMoveTools.add(tool);
+    globalState.tool = tool;
     this.onclick = cancelFreeDraw;
     document.getElementById("freedraw").innerHTML = '<img id="freedraw_img" width="20" height="20" style="margin:2px"/>' + " 完成"
     document.getElementById("freedraw_img").src = APPLICATION_ROOT + "Content/done.png";
@@ -790,7 +795,7 @@ function freeDraw() {
 
 function cancelFreeDraw() {
     myDiagram.toolManager.panningTool.isEnabled = true;
-    myDiagram.toolManager.mouseMoveTools.remove(tool);
+    myDiagram.toolManager.mouseMoveTools.remove(globalState.tool);
     this.onclick = freeDraw;
     document.getElementById("freedraw").innerHTML = '<img id="freedraw_img" width="20" height="20" style="margin:2px"/>' + " 圈選同住者"
     document.getElementById("freedraw_img").src = APPLICATION_ROOT + "Content/together.png";
