@@ -2,7 +2,6 @@
 var tempObj;
 var globalLocX = -470;
 var globalLocY = -190;
-var tool;
 
 var globalState = {
     tool: null,
