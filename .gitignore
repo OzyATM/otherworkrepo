@@ -75,3 +75,7 @@ _[Ss]cripts
 *.dot[Cc]over
 *.config
 .vs/FamilyTreeTesting/v15/.suo
+*.dll
+*.pdb
+*.cache
+FamilyTreeTesting/obj/Debug/FamilyTreeTesting.csproj.FileListAbsolute.txt
