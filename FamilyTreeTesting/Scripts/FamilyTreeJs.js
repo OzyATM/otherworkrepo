@@ -164,12 +164,22 @@ function init() {
            new go.Binding("stroke", "stroke-pregnancy")
        )
 
-    var panelForObjects = GO(go.Panel, "Spot", { name: "PANEL" }, defaultObject, containGen, deadSymbol, pregnantText,
-       // four small named ports, one on each side: 
-       makePort("T", go.Spot.Top, false, true),
-       makePort("L", go.Spot.Left, true, true),
-       makePort("R", go.Spot.Right, true, true),
-       makePort("B", go.Spot.Bottom, true, false)
+    var panelForObjects =
+        GO(
+           go.Panel,
+           "Spot",
+           {
+               name: "PANEL"
+           },
+           defaultObject,
+           containGen,
+           deadSymbol,
+           pregnantText,
+           // four small named ports, one on each side: 
+           makePort("T", go.Spot.Top, false, true),
+           makePort("L", go.Spot.Left, true, true),
+           makePort("R", go.Spot.Right, true, true),
+           makePort("B", go.Spot.Bottom, true, false)
        )
 
     var textPanel = GO(go.Panel, "Table", { name: "PANEL", margin: new go.Margin(0, 0, 0, 0) }, createTextBlock(0, 0, 10, "text"),
