@@ -149,13 +149,19 @@ function init() {
                 visible: false,
                 strokeWidth: 3
             },
-       new go.Binding("figure", "status"),
-       new go.Binding("visible")
+            new go.Binding("figure", "status"),
+            new go.Binding("visible")
        )
-    var pregnantText = GO(go.TextBlock, "",
-       { font: "10pt sans-serif ", visible: true },
-       new go.Binding("text", "pregnancy"),
-       new go.Binding("stroke", "stroke-pregnancy")
+    var pregnantText =
+        GO(
+            go.TextBlock,
+            "",
+            {
+                font: "10pt sans-serif ",
+                visible: true
+            },
+           new go.Binding("text", "pregnancy"),
+           new go.Binding("stroke", "stroke-pregnancy")
        )
 
     var panelForObjects = GO(go.Panel, "Spot", { name: "PANEL" }, defaultObject, containGen, deadSymbol, pregnantText,
