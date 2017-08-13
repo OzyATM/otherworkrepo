@@ -149,13 +149,19 @@ function init() {
                 visible: false,
                 strokeWidth: 3
             },
-       new go.Binding("figure", "status"),
-       new go.Binding("visible")
+            new go.Binding("figure", "status"),
+            new go.Binding("visible")
        )
-    var pregnantText = GO(go.TextBlock, "",
-       { font: "10pt sans-serif ", visible: true },
-       new go.Binding("text", "pregnancy"),
-       new go.Binding("stroke", "stroke-pregnancy")
+    var pregnantText =
+        GO(
+            go.TextBlock,
+            "",
+            {
+                font: "10pt sans-serif ",
+                visible: true
+            },
+           new go.Binding("text", "pregnancy"),
+           new go.Binding("stroke", "stroke-pregnancy")
        )
 
     var panelForObjects =
@@ -207,7 +213,15 @@ function init() {
             createBtn(addDaughterNodeAndLink, "女　兒")
         )
 
-    var horizontalPanel = GO(go.Panel, "Horizontal", { alignment: go.Spot.Bottom, alignmentFocus: go.Spot.Top }, createDeleteBtn(deleteNode, "刪　除", 80))
+    var horizontalPanel =
+        GO(
+            go.Panel,
+            "Horizontal",
+            {
+                alignment: go.Spot.Bottom, alignmentFocus: go.Spot.Top
+            },
+            createDeleteBtn(deleteNode, "刪　除", 80)
+        )
 
     var leftVerticalPanel = GO(go.Panel, "Vertical",
                { alignment: go.Spot.Left, alignmentFocus: go.Spot.Right }, createBtn(changeColor, "相同疾病", "#FFBD9D", 80), createBtn(changeGene, "帶基因者", "#FFBD9D", 80),
