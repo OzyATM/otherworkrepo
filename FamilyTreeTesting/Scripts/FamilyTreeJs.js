@@ -796,6 +796,7 @@ function freeDraw() {
 function cancelFreeDraw() {
     myDiagram.toolManager.panningTool.isEnabled = true;
     myDiagram.toolManager.mouseMoveTools.remove(globalState.tool);
+    globalState.tool = null;
     this.onclick = freeDraw;
     document.getElementById("freedraw").innerHTML = '<img id="freedraw_img" width="20" height="20" style="margin:2px"/>' + " 圈選同住者"
     document.getElementById("freedraw_img").src = APPLICATION_ROOT + "Content/together.png";
