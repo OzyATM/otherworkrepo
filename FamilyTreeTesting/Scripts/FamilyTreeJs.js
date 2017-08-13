@@ -777,7 +777,7 @@ function decreaseZoom() {
 function freeDraw() {
     myDiagram.toolManager.panningTool.isEnabled = false;
     // create drawing tool for myDiagram, defined in FreehandDrawingTool.js
-    tool = new FreehandDrawingTool();
+    var tool = new FreehandDrawingTool();
     // provide the default JavaScript object for a new polygon in the model
     tool.archetypePartData =
         { stroke: "black", strokeWidth: 5, category: "FreehandDrawing" };
