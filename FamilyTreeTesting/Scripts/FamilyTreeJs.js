@@ -1,10 +1,10 @@
 ﻿var tempKey = -1;
 var tempObj;
-var globalLocX = -200;
-var globalLocY = 50;
 
 var globalState = {
     tool: null,
+    LocX: -200,
+    LocY: 50
 }
 
 function init() {
@@ -190,7 +190,7 @@ function init() {
             deadSymbol,
             pregnantText,
             adoptedSign,
-            // four small named ports, one on each side: 
+            // four small named ports, one on each side: makePort(name, spot, output, input)
             makePort("T", go.Spot.Top, false, true),
             makePort("L", go.Spot.Left, true, true),
             makePort("R", go.Spot.Right, true, true),
@@ -879,7 +879,7 @@ function ValidateNumber(e, pnumber) {
 function addCarePerson(gender) {
     myDiagram.startTransaction("addCarePerson");
     var carePeronNode, categoryType
-    var setObjLoc = go.Point.stringify(new go.Point(globalLocX, globalLocY))
+    var setObjLoc = go.Point.stringify(new go.Point(globalState.LocX, globalState.LocY))
 
     if (gender === "M")
         categoryType = "CareMale"
@@ -891,22 +891,22 @@ function addCarePerson(gender) {
     myDiagram.commitTransaction("addCarePerson");
 
     // update globalLoc
-    globalLocX += 5
-    globalLocY += 5
+    globalState.LocX += 5
+    globalState.LocY += 5
 }
 
 function addcommit() {
     myDiagram.startTransaction("addcommit");
     var Commit_node
-    var setObjLoc = go.Point.stringify(new go.Point(globalLocX, globalLocY))
+    var setObjLoc = go.Point.stringify(new go.Point(globalState.LocX, globalState.LocY))
 
     Commit_node = { category: "Comment", text: "請輸入文字", loc: setObjLoc };
     myDiagram.model.addNodeData(Commit_node);
     myDiagram.commitTransaction("addcommit");
 
     // update globalLoc
-    globalLocX += 5
-    globalLocY += 5
+    globalState.LocX += 5
+    globalState.LocY += 5
 }
 function changetextbold() {
     var currentIndex = findCurrentIndex(tempKey);
