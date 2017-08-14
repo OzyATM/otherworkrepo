@@ -52,6 +52,7 @@
         <button type="button" @*class="btn btn-primary btn-lg"*@ data-toggle="modal" data-target="#myModal" style="display: none" id="deadButton">備註</button>
         <button type="button" @*class="btn btn-primary btn-lg"*@ data-toggle="modal" data-target="#myModal2" style="display: none" id="n_btn">多個體</button>
         <button type="button" @*class="btn btn-primary btn-lg"*@ data-toggle="modal" data-target="#myModalgender" style="display: none" id="changegen">換個體</button>
+        <button type="button" @*class="btn btn-primary btn-lg"*@ data-toggle="modal" data-target="#myModalrelationship" style="display: none" id="changerela">繼代關係</button>
         <textarea id="mySavedModel" style="width:500px;height:300px;display:none">
             { "class": "go.GraphLinksModel",
             "linkLabelKeysProperty": "labelKeys",
@@ -149,6 +150,28 @@
             <h5>二、點擊夫妻線條可設定(1)結婚、(2)離婚、(3)分居、(4)同居。</h5>
             <h5>三、點擊圈選同住者，可將同住在一起的家庭成員或主要照顧者圈起來。</h5>
             <h5>四、點擊個體可以註記死亡、同疾病、基因帶原者。</h5>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalrelationship" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">繼代關係</h4>
+            </div>
+            <div class="modal-body">
+                <h5>
+                    <input type="radio" name="relationshipRadio" id="rel_biologic"> 親生
+                    <input type="radio" name="relationshipRadio" id="rel_adoptinto"> 領養進來
+                    <input type="radio" name="relationshipRadio" id="rel_adoptout"> 被領養走
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirm4">確定</button>
+            </div>
         </div>
     </div>
 </div>
