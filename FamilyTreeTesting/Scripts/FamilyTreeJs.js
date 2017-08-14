@@ -1,7 +1,7 @@
 ﻿var tempKey = -1;
 var tempObj;
-var globalLocX = -470;
-var globalLocY = -190;
+var globalLocX = -200;
+var globalLocY = 50;
 
 var globalState = {
     tool: null,
@@ -108,8 +108,6 @@ function init() {
 
 
     // ********************* main node definition **************************** //
-
-
     var defaultObject =
         GO(
             go.Shape,
@@ -1840,4 +1838,8 @@ function loadDiagramProperties(e) {
     myDiagram.model.linkLabelKeysProperty = "labelKeys";
     myDiagram.model.linkFromPortIdProperty = "fromPort";
     myDiagram.model.linkToPortIdProperty = "toPort";
+}
+
+var allEvent = {
+
 }
