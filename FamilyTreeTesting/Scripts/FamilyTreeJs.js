@@ -5,7 +5,8 @@ var GO = go.GraphObject.make;
 var globalState = {
     tool: null,
     LocX: -200,
-    LocY: 50
+    LocY: 50,
+    myDiagram: null
 
 }
 
@@ -371,24 +372,7 @@ function init() {
 
     
     // **************************************************************** //
-    function nodeStyle() {
-        return [
-            // The Node.location comes from the "loc" property of the node data, 
-            // converted by the Point.parse static method. 
-            // If the Node.location is changed, it updates the "loc" property of the node data,
-            // converting back using the Point.stringify static method. 
-            new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
-            {
-                // the Node.location is at the center of each node 
-                locationSpot: go.Spot.Center,
-                //isShadowed: true, 
-                //shadowColor: "#888", 
-                // handle mouse enter/leave events to show/hide the ports 
-                //mouseEnter: function (e, obj) { showPorts(obj.part, true); }, 
-                //mouseLeave: function (e, obj) { showPorts(obj.part, false); } 
-            }
-        ];
-    }
+
 
     // ************************* LinkLabel definition(label node on the horizontal line) **************************** //
     var labelNodeShape =
@@ -433,8 +417,7 @@ function init() {
                 { alignment: go.Spot.Top, alignmentFocus: go.Spot.Bottom },
                 createBtn(globalEvent.marriage, "結婚", null, 70),
                 createBtn(globalEvent.divorce, "離婚", null, 70),
-                createBtn(globalEvent.separate, "分居", null, 70),
-                createBtn(globalEvent.liveTogether, "同居", null, 70)
+                createBtn(globalEvent.unmarried, "未婚", null, 70)
             )
         )
 
@@ -483,138 +466,8 @@ function init() {
     var link = myDiagram.links.first();
     if (link) link.isSelected = true;
 
-    // **************************  adjust canvas view function *********************************** //
-    document.getElementById("zoomToFit").addEventListener("click", zoom);
-    function zoom() {
-        myDiagram.zoomToFit();
-        myDiagram.contentAlignment = go.Spot.Center;
-        myDiagram.contentAlignment = go.Spot.Default;
-    }
-
-
-    
-
     // ******************** Obj definition ********************* //
-    function nodeForCaretaker(gender) {
-        var shapeForNode, caretakerNode, admShape;
-        if (gender === "M") {
-            shapeForNode = "Square"
-            admShape = "Square"
-        }
-        else {
-            shapeForNode = "Circle"
-            admShape = "Circle"
-        }
-
-        var adm =
-            GO(
-                go.Adornment,
-                "Spot",
-                GO(
-                    go.Shape,
-                    admShape,
-                    { fill: null, stroke: "blue", strokeWidth: 3 }
-                ),
-                GO(
-                    go.Panel,
-                    "Auto",
-                    GO(go.Placeholder)
-                ),
-                GO(
-                    go.Panel,
-                    "Horizontal",
-                    { alignment: go.Spot.Bottom, alignmentFocus: go.Spot.Top },
-                    createDeleteBtn(globalEvent.deleteComment, "刪除", 50)
-                )
-            )
-
-        caretakerNode =
-            GO(
-                go.Node,
-                "Vertical",
-                nodeStyle(),
-                GO(
-                    go.Shape,
-                    shapeForNode,
-                    { fill: "white", stroke: "black", strokeWidth: 3, maxSize: new go.Size(50, 50) }
-                ),
-                GO(
-                    go.TextBlock,
-                    "",
-                    {
-                        margin: new go.Margin(5, 0, 0, 0),
-                        font: "8pt serif"
-                    },
-                    new go.Binding("text")
-                ),
-                {
-                    selectionAdornmentTemplate: adm
-                }
-            )
-        return caretakerNode
-    }
-
-    // Define a function for creating a "port" that is normally transparent.
-    // The "name" is used as the GraphObject.portId, the "spot" is used to control how links connect
-    // and where the port is positioned on the node, and the boolean "output" and "input" arguments
-    // control whether the user can draw links from or to the port.
-    function makePort(name, spot, output, input) {
-        // the port is basically just a small transparent square
-        return GO(
-            go.Shape,
-            "Circle",
-            {
-                fill: null,  // not seen, by default; set to a translucent gray by showSmallPorts, defined below
-                stroke: null,
-                desiredSize: new go.Size(1, 1),
-                alignment: spot,  // align the port on the main Shape
-                alignmentFocus: spot,  // just inside the Shape
-                portId: name,  // declare this object to be a "port"
-                fromSpot: spot, toSpot: spot,  // declare where links may connect at this port
-                fromLinkable: output, toLinkable: input,  // declare whether the user may draw links to/from here
-                cursor: "pointer"  // show a different cursor to indicate potential link point
-            }
-        );
-    }
-
-    function linkDef(selectionAdmStyle, routingStyle) {
-        var linkSetUp, inputRoutingStyle
-        var inputAdmStyle = selectionAdmStyle
-        if (routingStyle != null)
-            inputRoutingStyle = go.Link.Orthogonal
-        else
-            inputRoutingStyle = "None"
-
-        linkSetUp =
-            GO(
-                go.Link,  // the whole link panel
-                //{ relinkableFrom: false, relinkableTo: false },
-                {
-                    selectable: true,
-                    //routing: go.Link.AvoidsNodes,  // but this is changed to go.Link.Orthgonal when the Link is reshaped
-                    adjusting: go.Link.End,
-                    cursor: "pointer",
-                    curve: go.Link.JumpOver,
-                    corner: 0,
-                    routing: inputRoutingStyle,
-                    //toShortLength: -10, // distance to the node
-                    mouseEnter: function (e, link) { link.findObject("HIGHLIGHT").stroke = "#227700"; },
-                    mouseLeave: function (e, link) { link.findObject("HIGHLIGHT").stroke = "#000000"; }
-                },
-                new go.Binding("points").makeTwoWay(),
-                // remember the Link.routing too
-                new go.Binding("routing", "routing", go.Binding.parseEnum(go.Link, go.Link.AvoidsNodes)).makeTwoWay(go.Binding.toString),
-                GO(
-                    go.Shape,
-                    { isPanelMain: true, strokeWidth: 5, strokeDashArray: [0, 0], stroke: "#000000", name: "HIGHLIGHT" },
-                    new go.Binding("strokeDashArray")),
-                {
-                    selectionAdornmentTemplate: inputAdmStyle
-                }
-            );
-        return linkSetUp
-    }
-
+    
 
     btnRegist();
     freeDrawDefinination();
@@ -777,43 +630,6 @@ function saveImg() {
     return ImgBaseString;
 }
 /*------------------------自訂方法----------------------------------------------------*/
-
-
-// Show the diagram's model in JSON format that the user may edit
-function save() {
-    saveDiagramProperties();  // do this first, before writing to JSON
-    document.getElementById("mySavedModel").value = myDiagram.model.toJson();
-    myDiagram.isModified = false;
-}
-
-function myZoomToFit() {
-    myDiagram.zoomToFit();
-    myDiagram.contentAlignment = go.Spot.Center;
-}
-
-function load() {
-    if (document.getElementById("mySavedModel").value.trim().length <= 0) {
-        return;
-    }
-
-    myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
-    loadDiagramProperties();
-    myDiagram.zoomToFit();
-}
-
-function saveDiagramProperties() {
-    myDiagram.model.modelData.position = go.Point.stringify(myDiagram.position);
-}
-// Called by "InitialLayoutCompleted" DiagramEvent listener, NOT directly by load()!
-function loadDiagramProperties(e) {
-    // set Diagram.initialPosition, not Diagram.position, to handle initialization side-effects
-    var pos = myDiagram.model.modelData.position;
-    if (pos) myDiagram.initialPosition = go.Point.parse(pos);
-    myDiagram.model.linkLabelKeysProperty = "labelKeys";
-    myDiagram.model.linkFromPortIdProperty = "fromPort";
-    myDiagram.model.linkToPortIdProperty = "toPort";
-}
-
 var globalEvent = {
     addBrotherNodeAndLink: addBrotherNodeAndLink,
     editgender: editgender,
@@ -831,10 +647,20 @@ var globalEvent = {
     editReason: editReason,
     marriage: marriage,
     divorce: divorce,
-    separate: separate,
-    liveTogether: liveTogether,
+    unmarried: unmarried,
     editborn: editborn,
     deleteComment: deleteComment
+}
+// **************************  adjust canvas view function *********************************** //
+function myZoomToFit() {
+    myDiagram.zoomToFit();
+    myDiagram.contentAlignment = go.Spot.Center;
+}
+
+function zoom() {
+    myDiagram.zoomToFit();
+    myDiagram.contentAlignment = go.Spot.Center;
+    myDiagram.contentAlignment = go.Spot.Default;
 }
 
 // ***************** all click function ********************************** //
@@ -1046,7 +872,7 @@ function deleteComment(e, b) {
 
 }
 
-// ********************************************* //
+// *************** comment box ************** //
 
 function changeNaviBarBtnColor(nodePart, textStyle) {
     var part = nodePart
@@ -1062,9 +888,14 @@ function fontSizeTypeOnNaviBar(nodePart, fontSizeStyle, value) {
     var part = nodePart
     var inputSizeStype = fontSizeStyle
     var inputValue = value
+    var fontStyleSetting;
+    if (fontSizeStyle === "fontstyle")
+        fontStyleSetting = $('#fontstyle2').text("新細明體");
+    else
+        fontStyleSetting = document.getElementById(inputSizeStype).value = inputValue
 
     if (!part.data[inputSizeStype])
-        document.getElementById(inputSizeStype).value = inputValue
+        fontStyleSetting
     else
         document.getElementById(inputSizeStype).value = part.data[inputSizeStype]
 }
@@ -1077,7 +908,7 @@ function setDefaultNaviBar(nodePart) {
     document.getElementById("underline").value = part.data.isUnderline
     document.getElementById("strikethrough").value = part.data.isStrikethrough
     document.getElementById("fontsize").value = part.data.fontsize
-    document.getElementById("fontstyle").value = part.data.fontstyle
+    $('#fontstyle2').text(part.data.fontstyle)
 
     $("#bold").removeClass("disabled");
     $("#italic").removeClass("disabled");
@@ -1106,12 +937,12 @@ function disableClickOnNaviBarForTextBlock() {
     $(".btn-md").addClass("disabled");
     $('#fontselect').addClass("disabledbutton");
     $('#fontselect-drop').addClass("display");
+    $('#fontstyle2').text("新細明體");
     document.getElementById("bold").style.backgroundColor = "white"
     document.getElementById("italic").style.backgroundColor = "white"
     document.getElementById("underline").style.backgroundColor = "white"
     document.getElementById("strikethrough").style.backgroundColor = "white"
     document.getElementById("fontsize").value = "12"
-    document.getElementById("fontstyle").value = "新細明體"
     document.getElementById("fontsize").disabled = true
 }
 
@@ -1302,6 +1133,145 @@ function addcomment() {
     globalState.LocY += 5
 }
 
+function nodeForCaretaker(gender) {
+    var shapeForNode, caretakerNode, admShape;
+    if (gender === "M") {
+        shapeForNode = "Square"
+        admShape = "Square"
+    }
+    else {
+        shapeForNode = "Circle"
+        admShape = "Circle"
+    }
+
+    var adm =
+        GO(
+            go.Adornment,
+            "Spot",
+            GO(
+                go.Shape,
+                admShape,
+                { fill: null, stroke: "blue", strokeWidth: 3 }
+            ),
+            GO(
+                go.Panel,
+                "Auto",
+                GO(go.Placeholder)
+            ),
+            GO(
+                go.Panel,
+                "Horizontal",
+                { alignment: go.Spot.Bottom, alignmentFocus: go.Spot.Top },
+                createDeleteBtn(globalEvent.deleteComment, "刪除", 50)
+            )
+        )
+
+    caretakerNode =
+        GO(
+            go.Node,
+            "Vertical",
+            nodeStyle(),
+            GO(
+                go.Shape,
+                shapeForNode,
+                { fill: "white", stroke: "black", strokeWidth: 3, maxSize: new go.Size(50, 50) }
+            ),
+            GO(
+                go.TextBlock,
+                "",
+                {
+                    margin: new go.Margin(5, 0, 0, 0),
+                    font: "8pt serif"
+                },
+                new go.Binding("text")
+            ),
+            {
+                selectionAdornmentTemplate: adm
+            }
+        )
+    return caretakerNode
+}
+
+// Define a function for creating a "port" that is normally transparent.
+// The "name" is used as the GraphObject.portId, the "spot" is used to control how links connect
+// and where the port is positioned on the node, and the boolean "output" and "input" arguments
+// control whether the user can draw links from or to the port.
+function makePort(name, spot, output, input) {
+    // the port is basically just a small transparent square
+    return GO(
+        go.Shape,
+        "Circle",
+        {
+            fill: null,  // not seen, by default; set to a translucent gray by showSmallPorts, defined below
+            stroke: null,
+            desiredSize: new go.Size(1, 1),
+            alignment: spot,  // align the port on the main Shape
+            alignmentFocus: spot,  // just inside the Shape
+            portId: name,  // declare this object to be a "port"
+            fromSpot: spot, toSpot: spot,  // declare where links may connect at this port
+            fromLinkable: output, toLinkable: input,  // declare whether the user may draw links to/from here
+            cursor: "pointer"  // show a different cursor to indicate potential link point
+        }
+    );
+}
+
+function linkDef(selectionAdmStyle, routingStyle) {
+    var linkSetUp, inputRoutingStyle
+    var inputAdmStyle = selectionAdmStyle
+    if (routingStyle != null)
+        inputRoutingStyle = go.Link.Orthogonal
+    else
+        inputRoutingStyle = "None"
+
+    linkSetUp =
+        GO(
+            go.Link,  // the whole link panel
+            //{ relinkableFrom: false, relinkableTo: false },
+            {
+                selectable: true,
+                //routing: go.Link.AvoidsNodes,  // but this is changed to go.Link.Orthgonal when the Link is reshaped
+                adjusting: go.Link.End,
+                cursor: "pointer",
+                curve: go.Link.JumpOver,
+                corner: 0,
+                routing: inputRoutingStyle,
+                //toShortLength: -10, // distance to the node
+                mouseEnter: function (e, link) { link.findObject("HIGHLIGHT").stroke = "#227700"; },
+                mouseLeave: function (e, link) { link.findObject("HIGHLIGHT").stroke = "#000000"; }
+            },
+            new go.Binding("points").makeTwoWay(),
+            // remember the Link.routing too
+            new go.Binding("routing", "routing", go.Binding.parseEnum(go.Link, go.Link.AvoidsNodes)).makeTwoWay(go.Binding.toString),
+            GO(
+                go.Shape,
+                { isPanelMain: true, strokeWidth: 5, strokeDashArray: [0, 0], stroke: "#000000", name: "HIGHLIGHT" },
+                new go.Binding("strokeDashArray")),
+            {
+                selectionAdornmentTemplate: inputAdmStyle
+            }
+        );
+    return linkSetUp
+}
+
+function nodeStyle() {
+    return [
+        // The Node.location comes from the "loc" property of the node data, 
+        // converted by the Point.parse static method. 
+        // If the Node.location is changed, it updates the "loc" property of the node data,
+        // converting back using the Point.stringify static method. 
+        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+        {
+            // the Node.location is at the center of each node 
+            locationSpot: go.Spot.Center,
+            //isShadowed: true, 
+            //shadowColor: "#888", 
+            // handle mouse enter/leave events to show/hide the ports 
+            //mouseEnter: function (e, obj) { showPorts(obj.part, true); }, 
+            //mouseLeave: function (e, obj) { showPorts(obj.part, false); } 
+        }
+    ];
+}
+
 // *********************** button registration ***************************** //
 
 function btnRegist() {
@@ -1334,11 +1304,43 @@ function btnRegist() {
     document.getElementById("fontsize").onchange = changetextsize;
     document.getElementById("fontstyle").onclick = clicktextstyle;
     document.getElementById("fontstyle").onchange = changetextstyle;
+    document.getElementById("zoomToFit").addEventListener("click", zoom);
 
     document.getElementById("increaseZoom").onclick = increaseZoom;
     document.getElementById("decreaseZoom").onclick = decreaseZoom;
 
     var changerela = document.getElementById("changerela");
+}
+
+// ********************* save and load ************************** //
+// Show the diagram's model in JSON format that the user may edit
+function save() {
+    saveDiagramProperties();  // do this first, before writing to JSON
+    document.getElementById("mySavedModel").value = myDiagram.model.toJson();
+    myDiagram.isModified = false;
+}
+
+function load() {
+    if (document.getElementById("mySavedModel").value.trim().length <= 0) {
+        return;
+    }
+
+    myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
+    loadDiagramProperties();
+    myDiagram.zoomToFit();
+}
+
+function saveDiagramProperties() {
+    myDiagram.model.modelData.position = go.Point.stringify(myDiagram.position);
+}
+// Called by "InitialLayoutCompleted" DiagramEvent listener, NOT directly by load()!
+function loadDiagramProperties(e) {
+    // set Diagram.initialPosition, not Diagram.position, to handle initialization side-effects
+    var pos = myDiagram.model.modelData.position;
+    if (pos) myDiagram.initialPosition = go.Point.parse(pos);
+    myDiagram.model.linkLabelKeysProperty = "labelKeys";
+    myDiagram.model.linkFromPortIdProperty = "fromPort";
+    myDiagram.model.linkToPortIdProperty = "toPort";
 }
 
 /*------------------------自訂方法----------------------------------------------------*/
