@@ -1,14 +1,16 @@
 ﻿var tempKey = -1;
 var tempObj;
+var GO = go.GraphObject.make;
 
 var globalState = {
     tool: null,
     LocX: -200,
     LocY: 50
+
 }
 
 function init() {
-    var GO = go.GraphObject.make;  // for conciseness in defining templates
+
 
     // ********************* graph set up ************************************ //
     var diagramPropties = {
@@ -69,42 +71,7 @@ function init() {
         }
     });
 
-    // ****************** free draw *********************** //
 
-    // GraphObject.make(type, initializers)
-
-    var partProperties =
-        {
-            locationSpot: go.Spot.Center,
-            isLayoutPositioned: false,
-            zOrder: 0
-        }
-
-    var adornmentTemplateForFreeDraw = GO(go.Adornment, "Vertical", GO(go.Placeholder, { margin: -1 }), createDeleteBtn(deleteCommit, "刪除", 50))
-
-
-    var adornmentForFreeDraw =
-        {
-            selectionAdorned: true,
-            selectionObjectName: "SHAPE",
-            selectionAdornmentTemplate: adornmentTemplateForFreeDraw
-
-        }
-
-    //orginally we use null for fill, but i cant  select node anymore if i use transparent
-    var shapeOfFreeDraw = GO(go.Shape,
-        { name: "SHAPE", fill: "transparent", strokeWidth: 1.5 },
-        new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
-        new go.Binding("angle").makeTwoWay(),
-        new go.Binding("geometryString", "geo").makeTwoWay(),
-        //new go.Binding("fill"),
-        //new go.Binding("stroke"),
-        new go.Binding("strokeWidth"))
-
-
-    var freeDrawPart = GO(go.Part, partProperties, new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify), adornmentForFreeDraw, shapeOfFreeDraw)
-
-    myDiagram.nodeTemplateMap.add("FreehandDrawing", freeDrawPart);
 
 
     // ********************* main node definition **************************** //
@@ -327,7 +294,7 @@ function init() {
         GO(
             go.Panel,
             "Horizontal",
-            { alignment: go.Spot.Bottom, alignmentFocus: go.Spot.Top }, createDeleteBtn(globalEvent.deleteCommit, "刪除", 50)
+            { alignment: go.Spot.Bottom, alignmentFocus: go.Spot.Top }, createDeleteBtn(globalEvent.deleteComment, "刪除", 50)
         )
 
     var admForComment =
@@ -357,44 +324,6 @@ function init() {
     myDiagram.nodeTemplateMap.add("CareMale", nodeForCaretaker("M"));
     myDiagram.nodeTemplateMap.add("CareFemale", nodeForCaretaker("F"));
 
-    // *********************** button registration ***************************** //
-
-    function btnRegist() {
-        //字型選擇按鈕的生成
-        $('#fontstyle').fontselect();
-        $('#fontselect').addClass("disabledbutton");
-
-        var changegen = document.getElementById("changegen");
-        var deadButton = document.getElementById("deadButton");
-        document.getElementById("freedraw").onclick = freeDraw;
-        var eventListener = document.getElementById("confirm");
-        eventListener.onclick = comfirmOnCss;
-        var eventListener2 = document.getElementById("confirm2");
-        eventListener2.onclick = comfirmOnCss;
-        var eventListener3 = document.getElementById("confirm3");
-        eventListener3.onclick = comfirmGender;
-        var eventListener3 = document.getElementById("confirm4");
-        eventListener3.onclick = comfirmRelationship;
-        var eventListener = document.getElementById("removeReason");
-        eventListener.onclick = removeReason;
-        var eventListener2 = document.getElementById("remove_n");
-        eventListener2.onclick = remove_n;
-
-        document.getElementById("commit").onclick = addcommit;
-        document.getElementById("bold").onclick = changetextbold;
-        document.getElementById("italic").onclick = changetextitalic;
-        document.getElementById("underline").onclick = changetextunderline;
-        document.getElementById("strikethrough").onclick = changetextstrikethrough;
-        document.getElementById("fontsize").onclick = clicktextsize;
-        document.getElementById("fontsize").onchange = changetextsize;
-        document.getElementById("fontstyle").onclick = clicktextstyle;
-        document.getElementById("fontstyle").onchange = changetextstyle;
-
-        document.getElementById("increaseZoom").onclick = increaseZoom;
-        document.getElementById("decreaseZoom").onclick = decreaseZoom;
-
-        var changerela = document.getElementById("changerela");
-    }
 
     //************************ objClick / backgroundClick / change selection  *****************//
 
@@ -595,7 +524,7 @@ function init() {
                     go.Panel,
                     "Horizontal",
                     { alignment: go.Spot.Bottom, alignmentFocus: go.Spot.Top },
-                    createDeleteBtn(globalEvent.deleteCommit, "刪除", 50)
+                    createDeleteBtn(globalEvent.deleteComment, "刪除", 50)
                 )
             )
 
@@ -687,95 +616,8 @@ function init() {
     }
 
 
-    // ********************  Button ******************* //
-    function createTextBlock(colum, row, fontSize, dataBoundTo) {
-        // if colum and row are both 0 it is the arraow TextBlock for patient
-        var textBlock;
-        var inputColum = colum;
-        var inputRow = row;
-        var inputFontSize = fontSize
-        var fontDef = "bold " + fontSize + "pt" + " serif"
-        var inputDataBound = dataBoundTo;
-
-        textBlock = GO(
-            go.TextBlock,
-            "",
-            {
-                column: inputColum, row: inputRow,
-                textAlign: 'center',
-                isMultiline: false,
-                font: fontDef,
-                wrap: go.TextBlock.None,
-                margin: 2,
-                height: 13.5,
-            },
-            new go.Binding("text", inputDataBound))
-
-        return textBlock;
-    }
-
-    function createDeleteBtn(event, btnText, btnWidth) {
-        var deleteBtn;
-        var inputEvent = event;
-        var inputText = btnText;
-        var inputWidth = btnWidth;
-        deleteBtn =
-            GO(
-                "Button",
-                {
-                    margin: 5,
-                    width: inputWidth,
-                    height: 30,
-                    "ButtonBorder.fill": "#FF2D2D",
-                    "ButtonBorder.stroke": null,
-                    "ButtonBorder.figure": "RoundedRectangle",
-                    "_buttonFillOver": "#FF2D2D",
-                    "_buttonStrokeOver": null,
-                    click: inputEvent
-                },
-                GO(
-                    go.TextBlock,
-                    inputText,
-                    { font: "10pt sans-serif ", stroke: "white" }
-                )
-            )
-        return deleteBtn
-    }
-
-    function createBtn(event, btntext, btnColor, width) {
-        var inputEvent = event
-        var inputText = btntext
-        var inputBtnColor = "#B8B8DC";
-        var inputWidth = 70;
-        if (btnColor != null)
-            inputBtnColor = btnColor
-        if (width != null)
-            inputWidth = width
-
-        var createdBtn =
-            GO(
-                "Button",
-                {
-                    margin: 2.5,
-                    width: inputWidth,
-                    height: 30,
-                    "ButtonBorder.fill": inputBtnColor,
-                    "ButtonBorder.stroke": null,
-                    "ButtonBorder.figure": "RoundedRectangle",
-                    "_buttonFillOver": inputBtnColor,
-                    "_buttonStrokeOver": null,
-                    click: inputEvent
-                },
-                GO(
-                    go.TextBlock,
-                    inputText,
-                    { font: "bold 10pt sans-serif" }
-                )
-            )
-        return createdBtn
-    }
-
     btnRegist();
+    freeDrawDefinination();
     load();  // load a simple diagram from the textarea
 }
 
@@ -791,6 +633,523 @@ function decreaseZoom() {
     myDiagram.commandHandler.increaseZoom(decreaseZoomOriginalSize);
 }
 
+// *********************** function for the age and dead reason ************** //
+
+function comfirmOnCss() {
+    var Reason1 = document.getElementById('NoteOneOnHTML').value;
+    var Reason2 = document.getElementById('NoteTwoOnHTML').value;
+    var Reason3 = document.getElementById('NoteThreeOnHTML').value;
+    var n_type = document.getElementById('n_type').value;
+    var tempIndex = findCurrentIndex(tempKey)
+    myDiagram.model.nodeDataArray[tempIndex].noteOne = Reason1;
+    myDiagram.model.nodeDataArray[tempIndex].noteTwo = Reason2;
+    myDiagram.model.nodeDataArray[tempIndex].noteThree = Reason3;
+    myDiagram.model.nodeDataArray[tempIndex].pregnancy = n_type;
+    myDiagram.rebuildParts();
+    document.getElementById('NoteOneOnHTML').value = ""
+    document.getElementById('NoteTwoOnHTML').value = ""
+    document.getElementById('NoteThreeOnHTML').value = ""
+    document.getElementById('n_type').value = ""
+}
+
+function removeReason() {
+    var tempIndex = findCurrentIndex(tempKey);
+    myDiagram.model.nodeDataArray[tempIndex].noteOne = "";
+    myDiagram.model.nodeDataArray[tempIndex].noteTwo = "";
+    myDiagram.model.nodeDataArray[tempIndex].noteThree = "";
+    myDiagram.rebuildParts();
+}
+
+function remove_n() {
+    var tempIndex = findCurrentIndex(tempKey);
+    myDiagram.model.nodeDataArray[tempIndex].pregnancy = "";
+    myDiagram.rebuildParts();
+}
+
+function comfirmGender() {
+    var tempIndex = findCurrentIndex(tempKey);
+    var obj = myDiagram.model.nodeDataArray[tempIndex];
+    changeGender(obj)
+}
+
+function findCurrentIndex(inputKey) {
+    (myDiagram.model.nodeDataArray).forEach(function (obj, index) {
+        if (obj.key === inputKey)
+            tempIndex = index
+    });
+    return tempIndex;
+}
+
+function ValidateNumber(e, pnumber) {
+    if (!/^\d+$/.test(pnumber)) {
+        e.value = /^\d+/.exec(e.value);
+    }
+    return false;
+}
+
+// ************************************************************************ //
+
+/*--------------------------------------------------------------------------*/
+
+function changetextbold() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (myDiagram.model.nodeDataArray[currentIndex].bold) {
+        myDiagram.model.nodeDataArray[currentIndex].bold = false
+    }
+    else {
+        myDiagram.model.nodeDataArray[currentIndex].bold = true;
+    }
+
+    getRadio(myDiagram.selection.Ca.value);
+}
+
+function changetextitalic() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (myDiagram.model.nodeDataArray[currentIndex].Italic) {
+        myDiagram.model.nodeDataArray[currentIndex].Italic = false
+    }
+    else {
+        myDiagram.model.nodeDataArray[currentIndex].Italic = true;
+    }
+    getRadio(myDiagram.selection.Ca.value);
+}
+
+function changetextunderline() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (myDiagram.model.nodeDataArray[currentIndex].isUnderline) {
+        myDiagram.model.nodeDataArray[currentIndex].isUnderline = false
+        document.getElementById("underline").style.backgroundColor = "white"
+    }
+    else {
+        myDiagram.model.nodeDataArray[currentIndex].isUnderline = true;
+        document.getElementById("underline").style.backgroundColor = "#ff8c00"
+    }
+    myDiagram.rebuildParts();
+}
+
+function changetextstrikethrough() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (myDiagram.model.nodeDataArray[currentIndex].isStrikethrough) {
+        myDiagram.model.nodeDataArray[currentIndex].isStrikethrough = false
+        document.getElementById("strikethrough").style.backgroundColor = "white"
+    }
+    else {
+        myDiagram.model.nodeDataArray[currentIndex].isStrikethrough = true;
+        document.getElementById("strikethrough").style.backgroundColor = "#ff8c00"
+    }
+    myDiagram.rebuildParts();
+}
+
+function clicktextsize() {
+    var fontsize = "";
+    document.getElementById("fontsize").value = fontsize;
+}
+
+function changetextsize() {
+    var currentIndex = findCurrentIndex(tempKey);
+    var fontsize = document.getElementById("fontsize").value;
+    myDiagram.model.nodeDataArray[currentIndex].fontsize = fontsize;
+    getRadio(myDiagram.selection.Ca.value);
+}
+
+function clicktextstyle() {
+    var fontstyle = "";
+    document.getElementById("fontstyle").value = fontstyle;
+}
+
+function changetextstyle() {
+    var currentIndex = findCurrentIndex(tempKey);
+    var fontstyle = document.getElementById("fontstyle").value;
+    myDiagram.model.nodeDataArray[currentIndex].fontstyle = fontstyle;
+    getRadio(myDiagram.selection.Ca.value);
+}
+
+function changetextColor(stroke) {
+    var currentIndex = findCurrentIndex(tempKey);
+    myDiagram.model.nodeDataArray[currentIndex].stroke = stroke.value;
+    myDiagram.rebuildParts();
+}
+
+/*--------------------------------------------------------------------------*/
+
+function saveImg() {
+    var ImgBaseString = myDiagram.makeImageData({ background: "white" });
+    return ImgBaseString;
+}
+/*------------------------自訂方法----------------------------------------------------*/
+
+
+// Show the diagram's model in JSON format that the user may edit
+function save() {
+    saveDiagramProperties();  // do this first, before writing to JSON
+    document.getElementById("mySavedModel").value = myDiagram.model.toJson();
+    myDiagram.isModified = false;
+}
+
+function myZoomToFit() {
+    myDiagram.zoomToFit();
+    myDiagram.contentAlignment = go.Spot.Center;
+}
+
+function load() {
+    if (document.getElementById("mySavedModel").value.trim().length <= 0) {
+        return;
+    }
+
+    myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
+    loadDiagramProperties();
+    myDiagram.zoomToFit();
+}
+
+function saveDiagramProperties() {
+    myDiagram.model.modelData.position = go.Point.stringify(myDiagram.position);
+}
+// Called by "InitialLayoutCompleted" DiagramEvent listener, NOT directly by load()!
+function loadDiagramProperties(e) {
+    // set Diagram.initialPosition, not Diagram.position, to handle initialization side-effects
+    var pos = myDiagram.model.modelData.position;
+    if (pos) myDiagram.initialPosition = go.Point.parse(pos);
+    myDiagram.model.linkLabelKeysProperty = "labelKeys";
+    myDiagram.model.linkFromPortIdProperty = "fromPort";
+    myDiagram.model.linkToPortIdProperty = "toPort";
+}
+
+var globalEvent = {
+    addBrotherNodeAndLink: addBrotherNodeAndLink,
+    editgender: editgender,
+    addParentsNodeAndLink: addParentsNodeAndLink,
+    addPartnerNodeAndLink: addPartnerNodeAndLink,
+    addSisterNodeAndLink: addSisterNodeAndLink,
+    addSonNodeAndLink: addSonNodeAndLink,
+    addDaughterNodeAndLink: addDaughterNodeAndLink,
+    deleteNode: deleteNode,
+    changeColor: changeColor,
+    changeGene: changeGene,
+    changePregnancy: changePregnancy,
+    editIndividual: editIndividual,
+    changeStatus: changeStatus,
+    editReason: editReason,
+    marriage: marriage,
+    divorce: divorce,
+    separate: separate,
+    liveTogether: liveTogether,
+    editborn: editborn,
+    deleteComment: deleteComment
+}
+
+// ***************** all click function ********************************** //
+
+function editReason(e, obj) {
+    var tempIndex = findCurrentIndex(tempKey)
+    document.getElementById("deadButton").click();
+    if (myDiagram.model.nodeDataArray[tempIndex].noteOne !== undefined) {
+        document.getElementById('NoteOneOnHTML').value = myDiagram.model.nodeDataArray[tempIndex].noteOne
+        document.getElementById('NoteTwoOnHTML').value = myDiagram.model.nodeDataArray[tempIndex].noteTwo
+        document.getElementById('NoteThreeOnHTML').value = myDiagram.model.nodeDataArray[tempIndex].noteThree
+    }
+    else {
+        document.getElementById('NoteOneOnHTML').value = ""
+        document.getElementById('NoteTwoOnHTML').value = ""
+        document.getElementById('NoteThreeOnHTML').value = ""
+    }
+}
+
+function editIndividual(e, obj) {
+    var tempIndex = findCurrentIndex(tempKey)
+    if (myDiagram.model.nodeDataArray[tempIndex].pregnancy !== "P" && myDiagram.model.nodeDataArray[tempIndex].color !== "black") {
+        document.getElementById("n_btn").click();
+    }
+    else {
+        swal({
+            title: "警告!",
+            text: "此功能僅在未具有相同疾病、未帶基因與未懷孕者，方可點擊",
+            type: "warning"
+        });
+    }
+    if (myDiagram.model.nodeDataArray[tempIndex].pregnancy !== undefined) {
+        document.getElementById('n_type').value = myDiagram.model.nodeDataArray[tempIndex].pregnancy
+    }
+    else {
+        document.getElementById('n_type').value = ""
+    }
+}
+
+function editgender(e, obj) {
+    var tempIndex = findCurrentIndex(tempKey)
+    document.getElementById("changegen").click();
+}
+
+function editborn(e, obj) {
+    temObj = obj;
+    var tempIndex = findCurrentIndex(tempKey)
+    document.getElementById("changerela").click();
+}
+
+function findObj(inputKey) {
+    var objtmp;
+    (myDiagram.model.linkDataArray).forEach(function (obj, index) {
+        if (obj.key === inputKey) {
+            objtmp = obj;
+        }
+
+    });
+    return objtmp;
+}
+
+function comfirmRelationship() {
+    var tempIndex = findCurrentIndex(tempKey);
+    var obj = myDiagram.model.nodeDataArray[tempIndex];
+    changeRelationship(obj)
+}
+
+function preloadGenderType(obj) {
+    var input_Gender = obj
+    document.getElementById("gendermale").checked;
+    if (input_Gender === "M") { document.getElementById("gendermale").checked = true; }
+    if (input_Gender === "F") { document.getElementById("genderfemale").checked = true; }
+    if (input_Gender === "Baby") { document.getElementById("genderbaby").checked = true; }
+    if (input_Gender === "Unknown") { document.getElementById("genderunknown").checked = true; }
+}
+
+function preloadRelationshipType(obj) {
+    var input_Relationship = obj
+    document.getElementById("rel_biologic").checked;
+    if (input_Relationship === "biologic") { document.getElementById("rel_biologic").checked = true; }
+    if (input_Relationship === "adoptinto") { document.getElementById("rel_adoptinto").checked = true; }
+    if (input_Relationship === "adoptout") { document.getElementById("rel_adoptout").checked = true; }
+}
+
+function noteOnNode(nodePart) {
+    var part = nodePart
+    if (!part.data.noteOne)
+        document.getElementById("NoteOneOnHTML").value = ""
+    else
+        document.getElementById("NoteOneOnHTML").value = part.data.noteOne
+    if (!part.data.noteTwo)
+        document.getElementById("NoteTwoOnHTML").value = ""
+    else
+        document.getElementById("NoteTwoOnHTML").value = part.data.noteTwo
+    if (!part.data.noteThree)
+        document.getElementById("NoteThreeOnHTML").value = ""
+    else
+        document.getElementById("NoteThreeOnHTML").value = part.data.noteThree
+}
+
+function pregnancyCheck(nodePart) {
+    var part = nodePart
+    if (!part.data.pregnancy)
+        document.getElementById("n_type").value = ""
+    else
+        document.getElementById("n_type").value = part.data.pregnancy
+}
+
+function deleteNode(e, b) {
+    var node = b.part.adornedPart;
+    var diagram = node.diagram;
+    if (node.data.key === -1 || node.data.key === -2 || node.data.key === -3) {
+        swal({
+            title: "警告!",
+            text: "病人與父母為基本角色，不能刪除",
+            type: "warning"
+        });
+        return false;
+    }
+    mySetNodeObjectProperty(diagram);
+    diagram.startTransaction("delete node");
+
+    if (node.data.treeLayer > 1) {
+        var fa = diagram.findNodeForKey(node.data.father);
+        var mo = diagram.findNodeForKey(node.data.mother);
+        var par = diagram.findNodeForKey(node.data.partner);
+
+        diagram.commandHandler.deleteSelection();
+
+        if (fa !== null) {
+            //diagram.model.removeNodeData(fa.data);
+            //var links = node.linksConnected;
+            //while (links.next()) {
+            //    console.log(links.next());
+            //}
+            diagram.select(fa);
+            diagram.commandHandler.deleteSelection();
+
+        }
+        if (mo !== null) {
+            //    diagram.model.removeNodeData(mo.data);
+            diagram.select(mo);
+            diagram.commandHandler.deleteSelection();
+        }
+        if (par !== null) {
+            //    diagram.model.removeNodeData(par.data);
+            diagram.select(par);
+            diagram.commandHandler.deleteSelection();
+            var par_mo = diagram.findNodeForKey(par.data.mother);
+            var par_fa = diagram.findNodeForKey(par.data.father);
+            if (par_mo !== null) {
+                diagram.select(par_mo);
+                diagram.commandHandler.deleteSelection();
+            }
+            if (par_fa !== null) {
+                diagram.select(par_fa);
+                diagram.commandHandler.deleteSelection();
+            }
+        }
+    }
+    if (node.data.treeLayer < 1) {
+        diagram.commandHandler.deleteSelection();
+    }
+    if (node.data.partner === -1) {
+        var childrenList = [];
+        jQuery.each(diagram.model.nodeDataArray, function (index, value) {
+            if (jQuery.type(value.treeLayer) !== "undefined") {
+                if (value.treeLayer === -1) {
+                    childrenList.push(value.key);
+                }
+            }
+        });
+        if (childrenList.length > 0) {
+            jQuery.each(childrenList, function (index, value) {
+                diagram.select(diagram.findNodeForKey(value));
+                diagram.commandHandler.deleteSelection();
+            });
+        }
+    }
+
+
+
+    //diagram.commandHandler.deleteSelection();
+    myAutoLayout(diagram);
+    diagram.commitTransaction("delete node");
+}
+
+function deleteComment(e, b) {
+    //var idrag = document.getElementById("infoDraggable");
+    var node = b.part.adornedPart;
+    var diagram = node.diagram;
+    diagram.startTransaction("delete comment");
+    diagram.commandHandler.deleteSelection();
+    $("#bold").addClass("disabled");
+    $("#italic").addClass("disabled");
+    $("#underline").addClass("disabled");
+    $("#strikethrough").addClass("disabled");
+    $(".btn-md").addClass("disabled");
+    $('#fontselect').addClass("disabledbutton");
+    document.getElementById("bold").style.backgroundColor = "white";
+    document.getElementById("italic").style.backgroundColor = "white";
+    document.getElementById("underline").style.backgroundColor = "white";
+    document.getElementById("strikethrough").style.backgroundColor = "white";
+    document.getElementById("fontsize").value = "12";
+    document.getElementById("fontstyle").value = "新細明體";
+    document.getElementById("fontsize").disabled = true;
+    document.getElementById("fontstyle").disabled = true;
+    diagram.commitTransaction("delete comment");
+
+}
+
+// ********************************************* //
+
+function changeNaviBarBtnColor(nodePart, textStyle) {
+    var part = nodePart
+    var inputTextStyle = textStyle
+
+    if (!part.data[inputTextStyle])
+        document.getElementById(inputTextStyle).style.backgroundColor = "white"
+    else
+        document.getElementById(inputTextStyle).style.backgroundColor = "#ff8c00"
+}
+
+function fontSizeTypeOnNaviBar(nodePart, fontSizeStyle, value) {
+    var part = nodePart
+    var inputSizeStype = fontSizeStyle
+    var inputValue = value
+
+    if (!part.data[inputSizeStype])
+        document.getElementById(inputSizeStype).value = inputValue
+    else
+        document.getElementById(inputSizeStype).value = part.data[inputSizeStype]
+}
+
+function setDefaultNaviBar(nodePart) {
+    var part = nodePart
+    tempKey = part.data.key
+    document.getElementById("bold").value = part.data.bold
+    document.getElementById("italic").value = part.data.Italic
+    document.getElementById("underline").value = part.data.isUnderline
+    document.getElementById("strikethrough").value = part.data.isStrikethrough
+    document.getElementById("fontsize").value = part.data.fontsize
+    document.getElementById("fontstyle").value = part.data.fontstyle
+
+    $("#bold").removeClass("disabled");
+    $("#italic").removeClass("disabled");
+    $("#underline").removeClass("disabled");
+    $("#strikethrough").removeClass("disabled");
+    $(".btn-md").removeClass("disabled");
+    $('#fontselect').removeClass("disabledbutton");
+    $('#fontselect-drop').removeClass("display");
+    document.getElementById("fontsize").disabled = false
+
+    changeNaviBarBtnColor(part, "bold")
+    changeNaviBarBtnColor(part, "italic")
+    changeNaviBarBtnColor(part, "underline")
+    changeNaviBarBtnColor(part, "strikethrough")
+
+    fontSizeTypeOnNaviBar(part, "fontsize", "12")
+    fontSizeTypeOnNaviBar(part, "fontstyle", "新細明體")
+
+}
+
+function disableClickOnNaviBarForTextBlock() {
+    $("#bold").addClass("disabled");
+    $("#italic").addClass("disabled");
+    $("#underline").addClass("disabled");
+    $("#strikethrough").addClass("disabled");
+    $(".btn-md").addClass("disabled");
+    $('#fontselect').addClass("disabledbutton");
+    $('#fontselect-drop').addClass("display");
+    document.getElementById("bold").style.backgroundColor = "white"
+    document.getElementById("italic").style.backgroundColor = "white"
+    document.getElementById("underline").style.backgroundColor = "white"
+    document.getElementById("strikethrough").style.backgroundColor = "white"
+    document.getElementById("fontsize").value = "12"
+    document.getElementById("fontstyle").value = "新細明體"
+    document.getElementById("fontsize").disabled = true
+}
+
+// ************ free Draw ************* //
+function freeDrawDefinination() {
+    var freeDrawPartProperties =
+    {
+        locationSpot: go.Spot.Center,
+        isLayoutPositioned: false,
+        zOrder: 0
+    }
+
+    var adornmentTemplateForFreeDraw = GO(go.Adornment, "Vertical", GO(go.Placeholder, { margin: -1 }), createDeleteBtn(deleteComment, "刪除", 50))
+
+
+    var adornmentForFreeDraw =
+        {
+            selectionAdorned: true,
+            selectionObjectName: "SHAPE",
+            selectionAdornmentTemplate: adornmentTemplateForFreeDraw
+
+        }
+
+    //orginally we use null for fill, but i cant  select node anymore if i use transparent
+    var shapeOfFreeDraw = GO(go.Shape,
+        { name: "SHAPE", fill: "transparent", strokeWidth: 1.5 },
+        new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
+        new go.Binding("angle").makeTwoWay(),
+        new go.Binding("geometryString", "geo").makeTwoWay(),
+        //new go.Binding("fill"),
+        //new go.Binding("stroke"),
+        new go.Binding("strokeWidth"))
+
+
+    var freeDrawPart = GO(go.Part, freeDrawPartProperties, new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify), adornmentForFreeDraw, shapeOfFreeDraw)
+
+    myDiagram.nodeTemplateMap.add("FreehandDrawing", freeDrawPart);
+}
 
 function freeDraw() {
     myDiagram.toolManager.panningTool.isEnabled = false;
@@ -821,60 +1180,94 @@ function cancelFreeDraw() {
 
 }
 
-// *********************** function for the age and dead reason ************** //
+// ************* create object ************** //
 
-function comfirmOnCss() {
-    var Reason1 = document.getElementById('NoteOneOnHTML').value;
-    var Reason2 = document.getElementById('NoteTwoOnHTML').value;
-    var Reason3 = document.getElementById('NoteThreeOnHTML').value;
-    var n_type = document.getElementById('n_type').value;
-    var tempIndex = findCurrentIndex(tempKey)
-    myDiagram.model.nodeDataArray[tempIndex].noteOne = Reason1;
-    myDiagram.model.nodeDataArray[tempIndex].noteTwo = Reason2;
-    myDiagram.model.nodeDataArray[tempIndex].noteThree = Reason3;
-    myDiagram.model.nodeDataArray[tempIndex].pregnancy = n_type;
-    myDiagram.rebuildParts();
-    document.getElementById('NoteOneOnHTML').value = ""
-    document.getElementById('NoteTwoOnHTML').value = ""
-    document.getElementById('NoteThreeOnHTML').value = ""
-    document.getElementById('n_type').value = ""
-}
-function removeReason() {
-    var tempIndex = findCurrentIndex(tempKey);
-    myDiagram.model.nodeDataArray[tempIndex].noteOne = "";
-    myDiagram.model.nodeDataArray[tempIndex].noteTwo = "";
-    myDiagram.model.nodeDataArray[tempIndex].noteThree = "";
-    myDiagram.rebuildParts();
-}
-function remove_n() {
-    var tempIndex = findCurrentIndex(tempKey);
-    myDiagram.model.nodeDataArray[tempIndex].pregnancy = "";
-    myDiagram.rebuildParts();
-}
-function comfirmGender() {
-    var tempIndex = findCurrentIndex(tempKey);
-    var obj = myDiagram.model.nodeDataArray[tempIndex];
-    changeGender(obj)
-}
+function createBtn(event, btntext, btnColor, width) {
+    var inputEvent = event
+    var inputText = btntext
+    var inputBtnColor = "#B8B8DC";
+    var inputWidth = 70;
+    if (btnColor != null)
+        inputBtnColor = btnColor
+    if (width != null)
+        inputWidth = width
 
-function findCurrentIndex(inputKey) {
-    (myDiagram.model.nodeDataArray).forEach(function (obj, index) {
-        if (obj.key === inputKey)
-            tempIndex = index
-    });
-    return tempIndex;
+    var createdBtn =
+        GO(
+            "Button",
+            {
+                margin: 2.5,
+                width: inputWidth,
+                height: 30,
+                "ButtonBorder.fill": inputBtnColor,
+                "ButtonBorder.stroke": null,
+                "ButtonBorder.figure": "RoundedRectangle",
+                "_buttonFillOver": inputBtnColor,
+                "_buttonStrokeOver": null,
+                click: inputEvent
+            },
+            GO(
+                go.TextBlock,
+                inputText,
+                { font: "bold 10pt sans-serif" }
+            )
+        )
+    return createdBtn
 }
 
-function ValidateNumber(e, pnumber) {
-    if (!/^\d+$/.test(pnumber)) {
-        e.value = /^\d+/.exec(e.value);
-    }
-    return false;
+function createDeleteBtn(event, btnText, btnWidth) {
+    var deleteBtn;
+    var inputEvent = event;
+    var inputText = btnText;
+    var inputWidth = btnWidth;
+    deleteBtn =
+        GO(
+            "Button",
+            {
+                margin: 5,
+                width: inputWidth,
+                height: 30,
+                "ButtonBorder.fill": "#FF2D2D",
+                "ButtonBorder.stroke": null,
+                "ButtonBorder.figure": "RoundedRectangle",
+                "_buttonFillOver": "#FF2D2D",
+                "_buttonStrokeOver": null,
+                click: inputEvent
+            },
+            GO(
+                go.TextBlock,
+                inputText,
+                { font: "10pt sans-serif ", stroke: "white" }
+            )
+        )
+    return deleteBtn
 }
 
-// ************************************************************************ //
+function createTextBlock(colum, row, fontSize, dataBoundTo) {
+    // if colum and row are both 0 it is the arraow TextBlock for patient
+    var textBlock;
+    var inputColum = colum;
+    var inputRow = row;
+    var inputFontSize = fontSize
+    var fontDef = "bold " + fontSize + "pt" + " serif"
+    var inputDataBound = dataBoundTo;
 
-/*--------------------------------------------------------------------------*/
+    textBlock = GO(
+        go.TextBlock,
+        "",
+        {
+            column: inputColum, row: inputRow,
+            textAlign: 'center',
+            isMultiline: false,
+            font: fontDef,
+            wrap: go.TextBlock.None,
+            margin: 2,
+            height: 13.5,
+        },
+        new go.Binding("text", inputDataBound))
+
+    return textBlock;
+}
 
 function addCarePerson(gender) {
     myDiagram.startTransaction("addCarePerson");
@@ -895,120 +1288,57 @@ function addCarePerson(gender) {
     globalState.LocY += 5
 }
 
-function addcommit() {
-    myDiagram.startTransaction("addcommit");
-    var Commit_node
+function addcomment() {
+    myDiagram.startTransaction("addcomment");
+    var Comment_node
     var setObjLoc = go.Point.stringify(new go.Point(globalState.LocX, globalState.LocY))
 
-    Commit_node = { category: "Comment", text: "請輸入文字", loc: setObjLoc };
-    myDiagram.model.addNodeData(Commit_node);
-    myDiagram.commitTransaction("addcommit");
+    Comment_node = { category: "Comment", text: "請輸入文字", loc: setObjLoc };
+    myDiagram.model.addNodeData(Comment_node);
+    myDiagram.commitTransaction("addcomment");
 
     // update globalLoc
     globalState.LocX += 5
     globalState.LocY += 5
 }
-function changetextbold() {
-    var currentIndex = findCurrentIndex(tempKey);
-    if (myDiagram.model.nodeDataArray[currentIndex].bold) {
-        myDiagram.model.nodeDataArray[currentIndex].bold = false
-    }
-    else {
-        myDiagram.model.nodeDataArray[currentIndex].bold = true;
-    }
 
-    getRadio(myDiagram.selection.Ca.value);
-}
-function changetextitalic() {
-    var currentIndex = findCurrentIndex(tempKey);
-    if (myDiagram.model.nodeDataArray[currentIndex].Italic) {
-        myDiagram.model.nodeDataArray[currentIndex].Italic = false
-    }
-    else {
-        myDiagram.model.nodeDataArray[currentIndex].Italic = true;
-    }
-    getRadio(myDiagram.selection.Ca.value);
-}
-function changetextunderline() {
-    var currentIndex = findCurrentIndex(tempKey);
-    if (myDiagram.model.nodeDataArray[currentIndex].isUnderline) {
-        myDiagram.model.nodeDataArray[currentIndex].isUnderline = false
-        document.getElementById("underline").style.backgroundColor = "white"
-    }
-    else {
-        myDiagram.model.nodeDataArray[currentIndex].isUnderline = true;
-        document.getElementById("underline").style.backgroundColor = "#ff8c00"
-    }
-    myDiagram.rebuildParts();
-}
-function changetextstrikethrough() {
-    var currentIndex = findCurrentIndex(tempKey);
-    if (myDiagram.model.nodeDataArray[currentIndex].isStrikethrough) {
-        myDiagram.model.nodeDataArray[currentIndex].isStrikethrough = false
-        document.getElementById("strikethrough").style.backgroundColor = "white"
-    }
-    else {
-        myDiagram.model.nodeDataArray[currentIndex].isStrikethrough = true;
-        document.getElementById("strikethrough").style.backgroundColor = "#ff8c00"
-    }
-    myDiagram.rebuildParts();
-}
-function clicktextsize() {
-    var fontsize = "";
-    document.getElementById("fontsize").value = fontsize;
-}
-function changetextsize() {
-    var currentIndex = findCurrentIndex(tempKey);
-    var fontsize = document.getElementById("fontsize").value;
-    myDiagram.model.nodeDataArray[currentIndex].fontsize = fontsize;
-    getRadio(myDiagram.selection.Ca.value);
-}
-function clicktextstyle() {
-    var fontstyle = "";
-    document.getElementById("fontstyle").value = fontstyle;
-}
-function changetextstyle() {
-    var currentIndex = findCurrentIndex(tempKey);
-    var fontstyle = document.getElementById("fontstyle").value;
-    myDiagram.model.nodeDataArray[currentIndex].fontstyle = fontstyle;
-    getRadio(myDiagram.selection.Ca.value);
-}
-function changetextColor(stroke) {
-    var currentIndex = findCurrentIndex(tempKey);
-    myDiagram.model.nodeDataArray[currentIndex].stroke = stroke.value;
-    myDiagram.rebuildParts();
-}
+// *********************** button registration ***************************** //
 
-/*--------------------------------------------------------------------------*/
+function btnRegist() {
+    //字型選擇按鈕的生成
+    $('#fontstyle').fontselect();
+    $('#fontselect').addClass("disabledbutton");
 
-function mySetNodeObjectProperty(myDiagram) {
-    var selfNode = myDiagram.findNodeForKey(-1).data;
-    var partnerNode = myDiagram.findNodeForKey(selfNode.partner);
-    if (partnerNode !== null) {
-        partnerNode = partnerNode.data;
-        if (selfNode.treeLayer !== partnerNode.treeLayer) {
-            delete selfNode.partner;
-        } else {
-            if (selfNode.father === partnerNode.father || selfNode.mother === partnerNode.mother) {
-                delete selfNode.partner;
-            }
-        }
-    }
-    jQuery.each(myDiagram.model.nodeDataArray, function (index, value) {
-        if (value.father !== null || value.mother !== null) {
-            var fa = myDiagram.findNodeForKey(value.father);
-            var mo = myDiagram.findNodeForKey(value.mother);
-            if (fa === null || mo === null) {
-                delete value.father;
-                delete value.mother;
-                if (fa === null) {
-                    myDiagram.model.removeNodeData(fa);
-                } else if (mo === null) {
-                    myDiagram.model.removeNodeData(mo);
-                }
-            }
-        }
-    });
+    var changegen = document.getElementById("changegen");
+    var deadButton = document.getElementById("deadButton");
+    document.getElementById("freedraw").onclick = freeDraw;
+    var eventListener = document.getElementById("confirm");
+    eventListener.onclick = comfirmOnCss;
+    var eventListener2 = document.getElementById("confirm2");
+    eventListener2.onclick = comfirmOnCss;
+    var eventListener3 = document.getElementById("confirm3");
+    eventListener3.onclick = comfirmGender;
+    var eventListener3 = document.getElementById("confirm4");
+    eventListener3.onclick = comfirmRelationship;
+    var eventListener = document.getElementById("removeReason");
+    eventListener.onclick = removeReason;
+    var eventListener2 = document.getElementById("remove_n");
+    eventListener2.onclick = remove_n;
+
+    document.getElementById("comment").onclick = addcomment;
+    document.getElementById("bold").onclick = changetextbold;
+    document.getElementById("italic").onclick = changetextitalic;
+    document.getElementById("underline").onclick = changetextunderline;
+    document.getElementById("strikethrough").onclick = changetextstrikethrough;
+    document.getElementById("fontsize").onclick = clicktextsize;
+    document.getElementById("fontsize").onchange = changetextsize;
+    document.getElementById("fontstyle").onclick = clicktextstyle;
+    document.getElementById("fontstyle").onchange = changetextstyle;
+
+    document.getElementById("increaseZoom").onclick = increaseZoom;
+    document.getElementById("decreaseZoom").onclick = decreaseZoom;
+
+    var changerela = document.getElementById("changerela");
 }
 
 /*------------------------自訂方法----------------------------------------------------*/
@@ -1071,7 +1401,7 @@ function addParentsNodeAndLink(e, b) {
 
         //母親圖示
         mother_newLocation = go.Point.stringify(new go.Point(node.location.x + 100, node.location.y - 200));
-        mother_newnode = { figure: "Circle", loc: mother_newLocation, born:"biologic",sex: "F", partner: father_key, treeLayer: node.data.treeLayer + 1 }
+        mother_newnode = { figure: "Circle", loc: mother_newLocation, born: "biologic", sex: "F", partner: father_key, treeLayer: node.data.treeLayer + 1 }
         diagram.model.addNodeData(mother_newnode);
         mother_key = diagram.model.nodeDataArray[diagram.model.nodeDataArray.length - 1].key;
         node.data["mother"] = mother_key;
@@ -1201,7 +1531,7 @@ function addSonNodeAndLink(e, b) {
     son_newLocation = go.Point.stringify(new go.Point(node.location.x + 180 + (75 * count), node.location.y + 180));
 
     //新增兒子圖示                
-    son_newnode = { figure: "Square", loc: son_newLocation, father: father_key, mother: mother_key, sex: "M",born: "biologic", treeLayer: node.data.treeLayer - 1 }
+    son_newnode = { figure: "Square", loc: son_newLocation, father: father_key, mother: mother_key, sex: "M", born: "biologic", treeLayer: node.data.treeLayer - 1 }
     diagram.model.addNodeData(son_newnode);
     son_key = diagram.model.nodeDataArray[diagram.model.nodeDataArray.length - 1].key;
 
@@ -1279,7 +1609,7 @@ function addDaughterNodeAndLink(e, b) {
     }
     daughter_newLocation = (node.location.x + 180 + (75 * count)).toString() + " " + (node.location.y + 180).toString();
     //新增女兒圖示                
-    daughter_newnode = { figure: "Circle", loc: daughter_newLocation, father: father_key, mother: mother_key, sex: "F",born:"biologic", treeLayer: node.data.treeLayer - 1 }
+    daughter_newnode = { figure: "Circle", loc: daughter_newLocation, father: father_key, mother: mother_key, sex: "F", born: "biologic", treeLayer: node.data.treeLayer - 1 }
     diagram.model.addNodeData(daughter_newnode);
     daughter_key = diagram.model.nodeDataArray[diagram.model.nodeDataArray.length - 1].key;
 
@@ -1295,108 +1625,7 @@ function addDaughterNodeAndLink(e, b) {
     diagram.commitTransaction("add node and link");
 
 }
-//刪除節點
-function deleteNode(e, b) {
-    var node = b.part.adornedPart;
-    var diagram = node.diagram;
-    if (node.data.key === -1 || node.data.key === -2 || node.data.key === -3) {
-        swal({
-            title: "警告!",
-            text: "病人與父母為基本角色，不能刪除",
-            type: "warning"
-        });
-        return false;
-    }
-    mySetNodeObjectProperty(diagram);
-    diagram.startTransaction("delete node");
 
-    if (node.data.treeLayer > 1) {
-        var fa = diagram.findNodeForKey(node.data.father);
-        var mo = diagram.findNodeForKey(node.data.mother);
-        var par = diagram.findNodeForKey(node.data.partner);
-
-        diagram.commandHandler.deleteSelection();
-
-        if (fa !== null) {
-            //diagram.model.removeNodeData(fa.data);
-            //var links = node.linksConnected;
-            //while (links.next()) {
-            //    console.log(links.next());
-            //}
-            diagram.select(fa);
-            diagram.commandHandler.deleteSelection();
-
-        }
-        if (mo !== null) {
-            //    diagram.model.removeNodeData(mo.data);
-            diagram.select(mo);
-            diagram.commandHandler.deleteSelection();
-        }
-        if (par !== null) {
-            //    diagram.model.removeNodeData(par.data);
-            diagram.select(par);
-            diagram.commandHandler.deleteSelection();
-            var par_mo = diagram.findNodeForKey(par.data.mother);
-            var par_fa = diagram.findNodeForKey(par.data.father);
-            if (par_mo !== null) {
-                diagram.select(par_mo);
-                diagram.commandHandler.deleteSelection();
-            }
-            if (par_fa !== null) {
-                diagram.select(par_fa);
-                diagram.commandHandler.deleteSelection();
-            }
-        }
-    }
-    if (node.data.treeLayer < 1) {
-        diagram.commandHandler.deleteSelection();
-    }
-    if (node.data.partner === -1) {
-        var childrenList = [];
-        jQuery.each(diagram.model.nodeDataArray, function (index, value) {
-            if (jQuery.type(value.treeLayer) !== "undefined") {
-                if (value.treeLayer === -1) {
-                    childrenList.push(value.key);
-                }
-            }
-        });
-        if (childrenList.length > 0) {
-            jQuery.each(childrenList, function (index, value) {
-                diagram.select(diagram.findNodeForKey(value));
-                diagram.commandHandler.deleteSelection();
-            });
-        }
-    }
-
-
-
-    //diagram.commandHandler.deleteSelection();
-    myAutoLayout(diagram);
-    diagram.commitTransaction("delete node");
-}
-function deleteCommit(e, b) {
-    //var idrag = document.getElementById("infoDraggable");
-    var node = b.part.adornedPart;
-    var diagram = node.diagram;
-    diagram.startTransaction("delete ccommit");
-    diagram.commandHandler.deleteSelection();
-    $("#bold").addClass("disabled");
-    $("#italic").addClass("disabled");
-    $("#underline").addClass("disabled");
-    $("#strikethrough").addClass("disabled");
-    $(".btn-md").addClass("disabled");
-    $('#fontselect').addClass("disabledbutton");
-    document.getElementById("bold").style.backgroundColor = "white";
-    document.getElementById("italic").style.backgroundColor = "white";
-    document.getElementById("underline").style.backgroundColor = "white";
-    document.getElementById("strikethrough").style.backgroundColor = "white";
-    document.getElementById("fontsize").value = "12";
-    document.getElementById("fontstyle").value = "新細明體";
-    document.getElementById("fontsize").disabled = true;
-    document.getElementById("fontstyle").disabled = true;
-    diagram.commitTransaction("delete commit");
-
-}
 //新增兄弟
 function addBrotherNodeAndLink(e, b) {
     var node = b.part.adornedPart;
@@ -1432,7 +1661,7 @@ function addBrotherNodeAndLink(e, b) {
     brother_newLocation = go.Point.stringify(new go.Point(node.location.x + 180, node.location.y + 180));
 
     //新增兒子圖示                
-    brother_newnode = { figure: "Square", loc: brother_newLocation, father: father_key, mother: mother_key,born:"biologic", sex: "M", treeLayer: node.data.treeLayer }
+    brother_newnode = { figure: "Square", loc: brother_newLocation, father: father_key, mother: mother_key, born: "biologic", sex: "M", treeLayer: node.data.treeLayer }
     diagram.model.addNodeData(brother_newnode);
     brother_key = diagram.model.nodeDataArray[diagram.model.nodeDataArray.length - 1].key;
 
@@ -1682,242 +1911,33 @@ function mySetNodeObjectProperty(myDiagram) {
     });
 }
 
-
-function saveImg() {
-    var ImgBaseString = myDiagram.makeImageData({ background: "white" });
-    return ImgBaseString;
-}
-/*------------------------自訂方法----------------------------------------------------*/
-
-
-// Show the diagram's model in JSON format that the user may edit
-function save() {
-    saveDiagramProperties();  // do this first, before writing to JSON
-    document.getElementById("mySavedModel").value = myDiagram.model.toJson();
-    myDiagram.isModified = false;
-}
-
-function myZoomToFit() {
-    myDiagram.zoomToFit();
-    myDiagram.contentAlignment = go.Spot.Center;
-}
-
-function load() {
-    if (document.getElementById("mySavedModel").value.trim().length <= 0) {
-        return;
-    }
-
-    myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
-    loadDiagramProperties();
-    myDiagram.zoomToFit();
-}
-
-function saveDiagramProperties() {
-    myDiagram.model.modelData.position = go.Point.stringify(myDiagram.position);
-}
-// Called by "InitialLayoutCompleted" DiagramEvent listener, NOT directly by load()!
-function loadDiagramProperties(e) {
-    // set Diagram.initialPosition, not Diagram.position, to handle initialization side-effects
-    var pos = myDiagram.model.modelData.position;
-    if (pos) myDiagram.initialPosition = go.Point.parse(pos);
-    myDiagram.model.linkLabelKeysProperty = "labelKeys";
-    myDiagram.model.linkFromPortIdProperty = "fromPort";
-    myDiagram.model.linkToPortIdProperty = "toPort";
-}
-
-var globalEvent = {
-    addBrotherNodeAndLink: addBrotherNodeAndLink,
-    editgender: editgender,
-    addParentsNodeAndLink: addParentsNodeAndLink,
-    addPartnerNodeAndLink: addPartnerNodeAndLink,
-    addSisterNodeAndLink: addSisterNodeAndLink,
-    addSonNodeAndLink: addSonNodeAndLink,
-    addDaughterNodeAndLink: addDaughterNodeAndLink,
-    deleteNode: deleteNode,
-    changeColor: changeColor,
-    changeGene: changeGene,
-    changePregnancy: changePregnancy,
-    editIndividual: editIndividual,
-    changeStatus: changeStatus,
-    editReason: editReason,
-    marriage: marriage,
-    divorce: divorce,
-    separate: separate,
-    liveTogether: liveTogether,
-    editborn: editborn,
-    deleteCommit:deleteCommit
-}
-
-// ***************** all click function ********************************** //
-
-function editReason(e, obj) {
-    var tempIndex = findCurrentIndex(tempKey)
-    document.getElementById("deadButton").click();
-    if (myDiagram.model.nodeDataArray[tempIndex].noteOne !== undefined) {
-        document.getElementById('NoteOneOnHTML').value = myDiagram.model.nodeDataArray[tempIndex].noteOne
-        document.getElementById('NoteTwoOnHTML').value = myDiagram.model.nodeDataArray[tempIndex].noteTwo
-        document.getElementById('NoteThreeOnHTML').value = myDiagram.model.nodeDataArray[tempIndex].noteThree
-    }
-    else {
-        document.getElementById('NoteOneOnHTML').value = ""
-        document.getElementById('NoteTwoOnHTML').value = ""
-        document.getElementById('NoteThreeOnHTML').value = ""
-    }
-}
-function editIndividual(e, obj) {
-    var tempIndex = findCurrentIndex(tempKey)
-    if (myDiagram.model.nodeDataArray[tempIndex].pregnancy !== "P" && myDiagram.model.nodeDataArray[tempIndex].color !== "black") {
-        document.getElementById("n_btn").click();
-    }
-    else {
-        swal({
-            title: "警告!",
-            text: "此功能僅在未具有相同疾病、未帶基因與未懷孕者，方可點擊",
-            type: "warning"
-        });
-    }
-    if (myDiagram.model.nodeDataArray[tempIndex].pregnancy !== undefined) {
-        document.getElementById('n_type').value = myDiagram.model.nodeDataArray[tempIndex].pregnancy
-    }
-    else {
-        document.getElementById('n_type').value = ""
-    }
-}
-
-
-function editgender(e, obj) {
-    var tempIndex = findCurrentIndex(tempKey)
-    document.getElementById("changegen").click();
-}
-
-function editborn(e, obj) {
-    temObj = obj;
-    var tempIndex = findCurrentIndex(tempKey)
-    document.getElementById("changerela").click();
-}
-
-
-function findObj(inputKey) {
-    var objtmp;
-    (myDiagram.model.linkDataArray).forEach(function (obj, index) {
-        if (obj.key === inputKey) {
-            objtmp = obj;
+// cleanUpNode's properties(cuz might missed something while we r deleting node)
+function mySetNodeObjectProperty(myDiagram) {
+    var selfNode = myDiagram.findNodeForKey(-1).data;
+    var partnerNode = myDiagram.findNodeForKey(selfNode.partner);
+    if (partnerNode !== null) {
+        partnerNode = partnerNode.data;
+        if (selfNode.treeLayer !== partnerNode.treeLayer) {
+            delete selfNode.partner;
+        } else {
+            if (selfNode.father === partnerNode.father || selfNode.mother === partnerNode.mother) {
+                delete selfNode.partner;
+            }
         }
-
+    }
+    jQuery.each(myDiagram.model.nodeDataArray, function (index, value) {
+        if (value.father !== null || value.mother !== null) {
+            var fa = myDiagram.findNodeForKey(value.father);
+            var mo = myDiagram.findNodeForKey(value.mother);
+            if (fa === null || mo === null) {
+                delete value.father;
+                delete value.mother;
+                if (fa === null) {
+                    myDiagram.model.removeNodeData(fa);
+                } else if (mo === null) {
+                    myDiagram.model.removeNodeData(mo);
+                }
+            }
+        }
     });
-    return objtmp;
-}
-
-function comfirmRelationship() {
-    var tempIndex = findCurrentIndex(tempKey);
-    var obj = myDiagram.model.nodeDataArray[tempIndex];
-    changeRelationship(obj)
-}
-
-function preloadGenderType(obj) {
-    var input_Gender = obj
-    document.getElementById("gendermale").checked;
-    if (input_Gender === "M") { document.getElementById("gendermale").checked = true; }
-    if (input_Gender === "F") { document.getElementById("genderfemale").checked = true; }
-    if (input_Gender === "Baby") { document.getElementById("genderbaby").checked = true; }
-    if (input_Gender === "Unknown") { document.getElementById("genderunknown").checked = true; }
-}
-
-function preloadRelationshipType(obj) {
-    var input_Relationship = obj
-    document.getElementById("rel_biologic").checked;
-    if (input_Relationship === "biologic") { document.getElementById("rel_biologic").checked = true; }
-    if (input_Relationship === "adoptinto") { document.getElementById("rel_adoptinto").checked = true; }
-    if (input_Relationship === "adoptout") { document.getElementById("rel_adoptout").checked = true; }
-}
-
-function noteOnNode(nodePart) {
-    var part = nodePart
-    if (!part.data.noteOne)
-        document.getElementById("NoteOneOnHTML").value = ""
-    else
-        document.getElementById("NoteOneOnHTML").value = part.data.noteOne
-    if (!part.data.noteTwo)
-        document.getElementById("NoteTwoOnHTML").value = ""
-    else
-        document.getElementById("NoteTwoOnHTML").value = part.data.noteTwo
-    if (!part.data.noteThree)
-        document.getElementById("NoteThreeOnHTML").value = ""
-    else
-        document.getElementById("NoteThreeOnHTML").value = part.data.noteThree
-}
-
-function pregnancyCheck(nodePart) {
-    var part = nodePart
-    if (!part.data.pregnancy)
-        document.getElementById("n_type").value = ""
-    else
-        document.getElementById("n_type").value = part.data.pregnancy
-}
-
-function changeNaviBarBtnColor(nodePart, textStyle) {
-    var part = nodePart
-    var inputTextStyle = textStyle
-
-    if (!part.data[inputTextStyle])
-        document.getElementById(inputTextStyle).style.backgroundColor = "white"
-    else
-        document.getElementById(inputTextStyle).style.backgroundColor = "#ff8c00"
-}
-
-function fontSizeTypeOnNaviBar(nodePart, fontSizeStyle, value) {
-    var part = nodePart
-    var inputSizeStype = fontSizeStyle
-    var inputValue = value
-
-    if (!part.data[inputSizeStype])
-        document.getElementById(inputSizeStype).value = inputValue
-    else
-        document.getElementById(inputSizeStype).value = part.data[inputSizeStype]
-}
-
-function setDefaultNaviBar(nodePart) {
-    var part = nodePart
-    tempKey = part.data.key
-    document.getElementById("bold").value = part.data.bold
-    document.getElementById("italic").value = part.data.Italic
-    document.getElementById("underline").value = part.data.isUnderline
-    document.getElementById("strikethrough").value = part.data.isStrikethrough
-    document.getElementById("fontsize").value = part.data.fontsize
-    document.getElementById("fontstyle").value = part.data.fontstyle
-
-    $("#bold").removeClass("disabled");
-    $("#italic").removeClass("disabled");
-    $("#underline").removeClass("disabled");
-    $("#strikethrough").removeClass("disabled");
-    $(".btn-md").removeClass("disabled");
-    $('#fontselect').removeClass("disabledbutton");
-    $('#fontselect-drop').removeClass("display");
-    document.getElementById("fontsize").disabled = false
-
-    changeNaviBarBtnColor(part, "bold")
-    changeNaviBarBtnColor(part, "italic")
-    changeNaviBarBtnColor(part, "underline")
-    changeNaviBarBtnColor(part, "strikethrough")
-
-    fontSizeTypeOnNaviBar(part, "fontsize", "12")
-    fontSizeTypeOnNaviBar(part, "fontstyle", "新細明體")
-
-}
-
-function disableClickOnNaviBarForTextBlock() {
-    $("#bold").addClass("disabled");
-    $("#italic").addClass("disabled");
-    $("#underline").addClass("disabled");
-    $("#strikethrough").addClass("disabled");
-    $(".btn-md").addClass("disabled");
-    $('#fontselect').addClass("disabledbutton");
-    $('#fontselect-drop').addClass("display");
-    document.getElementById("bold").style.backgroundColor = "white"
-    document.getElementById("italic").style.backgroundColor = "white"
-    document.getElementById("underline").style.backgroundColor = "white"
-    document.getElementById("strikethrough").style.backgroundColor = "white"
-    document.getElementById("fontsize").value = "12"
-    document.getElementById("fontstyle").value = "新細明體"
-    document.getElementById("fontsize").disabled = true
 }
