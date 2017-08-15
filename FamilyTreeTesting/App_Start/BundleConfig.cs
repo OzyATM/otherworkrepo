@@ -28,7 +28,7 @@ namespace FamilyTreeTesting
                       "~/Scripts/sweetalert.min.js"));
 
             bundles.Add(new StyleBundle("~/bundles/FamilyTree").Include(
-                      "~/Scripts/add_disease.js",
+                      "~/Scripts/allClickFunction.js",
                       "~/Scripts/changetexttype.js",
                       "~/Scripts/FreehandDrawingTool.js",
                       "~/Scripts/GeometryReshapingTool.js",
