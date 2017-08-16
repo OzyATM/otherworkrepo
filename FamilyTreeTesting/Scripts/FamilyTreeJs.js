@@ -1,10 +1,10 @@
 ﻿var tempKey = -1;
 var tempObj;
-var globalLocX = -200;
-var globalLocY = 50;
 
 var globalState = {
     tool: null,
+    LocX: -200,
+    LocY: 50
 }
 
 function init() {
@@ -166,6 +166,18 @@ function init() {
             new go.Binding("stroke", "stroke-pregnancy")
         )
 
+    var adoptedSign =
+        GO(
+            go.TextBlock,
+            "",  // the Button content
+            {
+                font: "35pt sans-serif ",
+                stroke: "black"
+            },
+        new go.Binding("text", "adoptinto")
+        )
+
+
     var panelForObjects =
         GO(
             go.Panel,
@@ -177,7 +189,8 @@ function init() {
             containGen,
             deadSymbol,
             pregnantText,
-            // four small named ports, one on each side: 
+            adoptedSign,
+            // four small named ports, one on each side: makePort(name, spot, output, input)
             makePort("T", go.Spot.Top, false, true),
             makePort("L", go.Spot.Left, true, true),
             makePort("R", go.Spot.Right, true, true),
@@ -212,8 +225,8 @@ function init() {
         GO(
             go.Panel,
             "Horizontal",
-            createBtn(addBrotherNodeAndLink, "兄", null, 32),
-            createBtn(addBrotherNodeAndLink, "弟", null, 32)
+            createBtn(globalEvent.addBrotherNodeAndLink, "兄", null, 32),
+            createBtn(globalEvent.addBrotherNodeAndLink, "弟", null, 32)
         )
 
     var rightVerticalPanel =
@@ -224,13 +237,13 @@ function init() {
                 alignment: go.Spot.Right,
                 alignmentFocus: go.Spot.Left
             },
-            createBtn(editgender, "換性別"),
-            createBtn(addParentsNodeAndLink, "父　母"),
-            createBtn(addPartnerNodeAndLink, "配　偶"),
+            createBtn(globalEvent.editgender, "換性別"),
+            createBtn(globalEvent.addParentsNodeAndLink, "父　母"),
+            createBtn(globalEvent.addPartnerNodeAndLink, "配　偶"),
             hroizontalPnlInsideVerticalPnl,
-            createBtn(addSisterNodeAndLink, "姊　妹"),
-            createBtn(addSonNodeAndLink, "兒　子"),
-            createBtn(addDaughterNodeAndLink, "女　兒")
+            createBtn(globalEvent.addSisterNodeAndLink, "姊　妹"),
+            createBtn(globalEvent.addSonNodeAndLink, "兒　子"),
+            createBtn(globalEvent.addDaughterNodeAndLink, "女　兒")
         )
 
     var horizontalPanel =
@@ -248,12 +261,12 @@ function init() {
             go.Panel,
             "Vertical",
             { alignment: go.Spot.Left, alignmentFocus: go.Spot.Right },
-            createBtn(changeColor, "相同疾病", "#FFBD9D", 80),
-            createBtn(changeGene, "帶基因者", "#FFBD9D", 80),
-            createBtn(changePregnancy, "懷   孕", "#FFBD9D", 80),
-            createBtn(editIndividual, "多個體", "#FFBD9D", 80),
-            createBtn(changeStatus, "死   亡", "#FFBD9D", 80),
-            createBtn(editReason, "註   解", "#FFBD9D", 80)
+            createBtn(globalEvent.changeColor, "相同疾病", "#FFBD9D", 80),
+            createBtn(globalEvent.changeGene, "帶基因者", "#FFBD9D", 80),
+            createBtn(globalEvent.changePregnancy, "懷   孕", "#FFBD9D", 80),
+            createBtn(globalEvent.editIndividual, "多個體", "#FFBD9D", 80),
+            createBtn(globalEvent.changeStatus, "死   亡", "#FFBD9D", 80),
+            createBtn(globalEvent.editReason, "註   解", "#FFBD9D", 80)
         )
 
 
@@ -314,7 +327,7 @@ function init() {
         GO(
             go.Panel,
             "Horizontal",
-            { alignment: go.Spot.Bottom, alignmentFocus: go.Spot.Top }, createDeleteBtn(deleteCommit, "刪除", 50)
+            { alignment: go.Spot.Bottom, alignmentFocus: go.Spot.Top }, createDeleteBtn(globalEvent.deleteCommit, "刪除", 50)
         )
 
     var admForComment =
@@ -360,6 +373,8 @@ function init() {
         eventListener2.onclick = comfirmOnCss;
         var eventListener3 = document.getElementById("confirm3");
         eventListener3.onclick = comfirmGender;
+        var eventListener3 = document.getElementById("confirm4");
+        eventListener3.onclick = comfirmRelationship;
         var eventListener = document.getElementById("removeReason");
         eventListener.onclick = removeReason;
         var eventListener2 = document.getElementById("remove_n");
@@ -377,6 +392,8 @@ function init() {
 
         document.getElementById("increaseZoom").onclick = increaseZoom;
         document.getElementById("decreaseZoom").onclick = decreaseZoom;
+
+        var changerela = document.getElementById("changerela");
     }
 
     //************************ objClick / backgroundClick / change selection  *****************//
@@ -384,9 +401,11 @@ function init() {
     myDiagram.addDiagramListener("ObjectSingleClicked",
         function (e) {
             var part = e.subject.part
-            if (part.data.sex === "M" || part.data.sex === "F" || part.data.sex === "Baby" || part.data.sex === "Unknown") {
+            if (part.data.sex === "M" || part.data.sex === "F" || part.data.sex === "Baby" || part.data.sex === "Unknown"
+                || part.data.born === "biologic" || part.data.born === "adoptinto" || part.data.born === "adoptout") {
                 tempKey = part.data.key
                 preloadGenderType(part.data.sex);
+                preloadRelationshipType(part.data.born);
                 noteOnNode(part);
                 pregnancyCheck(part);
             }
@@ -421,44 +440,7 @@ function init() {
 
         });
 
-    function editReason(e, obj) {
-        var tempIndex = findCurrentIndex(tempKey)
-        document.getElementById("deadButton").click();
-        if (myDiagram.model.nodeDataArray[tempIndex].noteOne !== undefined) {
-            document.getElementById('NoteOneOnHTML').value = myDiagram.model.nodeDataArray[tempIndex].noteOne
-            document.getElementById('NoteTwoOnHTML').value = myDiagram.model.nodeDataArray[tempIndex].noteTwo
-            document.getElementById('NoteThreeOnHTML').value = myDiagram.model.nodeDataArray[tempIndex].noteThree
-        }
-        else {
-            document.getElementById('NoteOneOnHTML').value = ""
-            document.getElementById('NoteTwoOnHTML').value = ""
-            document.getElementById('NoteThreeOnHTML').value = ""
-        }
-    }
-    function editIndividual(e, obj) {
-        var tempIndex = findCurrentIndex(tempKey)
-        if (myDiagram.model.nodeDataArray[tempIndex].pregnancy !== "P" && myDiagram.model.nodeDataArray[tempIndex].color !== "black") {
-            document.getElementById("n_btn").click();
-        }
-        else {
-            swal({
-                title: "警告!",
-                text: "此功能僅在未具有相同疾病、未帶基因與未懷孕者，方可點擊",
-                type: "warning"
-            });
-        }
-        if (myDiagram.model.nodeDataArray[tempIndex].pregnancy !== undefined) {
-            document.getElementById('n_type').value = myDiagram.model.nodeDataArray[tempIndex].pregnancy
-        }
-        else {
-            document.getElementById('n_type').value = ""
-        }
-    }
-
-    function editgender(e, obj) {
-        var tempIndex = findCurrentIndex(tempKey)
-        document.getElementById("changegen").click();
-    }
+    
     // **************************************************************** //
     function nodeStyle() {
         return [
@@ -520,10 +502,10 @@ function init() {
                 go.Panel,
                 "Horizontal",
                 { alignment: go.Spot.Top, alignmentFocus: go.Spot.Bottom },
-                createBtn(marriage, "結婚", null, 70),
-                createBtn(divorce, "離婚", null, 70),
-                createBtn(separate, "分居", null, 70),
-                createBtn(liveTogether, "同居", null, 70)
+                createBtn(globalEvent.marriage, "結婚", null, 70),
+                createBtn(globalEvent.divorce, "離婚", null, 70),
+                createBtn(globalEvent.separate, "分居", null, 70),
+                createBtn(globalEvent.liveTogether, "同居", null, 70)
             )
         )
 
@@ -538,7 +520,7 @@ function init() {
                 go.Panel,
                 "Vertical",
                 { alignment: go.Spot.Right, alignmentFocus: go.Spot.Left, segmentIndex: -1, segmentFraction: 0.1 },
-                createBtn(editborn, "領養", null, 70)
+                createBtn(globalEvent.editborn, "領養", null, 70)
             )
         )
 
@@ -580,107 +562,8 @@ function init() {
         myDiagram.contentAlignment = go.Spot.Default;
     }
 
-    // ******************************************************************************************** //
 
-    function preloadGenderType(obj) {
-        var input_Gender = obj
-        document.getElementById("gendermale").checked;
-        if (input_Gender === "M") { document.getElementById("gendermale").checked = true; }
-        if (input_Gender === "F") { document.getElementById("genderfemale").checked = true; }
-        if (input_Gender === "Baby") { document.getElementById("genderbaby").checked = true; }
-        if (input_Gender === "Unknown") { document.getElementById("genderunknown").checked = true; }
-    }
-
-    function noteOnNode(nodePart) {
-        var part = nodePart
-        if (!part.data.noteOne)
-            document.getElementById("NoteOneOnHTML").value = ""
-        else
-            document.getElementById("NoteOneOnHTML").value = part.data.noteOne
-        if (!part.data.noteTwo)
-            document.getElementById("NoteTwoOnHTML").value = ""
-        else
-            document.getElementById("NoteTwoOnHTML").value = part.data.noteTwo
-        if (!part.data.noteThree)
-            document.getElementById("NoteThreeOnHTML").value = ""
-        else
-            document.getElementById("NoteThreeOnHTML").value = part.data.noteThree
-    }
-
-    function pregnancyCheck(nodePart) {
-        var part = nodePart
-        if (!part.data.pregnancy)
-            document.getElementById("n_type").value = ""
-        else
-            document.getElementById("n_type").value = part.data.pregnancy
-    }
-
-    function changeNaviBarBtnColor(nodePart, textStyle) {
-        var part = nodePart
-        var inputTextStyle = textStyle
-
-        if (!part.data[inputTextStyle])
-            document.getElementById(inputTextStyle).style.backgroundColor = "white"
-        else
-            document.getElementById(inputTextStyle).style.backgroundColor = "#ff8c00"
-    }
-
-    function fontSizeTypeOnNaviBar(nodePart, fontSizeStyle, value) {
-        var part = nodePart
-        var inputSizeStype = fontSizeStyle
-        var inputValue = value
-
-        if (!part.data[inputSizeStype])
-            document.getElementById(inputSizeStype).value = inputValue
-        else
-            document.getElementById(inputSizeStype).value = part.data[inputSizeStype]
-    }
-
-    function setDefaultNaviBar(nodePart) {
-        var part = nodePart
-        tempKey = part.data.key
-        document.getElementById("bold").value = part.data.bold
-        document.getElementById("italic").value = part.data.Italic
-        document.getElementById("underline").value = part.data.isUnderline
-        document.getElementById("strikethrough").value = part.data.isStrikethrough
-        document.getElementById("fontsize").value = part.data.fontsize
-        document.getElementById("fontstyle").value = part.data.fontstyle
-
-        $("#bold").removeClass("disabled");
-        $("#italic").removeClass("disabled");
-        $("#underline").removeClass("disabled");
-        $("#strikethrough").removeClass("disabled");
-        $(".btn-md").removeClass("disabled");
-        $('#fontselect').removeClass("disabledbutton");
-        $('#fontselect-drop').removeClass("display");
-        document.getElementById("fontsize").disabled = false
-
-        changeNaviBarBtnColor(part, "bold")
-        changeNaviBarBtnColor(part, "italic")
-        changeNaviBarBtnColor(part, "underline")
-        changeNaviBarBtnColor(part, "strikethrough")
-
-        fontSizeTypeOnNaviBar(part, "fontsize", "12")
-        fontSizeTypeOnNaviBar(part, "fontstyle", "新細明體")
-
-    }
-
-    function disableClickOnNaviBarForTextBlock() {
-        $("#bold").addClass("disabled");
-        $("#italic").addClass("disabled");
-        $("#underline").addClass("disabled");
-        $("#strikethrough").addClass("disabled");
-        $(".btn-md").addClass("disabled");
-        $('#fontselect').addClass("disabledbutton");
-        $('#fontselect-drop').addClass("display");
-        document.getElementById("bold").style.backgroundColor = "white"
-        document.getElementById("italic").style.backgroundColor = "white"
-        document.getElementById("underline").style.backgroundColor = "white"
-        document.getElementById("strikethrough").style.backgroundColor = "white"
-        document.getElementById("fontsize").value = "12"
-        document.getElementById("fontstyle").value = "新細明體"
-        document.getElementById("fontsize").disabled = true
-    }
+    
 
     // ******************** Obj definition ********************* //
     function nodeForCaretaker(gender) {
@@ -712,7 +595,7 @@ function init() {
                     go.Panel,
                     "Horizontal",
                     { alignment: go.Spot.Bottom, alignmentFocus: go.Spot.Top },
-                    createDeleteBtn(deleteCommit, "刪除", 50)
+                    createDeleteBtn(globalEvent.deleteCommit, "刪除", 50)
                 )
             )
 
@@ -996,7 +879,7 @@ function ValidateNumber(e, pnumber) {
 function addCarePerson(gender) {
     myDiagram.startTransaction("addCarePerson");
     var carePeronNode, categoryType
-    var setObjLoc = go.Point.stringify(new go.Point(globalLocX, globalLocY))
+    var setObjLoc = go.Point.stringify(new go.Point(globalState.LocX, globalState.LocY))
 
     if (gender === "M")
         categoryType = "CareMale"
@@ -1008,22 +891,22 @@ function addCarePerson(gender) {
     myDiagram.commitTransaction("addCarePerson");
 
     // update globalLoc
-    globalLocX += 5
-    globalLocY += 5
+    globalState.LocX += 5
+    globalState.LocY += 5
 }
 
 function addcommit() {
     myDiagram.startTransaction("addcommit");
     var Commit_node
-    var setObjLoc = go.Point.stringify(new go.Point(globalLocX, globalLocY))
+    var setObjLoc = go.Point.stringify(new go.Point(globalState.LocX, globalState.LocY))
 
     Commit_node = { category: "Comment", text: "請輸入文字", loc: setObjLoc };
     myDiagram.model.addNodeData(Commit_node);
     myDiagram.commitTransaction("addcommit");
 
     // update globalLoc
-    globalLocX += 5
-    globalLocY += 5
+    globalState.LocX += 5
+    globalState.LocY += 5
 }
 function changetextbold() {
     var currentIndex = findCurrentIndex(tempKey);
@@ -1180,7 +1063,7 @@ function addParentsNodeAndLink(e, b) {
 
         //父親圖示        
         father_newLocation = go.Point.stringify(new go.Point(node.location.x - 100, node.location.y - 200));
-        father_newnode = { figure: "Square", loc: father_newLocation, sex: "M", treeLayer: node.data.treeLayer + 1 }
+        father_newnode = { figure: "Square", loc: father_newLocation, born: "biologic", sex: "M", treeLayer: node.data.treeLayer + 1 }
         diagram.model.addNodeData(father_newnode);
         father_node = diagram.model.nodeDataArray[diagram.model.nodeDataArray.length - 1];
         father_key = father_node.key;
@@ -1188,7 +1071,7 @@ function addParentsNodeAndLink(e, b) {
 
         //母親圖示
         mother_newLocation = go.Point.stringify(new go.Point(node.location.x + 100, node.location.y - 200));
-        mother_newnode = { figure: "Circle", loc: mother_newLocation, sex: "F", partner: father_key, treeLayer: node.data.treeLayer + 1 }
+        mother_newnode = { figure: "Circle", loc: mother_newLocation, born:"biologic",sex: "F", partner: father_key, treeLayer: node.data.treeLayer + 1 }
         diagram.model.addNodeData(mother_newnode);
         mother_key = diagram.model.nodeDataArray[diagram.model.nodeDataArray.length - 1].key;
         node.data["mother"] = mother_key;
@@ -1244,13 +1127,15 @@ function addPartnerNodeAndLink(e, b) {
         if (node.data.sex === "M") {
             partner_shape = "Circle";
             partner_sex = "F";
+            part_born = "biologic"
         } else {
             partner_shape = "Square";
             partner_sex = "M";
+            part_born = "biologic"
         }
         partner_newLocation = go.Point.stringify(new go.Point(node.location.x + 150, node.location.y));
         //新增伴侶圖示        
-        partner_newnode = { figure: partner_shape, sex: partner_sex, loc: partner_newLocation, partner: node.data.key, treeLayer: node.data.treeLayer }
+        partner_newnode = { figure: partner_shape, sex: partner_sex, born: part_born, loc: partner_newLocation, partner: node.data.key, treeLayer: node.data.treeLayer }
         diagram.model.addNodeData(partner_newnode);
         partner_key = diagram.model.nodeDataArray[diagram.model.nodeDataArray.length - 1].key;
         node.data["partner"] = partner_key;
@@ -1316,7 +1201,7 @@ function addSonNodeAndLink(e, b) {
     son_newLocation = go.Point.stringify(new go.Point(node.location.x + 180 + (75 * count), node.location.y + 180));
 
     //新增兒子圖示                
-    son_newnode = { figure: "Square", loc: son_newLocation, father: father_key, mother: mother_key, sex: "M", treeLayer: node.data.treeLayer - 1 }
+    son_newnode = { figure: "Square", loc: son_newLocation, father: father_key, mother: mother_key, sex: "M",born: "biologic", treeLayer: node.data.treeLayer - 1 }
     diagram.model.addNodeData(son_newnode);
     son_key = diagram.model.nodeDataArray[diagram.model.nodeDataArray.length - 1].key;
 
@@ -1394,7 +1279,7 @@ function addDaughterNodeAndLink(e, b) {
     }
     daughter_newLocation = (node.location.x + 180 + (75 * count)).toString() + " " + (node.location.y + 180).toString();
     //新增女兒圖示                
-    daughter_newnode = { figure: "Circle", loc: daughter_newLocation, father: father_key, mother: mother_key, sex: "F", treeLayer: node.data.treeLayer - 1 }
+    daughter_newnode = { figure: "Circle", loc: daughter_newLocation, father: father_key, mother: mother_key, sex: "F",born:"biologic", treeLayer: node.data.treeLayer - 1 }
     diagram.model.addNodeData(daughter_newnode);
     daughter_key = diagram.model.nodeDataArray[diagram.model.nodeDataArray.length - 1].key;
 
@@ -1547,7 +1432,7 @@ function addBrotherNodeAndLink(e, b) {
     brother_newLocation = go.Point.stringify(new go.Point(node.location.x + 180, node.location.y + 180));
 
     //新增兒子圖示                
-    brother_newnode = { figure: "Square", loc: brother_newLocation, father: father_key, mother: mother_key, sex: "M", treeLayer: node.data.treeLayer }
+    brother_newnode = { figure: "Square", loc: brother_newLocation, father: father_key, mother: mother_key,born:"biologic", sex: "M", treeLayer: node.data.treeLayer }
     diagram.model.addNodeData(brother_newnode);
     brother_key = diagram.model.nodeDataArray[diagram.model.nodeDataArray.length - 1].key;
 
@@ -1597,7 +1482,7 @@ function addSisterNodeAndLink(e, b) {
     sister_newLocation = go.Point.stringify(new go.Point(node.location.x + 180, node.location.y + 180));
 
     //新增兒子圖示                
-    sister_newnode = { figure: "Circle", loc: sister_newLocation, father: father_key, mother: mother_key, sex: "F", treeLayer: node.data.treeLayer }
+    sister_newnode = { figure: "Circle", loc: sister_newLocation, father: father_key, mother: mother_key, sex: "F", born: "biologic", treeLayer: node.data.treeLayer }
     diagram.model.addNodeData(sister_newnode);
     sister_key = diagram.model.nodeDataArray[diagram.model.nodeDataArray.length - 1].key;
 
@@ -1840,6 +1725,199 @@ function loadDiagramProperties(e) {
     myDiagram.model.linkToPortIdProperty = "toPort";
 }
 
-var allEvent = {
+var globalEvent = {
+    addBrotherNodeAndLink: addBrotherNodeAndLink,
+    editgender: editgender,
+    addParentsNodeAndLink: addParentsNodeAndLink,
+    addPartnerNodeAndLink: addPartnerNodeAndLink,
+    addSisterNodeAndLink: addSisterNodeAndLink,
+    addSonNodeAndLink: addSonNodeAndLink,
+    addDaughterNodeAndLink: addDaughterNodeAndLink,
+    deleteNode: deleteNode,
+    changeColor: changeColor,
+    changeGene: changeGene,
+    changePregnancy: changePregnancy,
+    editIndividual: editIndividual,
+    changeStatus: changeStatus,
+    editReason: editReason,
+    marriage: marriage,
+    divorce: divorce,
+    separate: separate,
+    liveTogether: liveTogether,
+    editborn: editborn,
+    deleteCommit:deleteCommit
+}
 
+// ***************** all click function ********************************** //
+
+function editReason(e, obj) {
+    var tempIndex = findCurrentIndex(tempKey)
+    document.getElementById("deadButton").click();
+    if (myDiagram.model.nodeDataArray[tempIndex].noteOne !== undefined) {
+        document.getElementById('NoteOneOnHTML').value = myDiagram.model.nodeDataArray[tempIndex].noteOne
+        document.getElementById('NoteTwoOnHTML').value = myDiagram.model.nodeDataArray[tempIndex].noteTwo
+        document.getElementById('NoteThreeOnHTML').value = myDiagram.model.nodeDataArray[tempIndex].noteThree
+    }
+    else {
+        document.getElementById('NoteOneOnHTML').value = ""
+        document.getElementById('NoteTwoOnHTML').value = ""
+        document.getElementById('NoteThreeOnHTML').value = ""
+    }
+}
+function editIndividual(e, obj) {
+    var tempIndex = findCurrentIndex(tempKey)
+    if (myDiagram.model.nodeDataArray[tempIndex].pregnancy !== "P" && myDiagram.model.nodeDataArray[tempIndex].color !== "black") {
+        document.getElementById("n_btn").click();
+    }
+    else {
+        swal({
+            title: "警告!",
+            text: "此功能僅在未具有相同疾病、未帶基因與未懷孕者，方可點擊",
+            type: "warning"
+        });
+    }
+    if (myDiagram.model.nodeDataArray[tempIndex].pregnancy !== undefined) {
+        document.getElementById('n_type').value = myDiagram.model.nodeDataArray[tempIndex].pregnancy
+    }
+    else {
+        document.getElementById('n_type').value = ""
+    }
+}
+
+
+function editgender(e, obj) {
+    var tempIndex = findCurrentIndex(tempKey)
+    document.getElementById("changegen").click();
+}
+
+function editborn(e, obj) {
+    temObj = obj;
+    var tempIndex = findCurrentIndex(tempKey)
+    document.getElementById("changerela").click();
+}
+
+
+function findObj(inputKey) {
+    var objtmp;
+    (myDiagram.model.linkDataArray).forEach(function (obj, index) {
+        if (obj.key === inputKey) {
+            objtmp = obj;
+        }
+
+    });
+    return objtmp;
+}
+
+function comfirmRelationship() {
+    var tempIndex = findCurrentIndex(tempKey);
+    var obj = myDiagram.model.nodeDataArray[tempIndex];
+    changeRelationship(obj)
+}
+
+function preloadGenderType(obj) {
+    var input_Gender = obj
+    document.getElementById("gendermale").checked;
+    if (input_Gender === "M") { document.getElementById("gendermale").checked = true; }
+    if (input_Gender === "F") { document.getElementById("genderfemale").checked = true; }
+    if (input_Gender === "Baby") { document.getElementById("genderbaby").checked = true; }
+    if (input_Gender === "Unknown") { document.getElementById("genderunknown").checked = true; }
+}
+
+function preloadRelationshipType(obj) {
+    var input_Relationship = obj
+    document.getElementById("rel_biologic").checked;
+    if (input_Relationship === "biologic") { document.getElementById("rel_biologic").checked = true; }
+    if (input_Relationship === "adoptinto") { document.getElementById("rel_adoptinto").checked = true; }
+    if (input_Relationship === "adoptout") { document.getElementById("rel_adoptout").checked = true; }
+}
+
+function noteOnNode(nodePart) {
+    var part = nodePart
+    if (!part.data.noteOne)
+        document.getElementById("NoteOneOnHTML").value = ""
+    else
+        document.getElementById("NoteOneOnHTML").value = part.data.noteOne
+    if (!part.data.noteTwo)
+        document.getElementById("NoteTwoOnHTML").value = ""
+    else
+        document.getElementById("NoteTwoOnHTML").value = part.data.noteTwo
+    if (!part.data.noteThree)
+        document.getElementById("NoteThreeOnHTML").value = ""
+    else
+        document.getElementById("NoteThreeOnHTML").value = part.data.noteThree
+}
+
+function pregnancyCheck(nodePart) {
+    var part = nodePart
+    if (!part.data.pregnancy)
+        document.getElementById("n_type").value = ""
+    else
+        document.getElementById("n_type").value = part.data.pregnancy
+}
+
+function changeNaviBarBtnColor(nodePart, textStyle) {
+    var part = nodePart
+    var inputTextStyle = textStyle
+
+    if (!part.data[inputTextStyle])
+        document.getElementById(inputTextStyle).style.backgroundColor = "white"
+    else
+        document.getElementById(inputTextStyle).style.backgroundColor = "#ff8c00"
+}
+
+function fontSizeTypeOnNaviBar(nodePart, fontSizeStyle, value) {
+    var part = nodePart
+    var inputSizeStype = fontSizeStyle
+    var inputValue = value
+
+    if (!part.data[inputSizeStype])
+        document.getElementById(inputSizeStype).value = inputValue
+    else
+        document.getElementById(inputSizeStype).value = part.data[inputSizeStype]
+}
+
+function setDefaultNaviBar(nodePart) {
+    var part = nodePart
+    tempKey = part.data.key
+    document.getElementById("bold").value = part.data.bold
+    document.getElementById("italic").value = part.data.Italic
+    document.getElementById("underline").value = part.data.isUnderline
+    document.getElementById("strikethrough").value = part.data.isStrikethrough
+    document.getElementById("fontsize").value = part.data.fontsize
+    document.getElementById("fontstyle").value = part.data.fontstyle
+
+    $("#bold").removeClass("disabled");
+    $("#italic").removeClass("disabled");
+    $("#underline").removeClass("disabled");
+    $("#strikethrough").removeClass("disabled");
+    $(".btn-md").removeClass("disabled");
+    $('#fontselect').removeClass("disabledbutton");
+    $('#fontselect-drop').removeClass("display");
+    document.getElementById("fontsize").disabled = false
+
+    changeNaviBarBtnColor(part, "bold")
+    changeNaviBarBtnColor(part, "italic")
+    changeNaviBarBtnColor(part, "underline")
+    changeNaviBarBtnColor(part, "strikethrough")
+
+    fontSizeTypeOnNaviBar(part, "fontsize", "12")
+    fontSizeTypeOnNaviBar(part, "fontstyle", "新細明體")
+
+}
+
+function disableClickOnNaviBarForTextBlock() {
+    $("#bold").addClass("disabled");
+    $("#italic").addClass("disabled");
+    $("#underline").addClass("disabled");
+    $("#strikethrough").addClass("disabled");
+    $(".btn-md").addClass("disabled");
+    $('#fontselect').addClass("disabledbutton");
+    $('#fontselect-drop').addClass("display");
+    document.getElementById("bold").style.backgroundColor = "white"
+    document.getElementById("italic").style.backgroundColor = "white"
+    document.getElementById("underline").style.backgroundColor = "white"
+    document.getElementById("strikethrough").style.backgroundColor = "white"
+    document.getElementById("fontsize").value = "12"
+    document.getElementById("fontstyle").value = "新細明體"
+    document.getElementById("fontsize").disabled = true
 }

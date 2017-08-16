@@ -455,6 +455,41 @@ function changeRelationship(e, obj) {
     myDiagram.commitTransaction("changed adoptinto");
 }
 
-function editborn(e, obj) {
-    window.alert("I am sooooooooooooooooooo fake =D")
+function changeRelationship(e, obj) {
+    myDiagram.startTransaction("changed adoptinto");
+    var contextmenu = temObj.part;
+    var linkdata = contextmenu.data;
+    var currentDiagram = contextmenu.diagram
+    var linktobjedctkey = contextmenu.Vd.to;
+    var adoptintoObject = currentDiagram.findNodeForKey(linktobjedctkey)
+    var node = temObj.part.adornedPart;
+    var diagram = node.diagram;
+    var strokeDashArray;
+    var adoptinto;
+    var adoptinto_visible = true;
+
+
+
+    if (document.getElementById("rel_biologic").checked) {
+        strokeDashArray = [0, 0];
+        adoptinto = "";
+    }
+    if (document.getElementById("rel_adoptinto").checked) {
+        strokeDashArray = [5, 2];
+        adoptinto = "[    ]";
+    }
+    if (document.getElementById("rel_adoptout").checked) {
+        strokeDashArray = [0, 0];
+        adoptinto = "[    ]";
+    }
+    switch (strokeDashArray) {
+        case[0, 0]: strokeDashArray = [0, 0]; if (adoptinto = "") adoptinto = ""; born = "biologic"; break;
+        case[5, 2]: strokeDashArray = [5, 2]; if (adoptinto = "[    ]") adoptinto = "[    ]"; born = "adoptinto"; break;
+        case[0, 0]: strokeDashArray = [0, 0]; if (adoptinto = "[    ]") adoptinto = "[    ]"; born = "adoptout"; break;
+    }
+
+
+    myDiagram.model.setDataProperty(adoptintoObject.data, "adoptinto", adoptinto);
+    myDiagram.model.setDataProperty(linkdata, "strokeDashArray", strokeDashArray);
+    myDiagram.commitTransaction("changed adoptinto");
 }
