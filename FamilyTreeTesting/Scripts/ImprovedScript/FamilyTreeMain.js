@@ -2,9 +2,9 @@
 
 var mainDiagram
 
-var model = goObject(go.GraphLinksModel);
+var dataModel = {};
 
-model.nodeDataArray = [
+dataModel.nodeArray = [
     {
         key: "1",
         displayText: "Tony is Mean to me"
@@ -21,14 +21,25 @@ model.nodeDataArray = [
         key: "4",
         displayText: "so yea...i hate him now =("
     }
-]
+];
 
-model.linkDataArray = [
+dataModel.linkArray = [
     {
         from: "1", to: "2"
     }
-]
+];
 
+function generateGoModel(inputModel) {
+    var model = goObject(go.GraphLinksModel);
+    model.nodeDataArray = inputModel.nodeArray.slice(0);
+    model.linkDataArray = inputModel.linkArray.slice(0);
+    return model;
+}
+
+
+//*********************************************
+// Node Definition
+//*********************************************
 
 var adm =
     goObject(
@@ -55,33 +66,38 @@ var adm =
                 alignment: go.Spot.Bottom,
                 alignmentFocus: go.Spot.Bottom
             },
-            createDeleteBtn(null, "刪除", 50)
+            createDeleteBtn(deleteNode, "刪除", 50)
         )
     )
 
-
-personNodeTemplate = goObject( 
-    go.Node,
-    "Auto", // Alignment setting is not used, we manually set item position
-    goObject(
-        go.Shape,
+function getNodeTemplate(mainShape, adornment, text) {
+    var personNodeTemplate = goObject(
+        go.Node,
+        "Auto", // Alignment setting is not used, we manually set item position
+        goObject(
+            go.Shape,
+            {
+                figure: "RoundedRectangle",
+                fill: "lightblue"
+            }
+        ),
+        goObject(
+            go.TextBlock,
+            {
+                margin: 5
+            },
+            new go.Binding("text", "displayText")
+        ),
         {
-            figure: "RoundedRectangle",
-            fill: "lightblue"
+            selectionAdornmentTemplate: adm
         }
-    ),
-    goObject(
-        go.TextBlock,
-        {
-            margin: 5
-        },
-        new go.Binding("text", "displayText")
-    ),
-    {
-        selectionAdornmentTemplate: adm
-    }
-)
+    );
+    return personNodeTemplate;
+}
 
+//*********************************************
+// Graph initialization
+//*********************************************
 function initializeDiagram() {
     mainDiagram = goObject(
         go.Diagram, // go Type
@@ -91,12 +107,9 @@ function initializeDiagram() {
             "undoManager.isEnabled": false
         }
     )
-    mainDiagram.nodeTemplate = personNodeTemplate;
-    mainDiagram.model = model;
+    mainDiagram.nodeTemplate = getNodeTemplate();
+    mainDiagram.model = generateGoModel(dataModel);
 }
-
-
-
 
 function createDeleteBtn(event, btnText, btnWidth) {
     var deleteBtn;
@@ -124,4 +137,20 @@ function createDeleteBtn(event, btnText, btnWidth) {
             )
         )
     return deleteBtn
+}
+
+function deleteNode(e, object) {
+    var node = object.part.adornedPart;
+    var nodeKey = node.data.key;
+    var objIndex = findCurrentIndex(nodeKey);
+    dataModel.nodeArray.splice(objIndex, 1);
+    mainDiagram.model = generateGoModel(dataModel);
+}
+
+function findCurrentIndex(inputKey) {
+    dataModel.nodeArray.forEach(function (obj, index) {
+        if (obj.key === inputKey)
+            tempIndex = index
+    });
+    return tempIndex;
 }
