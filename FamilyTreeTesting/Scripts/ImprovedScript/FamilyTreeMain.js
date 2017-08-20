@@ -7,19 +7,19 @@ var model = goObject(go.GraphLinksModel);
 model.nodeDataArray = [
     {
         key: "1",
-        displayText: "Tony is Mean to me"
+        figure: "Circle"
     },
     {
         key: "2",
-        displayText: "So i am sad"
+        figure: "Circle"
     },
     {
         key: "3",
-        displayText: "i really miss the nice Tony"
+        figure: "Square"
     },
     {
         key: "4",
-        displayText: "so yea...i hate him now =("
+        figure: "Square"
     }
 ]
 
@@ -43,32 +43,27 @@ var adm =
                 strokeWidth: 3
             }
         ),
+        goObject(go.Placeholder),
         goObject(
             go.Panel,
             "Auto",
-            goObject(go.Placeholder)
-        ),
-        goObject(
-            go.Panel,
-            "Horizontal",
-            {
-                alignment: go.Spot.Bottom,
-                alignmentFocus: go.Spot.Bottom
-            },
-            createDeleteBtn(null, "刪除", 50)
+            createDeleteBtn(deleteNode, "刪除", 50)
         )
     )
 
 
-personNodeTemplate = goObject( 
+personNodeTemplate = goObject(
     go.Node,
     "Auto", // Alignment setting is not used, we manually set item position
     goObject(
         go.Shape,
         {
-            figure: "RoundedRectangle",
-            fill: "lightblue"
-        }
+            strokeWidth: 5,
+            maxSize: new go.Size(40, 40),
+            cursor: "pointer",
+            fill: "white"
+        },
+        new go.Binding("figure")
     ),
     goObject(
         go.TextBlock,
@@ -82,28 +77,11 @@ personNodeTemplate = goObject(
     }
 )
 
-function initializeDiagram() {
-    mainDiagram = goObject(
-        go.Diagram, // go Type
-        "mainDiagramDiv", // div id
-        { // main setting, API detail and default at https://gojs.net/latest/api/symbols/Diagram.html
-            initialContentAlignment: go.Spot.Center,
-            "undoManager.isEnabled": false
-        }
-    )
-    mainDiagram.nodeTemplate = personNodeTemplate;
-    mainDiagram.model = model;
-}
-
-
-
-
 function createDeleteBtn(event, btnText, btnWidth) {
-    var deleteBtn;
     var inputEvent = event;
     var inputText = btnText;
     var inputWidth = btnWidth;
-    deleteBtn =
+    var deleteBtn =
         goObject(
             "Button",
             {
@@ -125,3 +103,41 @@ function createDeleteBtn(event, btnText, btnWidth) {
         )
     return deleteBtn
 }
+
+function deleteNode(e, obj) {
+    var node = obj.part.adornedPart;
+    var nodeKey = node.data.key;
+    var objIndex = findCurrentIndex(nodeKey)
+    mainDiagram.model.removeNodeData(node.data)
+    //mainDiagram.model.nodeDataArray.splice(objIndex, 1)
+}
+
+function findCurrentIndex(inputKey) {
+    (mainDiagram.model.nodeDataArray).forEach(function (obj, index) {
+        if (obj.key === inputKey)
+            tempIndex = index
+    });
+    return tempIndex;
+} 
+
+
+
+
+function initializeDiagram() {
+    mainDiagram = goObject(
+        go.Diagram, // go Type
+        "mainDiagramDiv", // div id
+        { // main setting, API detail and default at https://gojs.net/latest/api/symbols/Diagram.html
+            initialContentAlignment: go.Spot.Center,
+            "undoManager.isEnabled": false
+        }
+    )
+    mainDiagram.nodeTemplate = personNodeTemplate;
+    mainDiagram.model = model;
+}
+
+
+
+
+
+
