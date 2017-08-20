@@ -35,6 +35,9 @@ namespace FamilyTreeTesting
                       "~/Scripts/SnapLinkReshapingTool.js",
                       "~/Scripts/FamilyTreeJs.js"));
 
+            bundles.Add(new StyleBundle("~/bundles/FamilyTreeImproved").Include(
+                      "~/Scripts/ImprovedScript/FamilyTreeMain.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/GoJS").Include(
                       "~/Scripts/go-1.7.7-debug.js",
                       "~/Scripts/go-1.7.7.js"));
