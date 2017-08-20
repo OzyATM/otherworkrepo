@@ -6,21 +6,59 @@ var model = goObject(go.GraphLinksModel);
 
 model.nodeDataArray = [
     {
-        key: "Something"
+        key: "1",
+        displayText: "Tony is Mean to me"
     },
     {
-        key: "Something else"
+        key: "2",
+        displayText: "So i am sad"
     },
     {
-        key: "Ok"
+        key: "3",
+        displayText: "i really miss the nice Tony"
+    },
+    {
+        key: "4",
+        displayText: "so yea...i hate him now =("
     }
 ]
 
 model.linkDataArray = [
     {
-        from: "Something", to: "Something else"
+        from: "1", to: "2"
     }
 ]
+
+
+var adm =
+    goObject(
+        go.Adornment,
+        "Auto",
+        goObject(
+            go.Shape,
+            "Rectangle",
+            {
+                fill: null,
+                stroke: "blue",
+                strokeWidth: 3
+            }
+        ),
+        goObject(
+            go.Panel,
+            "Auto",
+            goObject(go.Placeholder)
+        ),
+        goObject(
+            go.Panel,
+            "Horizontal",
+            {
+                alignment: go.Spot.Bottom,
+                alignmentFocus: go.Spot.Bottom
+            },
+            createDeleteBtn(null, "刪除", 50)
+        )
+    )
+
 
 personNodeTemplate = goObject( 
     go.Node,
@@ -35,11 +73,13 @@ personNodeTemplate = goObject(
     goObject(
         go.TextBlock,
         {
-            text: "Alpha",
             margin: 5
         },
-        new go.Binding("text", "Key")
-    )
+        new go.Binding("text", "displayText")
+    ),
+    {
+        selectionAdornmentTemplate: adm
+    }
 )
 
 function initializeDiagram() {
@@ -53,4 +93,35 @@ function initializeDiagram() {
     )
     mainDiagram.nodeTemplate = personNodeTemplate;
     mainDiagram.model = model;
+}
+
+
+
+
+function createDeleteBtn(event, btnText, btnWidth) {
+    var deleteBtn;
+    var inputEvent = event;
+    var inputText = btnText;
+    var inputWidth = btnWidth;
+    deleteBtn =
+        goObject(
+            "Button",
+            {
+                margin: 5,
+                width: inputWidth,
+                height: 30,
+                "ButtonBorder.fill": "#FF2D2D",
+                "ButtonBorder.stroke": null,
+                "ButtonBorder.figure": "RoundedRectangle",
+                "_buttonFillOver": "#FF2D2D",
+                "_buttonStrokeOver": null,
+                click: inputEvent
+            },
+            goObject(
+                go.TextBlock,
+                inputText,
+                { font: "10pt sans-serif ", stroke: "white" }
+            )
+        )
+    return deleteBtn
 }
