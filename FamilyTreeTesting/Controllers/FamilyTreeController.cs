@@ -18,5 +18,10 @@ namespace FamilyTreeTesting.Controllers
         {
             return View();
         }
+
+        public ActionResult FamilyTreeImproved()
+        {
+            return View();
+        }
     }
 }

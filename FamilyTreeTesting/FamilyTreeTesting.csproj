@@ -230,6 +230,7 @@
     <Content Include="Scripts\GeometryReshapingTool.js" />
     <Content Include="Scripts\go-1.7.7-debug.js" />
     <Content Include="Scripts\go-1.7.7.js" />
+    <Content Include="Scripts\ImprovedScript\FamilyTreeMain.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -286,6 +287,8 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\FamilyTree\DrawingFamilyTree.cshtml" />
+    <Content Include="Views\FamilyTree\FamilyTreeImproved.cshtml" />
+    <Content Include="Views\Shared\_LayoutInsert.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
