@@ -79,7 +79,6 @@ function init() {
     var defaultObject =
         GO(
             go.Shape,
-            "Square",
             {
                 width: 30,
                 height: 30,
