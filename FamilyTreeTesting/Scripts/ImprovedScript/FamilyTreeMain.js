@@ -7,19 +7,19 @@ var dataModel = {};
 dataModel.nodeArray = [
     {
         key: "1",
-        displayText: "Tony is Mean to me"
+        figure: "Circle"
     },
     {
         key: "2",
-        displayText: "So i am sad"
+        figure: "Circle"
     },
     {
         key: "3",
-        displayText: "i really miss the nice Tony"
+        figure: "Square"
     },
     {
         key: "4",
-        displayText: "so yea...i hate him now =("
+        figure: "Square"
     }
 ];
 
@@ -77,9 +77,14 @@ function getNodeTemplate(mainShape, adornment, text) {
         goObject(
             go.Shape,
             {
-                figure: "RoundedRectangle",
-                fill: "lightblue"
-            }
+                width: 30,
+                height: 30,
+                strokeWidth: 5,
+                maxSize: new go.Size(40, 40),
+                cursor: "pointer",
+                fill: "white"
+            },
+            new go.Binding("figure")
         ),
         goObject(
             go.TextBlock,
