@@ -1,11 +1,11 @@
 ﻿var goObject = go.GraphObject.make;
 // Initialize an empty datamodel
-var dataModel = {};
 
 //*********************************************
 // Data Model initialization
 //*********************************************
 function initializeDataModel() {
+    var dataModel = {};
     dataModel.nodeArray = [
         {
             key: "1",
@@ -30,6 +30,7 @@ function initializeDataModel() {
             from: "1", to: "2"
         }
     ];
+    return dataModel;
 }
 
 //***********************************************
