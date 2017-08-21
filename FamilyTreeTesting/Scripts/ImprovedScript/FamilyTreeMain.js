@@ -6,7 +6,7 @@ var mainDiagram
 //*********************************************
 function initializeDiagram() {
     // Initialize Our DataModel, in the future, support load from file
-    initializeDataModel();
+    var initialDataModel = initializeDataModel();
     mainDiagram = goObject(
         go.Diagram, // go Type
         "mainDiagramDiv", // div id
@@ -16,5 +16,5 @@ function initializeDiagram() {
         }
     )
     mainDiagram.nodeTemplate = generateNodeTemplate();
-    mainDiagram.model = generateGoModel(dataModel);
+    mainDiagram.model = generateGoModel(initialDataModel);
 }
