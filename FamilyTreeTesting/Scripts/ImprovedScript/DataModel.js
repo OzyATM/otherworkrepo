@@ -47,7 +47,6 @@ function generateGoModel(inputModel) {
 // Helper functions
 //*********************************************
 function findCurrentIndex(inputKey) {
-    dataModel.nodeArray.forEach(function (obj, index) {
         if (obj.key === inputKey)
             tempIndex = index
     });
