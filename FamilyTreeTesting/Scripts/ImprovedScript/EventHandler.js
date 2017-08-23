@@ -13,3 +13,16 @@ function deleteNode(e, object) {
     globalDataModel.nodeArray.splice(objIndex, 1);
     mainDiagram.model = generateGoModel(globalDataModel);
 }
+
+// ***************************************
+// Contain Gen Event Handler
+// Add a small black circle
+// ***************************************
+function containGen(e, object) {
+    var nodeData = object.part.data
+
+    if (nodeData.fill != "black") {
+
+    }
+
+}

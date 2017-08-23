@@ -17,7 +17,21 @@ function generateNodeTemplate() {
         generateMainShape(),
         {
             selectionAdornmentTemplate: generateMainAdornment()
-        }
+        },
+        goObject(
+            go.Shape,
+            "Circle",
+            {
+                width: 100,
+                height: 100,
+                stroke: null,
+                maxSize: new go.Size(15, 15),
+                fill: "black",
+                visible: true
+            },
+            new go.Binding("fill",""),
+            new go.Binding("visible")
+        )
     );
     return personNodeTemplate;
 }
@@ -40,7 +54,8 @@ function generateMainShape() {
             fill: "white"
         },
         new go.Binding("figure")
-    )
+    )     
+
     return tempShape;
 }
 
