@@ -189,33 +189,33 @@ function createBtn(event, btnText, btnColor, width) {
 // Create Panel in Adornment
 //*********************************************
 
-//function createPanelForAdornment(panelPos,panelAlignment, btnArray){
-//    var inputPos = panelPos
-//    var inputAlignment = panelAlignment
-//    var goAlignment,goAlignmentFocus
-//    if (inputAlignment === "bottom"){
-//        goAlignment = go.Spot.Bottom
-//        goAlignmentFocus = go.Spot.Top
-//    } else if (inputAlignment === "right"){
-//        goAlignment = go.Spot.Right
-//        goAlignmentFocus = go.Spot.Left
-//    } else if (inputAlignment === "left"){
-//        goAlignment = go.Spot.Left
-//        goAlignmentFocus = go.Spot.Right
-//    } else{
-//        goAlignment = null
-//        goAlignmentFocus = null
-//    }
+function createPanelForAdornment(panelPos,panelAlignment, btnArray){
+    var inputPos = panelPos
+    var inputAlignment = panelAlignment
+    var goAlignment,goAlignmentFocus
+    if (inputAlignment === "bottom"){
+        goAlignment = go.Spot.Bottom
+        goAlignmentFocus = go.Spot.Top
+    } else if (inputAlignment === "right"){
+        goAlignment = go.Spot.Right
+        goAlignmentFocus = go.Spot.Left
+    } else if (inputAlignment === "left"){
+        goAlignment = go.Spot.Left
+        goAlignmentFocus = go.Spot.Right
+    } else{
+        goAlignment = null
+        goAlignmentFocus = null
+    }
 
-//    var tempPanel =
-//        goObject(
-//            go.Panel,
-//            inputPos,
-//            {
-//                alignment: goAlignment,
-//                alignmentFocus: goAlignmentFocus
-//            }
-//    )
+    var tempPanel =
+        goObject(
+            go.Panel,
+            inputPos,
+            {
+                alignment: goAlignment,
+                alignmentFocus: goAlignmentFocus
+            }
+    )
 
-//    return tempPanel
-//}
+    return tempPanel
+}
