@@ -1,12 +1,13 @@
 ﻿var goObject = go.GraphObject.make;
 // Initialize an empty datamodel
+var globalDataModel;
 
 //*********************************************
 // Data Model initialization
 //*********************************************
 function initializeDataModel() {
-    var dataModel = {};
-    dataModel.nodeArray = [
+    globalDataModel = {};
+    globalDataModel.nodeArray = [
         {
             key: "1",
             figure: "Circle"
@@ -25,12 +26,12 @@ function initializeDataModel() {
         }
     ];
 
-    dataModel.linkArray = [
+    globalDataModel.linkArray = [
         {
             from: "1", to: "2"
         }
     ];
-    return dataModel;
+    return globalDataModel;
 }
 
 //***********************************************
@@ -47,7 +48,7 @@ function generateGoModel(inputModel) {
 // Helper functions
 //*********************************************
 function findCurrentIndex(inputKey) {
-    dataModel.nodeArray.forEach(function (obj, index) {
+    globalDataModel.nodeArray.forEach(function (obj, index) {
         if (obj.key === inputKey)
             tempIndex = index
     });
