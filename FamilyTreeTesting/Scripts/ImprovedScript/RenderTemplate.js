@@ -50,33 +50,76 @@ function generateMainShape() {
 function generateMainAdornment() {
     var tempAdornment = goObject(
         go.Adornment,
-        "Auto",
+        "Spot",
         goObject(
             go.Shape,
-            "Rectangle",
+            "Square",
             {
+                height: 50,
+                width: 50,
                 fill: null,
                 stroke: "blue",
                 strokeWidth: 3
             }
         ),
-        goObject(
-            go.Panel,
-            "Auto",
-            goObject(go.Placeholder)
-        ),
+        goObject(go.Placeholder), // make sure the admornment's position will not at a weird place
         goObject(
             go.Panel,
             "Horizontal",
             {
                 alignment: go.Spot.Bottom,
-                alignmentFocus: go.Spot.Bottom
+                alignmentFocus: go.Spot.Top
             },
             createDeleteBtn(deleteNode, "刪除", 50)
+        ),
+        goObject(
+            go.Panel,
+            "Vertical",
+            {
+                alignment: go.Spot.Right,
+                alignmentFocus: go.Spot.Left
+            },
+            createBtn(null, "換性別", null, null),
+            createBtn(null, "父　母", null, null),
+            createBtn(null, "配　偶", null, null),
+            goObject(
+                go.Panel,
+                "Horizontal",
+                createBtn(null, "兄", null, 32),
+                createBtn(null, "弟", null, 32)
+            ),
+            goObject(
+                go.Panel,
+                "Horizontal",
+                createBtn(null, "姊", null, 32),
+                createBtn(null, "妹", null, 32)
+            ),
+            goObject(
+                go.Panel,
+                "Horizontal",
+                createBtn(null, "兒", null, 32),
+                createBtn(null, "女", null, 32)
+            )
+        ),
+        goObject(
+            go.Panel,
+            "Vertical",
+            {
+                alignment: go.Spot.Left,
+                alignmentFocus: go.Spot.Right
+            },
+            createBtn(null, "相同疾病", "#FFBD9D", 80),
+            createBtn(null, "帶基因者", "#FFBD9D", 80),
+            createBtn(null, "懷   孕", "#FFBD9D", 80),
+            createBtn(null, "多個體", "#FFBD9D", 80),
+            createBtn(null, "死   亡", "#FFBD9D", 80),
+            createBtn(null, "註   解", "#FFBD9D", 80)
         )
     );
     return tempAdornment;
 }
+
+
 
 //*********************************************
 // Create Button Definition
@@ -107,4 +150,37 @@ function createDeleteBtn(event, btnText, btnWidth) {
             )
         )
     return deleteBtn
+}
+
+function createBtn(event, btnText, btnColor, width) {
+    var inputEvent = event
+    var inputText = btnText
+    var inputBtnColor = "#B8B8DC";
+    var inputWidth = 70;
+    if (btnColor != null)
+        inputBtnColor = btnColor
+    if (width != null)
+        inputWidth = width
+
+    var createdBtn =
+        goObject(
+            "Button",
+            {
+                margin: 2.5,
+                width: inputWidth,
+                height: 30,
+                "ButtonBorder.fill": inputBtnColor,
+                "ButtonBorder.stroke": null,
+                "ButtonBorder.figure": "RoundedRectangle",
+                "_buttonFillOver": inputBtnColor,
+                "_buttonStrokeOver": null,
+                click: inputEvent
+            },
+            goObject(
+                go.TextBlock,
+                inputText,
+                { font: "bold 10pt sans-serif" }
+            )
+        )
+    return createdBtn
 }
