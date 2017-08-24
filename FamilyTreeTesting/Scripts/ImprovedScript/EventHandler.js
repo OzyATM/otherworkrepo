@@ -2,7 +2,8 @@
     deleteNode: deleteNode,
     containGen: containGen,
     sameDisease: sameDisease,
-    isPregnant: isPregnant
+    isPregnant: isPregnant,
+    isDead: isDead
 }
 
 // ***************************************
@@ -50,7 +51,7 @@ function sameDisease(e, object) {
         nodeData.containGenVisible = false;
     }
     else {
-        nodeData.fill = "white";
+        nodeData.fill = "transparent";
         nodeData.colorForContainGenCircle = "white"
         nodeData.containGenVisible = false;
     }
@@ -63,7 +64,7 @@ function sameDisease(e, object) {
 
 // ***************************************
 // Pregnant Event Handler
-// Add a text "P" at the middle and change the color if the background is black
+// Add a text "P" at the middle and change the color if the background is blacks
 // ***************************************
 function isPregnant(e, object) {
     var nodeData = object.part.data;
@@ -79,4 +80,18 @@ function isPregnant(e, object) {
     if (nodeData.fill === "black" || nodeData.colorForContainGenCircle === "black")
         nodeData.colorForP = "white";
     mainDiagram.model = generateGoModel(globalDataModel);
+}
+
+// ***************************************
+// Dead Symbol Event Handler
+// Add a slash line
+// ***************************************
+function isDead(e,object) {
+    var nodeData = object.part.data;
+    if (nodeData.deadSymbolVisible)
+        nodeData.deadSymbolVisible = true;
+    else
+        nodeData.deadSymbolVisible = false;
+    mainDiagram.model = generateGoModel(globalDataModel);
+
 }

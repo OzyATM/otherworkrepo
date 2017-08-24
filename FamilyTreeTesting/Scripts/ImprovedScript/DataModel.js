@@ -11,30 +11,34 @@ function initializeDataModel() {
         {
             key: "1",
             figure: "circle",
-            fill: "white",
+            fill: "transparent",
             isPVisable: false,
-            colorForP: "white"
+            colorForP: "white",
+            deadSymbolVisible: false
         },
         {
             key: "2",
             figure: "circle",
-            fill: "white",
+            fill: "transparent",
             isPVisable: false,
-            colorForP: "white"
+            colorForP: "white",
+            deadSymbolVisible: false
         },
         {
             key: "3",
             figure: "square",
-            fill: "white",
+            fill: "transparent",
             isPVisable: false,
-            colorForP: "white"
+            colorForP: "white",
+            deadSymbolVisible: false
         },
         {
             key: "4",
             figure: "square",
-            fill: "white",
+            fill: "transparent",
             isPVisable: false,
-            colorForP: "white"
+            colorForP: "white",
+            deadSymbolVisible: false
         }
     ];
 

@@ -14,6 +14,21 @@ function generateNodeTemplate() {
     var personNodeTemplate = goObject(
         go.Node,
         "Auto", // Alignment setting is not used, we manually set item position
+        goObject(
+            go.Panel,
+            goObject(
+                go.Shape,
+                "Line2",
+                {
+                    width: 50,
+                    height: 50,
+                    stroke: "black",
+                    visible: false,
+                    strokeWidth: 3
+                },
+                new go.Binding("visible", "deadSymbolVisible")
+            )
+        ),
         generateMainShape(),
         {
             selectionAdornmentTemplate: generateMainAdornment()
@@ -62,7 +77,7 @@ function generateMainShape() {
             strokeWidth: 5,
             maxSize: new go.Size(40, 40),
             cursor: "pointer",
-            fill: "white"
+            fill: "transparent"
         },
         new go.Binding("figure"),
         new go.Binding("fill")
@@ -139,7 +154,7 @@ function generateMainAdornment() {
             createBtn(EventHandler.containGen, "帶基因者", "#FFBD9D", 80),
             createBtn(EventHandler.isPregnant, "懷   孕", "#FFBD9D", 80),
             createBtn(null, "多個體", "#FFBD9D", 80),
-            createBtn(null, "死   亡", "#FFBD9D", 80),
+            createBtn(EventHandler.isDead, "死   亡", "#FFBD9D", 80),
             createBtn(null, "註   解", "#FFBD9D", 80)
         )
     );
