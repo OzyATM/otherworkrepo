@@ -10,19 +10,31 @@ function initializeDataModel() {
     globalDataModel.nodeArray = [
         {
             key: "1",
-            figure: "Circle"
+            figure: "circle",
+            fill: "white",
+            isPVisable: false,
+            colorForP: "white"
         },
         {
             key: "2",
-            figure: "Circle"
+            figure: "circle",
+            fill: "white",
+            isPVisable: false,
+            colorForP: "white"
         },
         {
             key: "3",
-            figure: "Square"
+            figure: "square",
+            fill: "white",
+            isPVisable: false,
+            colorForP: "white"
         },
         {
             key: "4",
-            figure: "Square"
+            figure: "square",
+            fill: "white",
+            isPVisable: false,
+            colorForP: "white"
         }
     ];
 

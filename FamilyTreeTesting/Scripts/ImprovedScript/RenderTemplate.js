@@ -26,11 +26,22 @@ function generateNodeTemplate() {
                 height: 100,
                 stroke: null,
                 maxSize: new go.Size(15, 15),
-                fill: "black",
-                visible: true
+                fill: "white",
+                visible: false
             },
-            new go.Binding("fill",""),
-            new go.Binding("visible")
+            new go.Binding("fill","colorForContainGenCircle"),
+            new go.Binding("visible","containGenVisible")
+        ),
+        goObject(
+            go.TextBlock,
+            "P",
+            {
+                font: "10pt sans-serif",
+                stroke: "white",
+                visible: false
+            },
+            new go.Binding("visible", "isPVisable"),
+            new go.Binding("stroke", "colorForP")
         )
     );
     return personNodeTemplate;
@@ -53,7 +64,8 @@ function generateMainShape() {
             cursor: "pointer",
             fill: "white"
         },
-        new go.Binding("figure")
+        new go.Binding("figure"),
+        new go.Binding("fill")
     )     
 
     return tempShape;
@@ -85,7 +97,7 @@ function generateMainAdornment() {
                 alignment: go.Spot.Bottom,
                 alignmentFocus: go.Spot.Top
             },
-            createDeleteBtn(deleteNode, "刪除", 50)
+            createDeleteBtn(EventHandler.deleteNode, "刪除", 50)
         ),
         goObject(
             go.Panel,
@@ -123,9 +135,9 @@ function generateMainAdornment() {
                 alignment: go.Spot.Left,
                 alignmentFocus: go.Spot.Right
             },
-            createBtn(null, "相同疾病", "#FFBD9D", 80),
-            createBtn(null, "帶基因者", "#FFBD9D", 80),
-            createBtn(null, "懷   孕", "#FFBD9D", 80),
+            createBtn(EventHandler.sameDisease, "相同疾病", "#FFBD9D", 80),
+            createBtn(EventHandler.containGen, "帶基因者", "#FFBD9D", 80),
+            createBtn(EventHandler.isPregnant, "懷   孕", "#FFBD9D", 80),
             createBtn(null, "多個體", "#FFBD9D", 80),
             createBtn(null, "死   亡", "#FFBD9D", 80),
             createBtn(null, "註   解", "#FFBD9D", 80)
