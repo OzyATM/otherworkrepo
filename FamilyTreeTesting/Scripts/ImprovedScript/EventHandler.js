@@ -26,14 +26,15 @@ function containGen(e, object) {
     if (nodeData.colorForContainGenCircle != "black") {
         nodeData.colorForContainGenCircle = "black";
         nodeData.containGenVisible = true
-        if (nodeData.isPVisable)
-            nodeData.colorForP = "white";
     }
     else {
         nodeData.colorForContainGenCircle = "white";
         nodeData.containGenVisible = false
-        nodeData.colorForP = "black"
     }
+    if (nodeData.isPVisable && (nodeData.fill === "black" || nodeData.colorForContainGenCircle === "black"))
+        nodeData.colorForP = "white"
+    else
+        nodeData.colorForP = "black"
     mainDiagram.model = generateGoModel(globalDataModel);
 }
 
@@ -47,19 +48,22 @@ function sameDisease(e, object) {
         nodeData.fill = "black";
         nodeData.colorForContainGenCircle = "white"
         nodeData.containGenVisible = false;
-        if (nodeData.isPVisable)
-            nodeData.colorForP = "white";
     }
     else {
         nodeData.fill = "white";
-        nodeData.colorForP = "black"
+        nodeData.colorForContainGenCircle = "white"
+        nodeData.containGenVisible = false;
     }
+    if (nodeData.isPVisable && (nodeData.fill === "black" || nodeData.colorForContainGenCircle === "black"))
+        nodeData.colorForP = "white"
+    else
+        nodeData.colorForP = "black"
     mainDiagram.model = generateGoModel(globalDataModel);
 }
 
 // ***************************************
-// Same Disease Event Handler
-// Change the fill properties of MainNode
+// Pregnant Event Handler
+// Add a text "P" at the middle and change the color if the background is black
 // ***************************************
 function isPregnant(e, object) {
     var nodeData = object.part.data;
@@ -72,7 +76,7 @@ function isPregnant(e, object) {
         nodeData.colorForP = "black";
     } else
         nodeData.isPVisable = false;
-    if (nodeData.fill === "black")
+    if (nodeData.fill === "black" || nodeData.colorForContainGenCircle === "black")
         nodeData.colorForP = "white";
     mainDiagram.model = generateGoModel(globalDataModel);
 }
