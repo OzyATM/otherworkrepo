@@ -15,7 +15,19 @@ function generateNodeTemplate() {
     var personNodeTemplate = goObject(
         go.Node,
         "Position", // Alignment setting is not used, we manually set item position
-        generateSlashLineInAPanel(),
+        goObject(
+            go.Shape,
+            "Line2",
+            {
+                width: 42,
+                height: 42,
+                stroke: "black",
+                visible: false,
+                strokeWidth: 3,
+                //position: new go.Point(-5, -5)
+            },
+            new go.Binding("visible", "deadSymbolVisible")
+        ),
         generateMainShape(),
         {
             selectionAdornmentTemplate: generateMainAdornment()
@@ -98,7 +110,7 @@ function generateContainGenCircle() {
             maxSize: new go.Size(15, 15),
             fill: "white",
             visible: false,
-            position: new go.Point(9, 9)
+            position: new go.Point(9.5, 9.5)
         },
         new go.Binding("fill", "colorForContainGenCircle"),
         new go.Binding("visible", "containGenVisible")
@@ -138,8 +150,8 @@ function generateArrowPointToPatient() {
         {
             font: "10pt sans-serif ",
             stroke: "black",
-            background: "lightblue", //backgrond is for debug use
-            alignment: new go.Spot(1, 1, 0, 20)
+            //alignment: new go.Spot(1, 1, 0, 20)
+            position: new go.Point(0, 35)
         }
     )
     return tempTextBlock;
@@ -169,8 +181,7 @@ function generateMainAdornment() {
             go.Panel,
             "Horizontal",
             {
-                alignment: go.Spot.Bottom,
-                alignmentFocus: go.Spot.Top
+                position: new go.Point(-12, 50)
             },
             createDeleteBtn(EventHandler.deleteNode, "刪除", 50)
         ),
@@ -178,8 +189,7 @@ function generateMainAdornment() {
             go.Panel,
             "Vertical",
             {
-                alignment: go.Spot.Right,
-                alignmentFocus: go.Spot.Left
+                position: new go.Point(50, -100)
             },
             createBtn(null, "換性別", null, null),
             createBtn(null, "父　母", null, null),
@@ -207,8 +217,7 @@ function generateMainAdornment() {
             go.Panel,
             "Vertical",
             {
-                alignment: go.Spot.Left,
-                alignmentFocus: go.Spot.Right
+                position: new go.Point(-100, -100)
             },
             createBtn(EventHandler.sameDisease, "相同疾病", "#FFBD9D", 80),
             createBtn(EventHandler.containGen, "帶基因者", "#FFBD9D", 80),
