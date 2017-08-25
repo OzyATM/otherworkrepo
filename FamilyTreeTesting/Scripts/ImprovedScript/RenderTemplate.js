@@ -20,8 +20,8 @@ function generateNodeTemplate() {
                 go.Shape,
                 "Line2",
                 {
-                    width: 50,
-                    height: 50,
+                    width: 42,
+                    height: 42,
                     stroke: "black",
                     visible: false,
                     strokeWidth: 3
@@ -104,7 +104,7 @@ function generateMainAdornment() {
                 strokeWidth: 3
             }
         ),
-        goObject(go.Placeholder), // make sure the admornment's position will not at a weird place
+        goObject(go.Placeholder), // make sure the admornment's position will not at a weird place(according to API it should be inside a panel or a group)
         goObject(
             go.Panel,
             "Horizontal",

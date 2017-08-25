@@ -12,7 +12,8 @@ function initializeDiagram() {
         "mainDiagramDiv", // div id
         { // main setting, API detail and default at https://gojs.net/latest/api/symbols/Diagram.html
             initialContentAlignment: go.Spot.Center,
-            "undoManager.isEnabled": false
+            "undoManager.isEnabled": false,
+            "animationManager.isEnabled": false // disable the animation when redraw
         }
     )
     mainDiagram.nodeTemplate = generateNodeTemplate();
