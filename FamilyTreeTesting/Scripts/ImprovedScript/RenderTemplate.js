@@ -9,55 +9,20 @@
 // Input Data Control:
 // Main Shape
 //     - figure: shape of main object
+//     - fill: the shape's color
 //*********************************************
 function generateNodeTemplate() {
     var personNodeTemplate = goObject(
         go.Node,
-        "Auto", // Alignment setting is not used, we manually set item position
-        goObject(
-            go.Panel,
-            goObject(
-                go.Shape,
-                "Line2",
-                {
-                    width: 42,
-                    height: 42,
-                    stroke: "black",
-                    visible: false,
-                    strokeWidth: 3
-                },
-                new go.Binding("visible", "deadSymbolVisible")
-            )
-        ),
+        "Position", // Alignment setting is not used, we manually set item position
+        generateSlashLineInAPanel(),
         generateMainShape(),
         {
             selectionAdornmentTemplate: generateMainAdornment()
         },
-        goObject(
-            go.Shape,
-            "Circle",
-            {
-                width: 100,
-                height: 100,
-                stroke: null,
-                maxSize: new go.Size(15, 15),
-                fill: "white",
-                visible: false
-            },
-            new go.Binding("fill","colorForContainGenCircle"),
-            new go.Binding("visible","containGenVisible")
-        ),
-        goObject(
-            go.TextBlock,
-            "P",
-            {
-                font: "10pt sans-serif",
-                stroke: "white",
-                visible: false
-            },
-            new go.Binding("visible", "isPVisable"),
-            new go.Binding("stroke", "colorForP")
-        )
+        generateContainGenCircle(),
+        generatePTextBlock(),
+        generateArrowPointToPatient()
     );
     return personNodeTemplate;
 }
@@ -67,6 +32,7 @@ function generateNodeTemplate() {
 // Main Shape Definition
 // Input Data Control:
 // - figure: shape of the main object
+// - fill: the shape's color
 //*********************************************
 function generateMainShape() {
     var tempShape = goObject(
@@ -87,12 +53,105 @@ function generateMainShape() {
 }
 
 //*********************************************
+// Panel With Line2(slash line) Definition
+// Input Data Control:
+// - deadSymbolVisible: make the Line2 Visible or not
+//*********************************************
+function generateSlashLineInAPanel() {
+    var tempPanel = goObject(
+        go.Panel,
+        {
+            width: 45,
+            height: 45,
+        },
+        goObject(
+            go.Shape,
+            "Line2",
+            {
+                width: 42,
+                height: 42,
+                stroke: "black",
+                visible: false,
+                strokeWidth: 3,
+                //position: new go.Point(5, 5)
+            },
+            new go.Binding("visible", "deadSymbolVisible")
+        )
+    )
+    return tempPanel
+}
+
+//*********************************************
+// The circle for containGen Definition
+// Input Data Control:
+// - colorForContainGenCircle: the color of the circle for ceotainGen
+// - containGenVisible: the circle's color
+//*********************************************
+function generateContainGenCircle() {
+    var tempShape = goObject(
+        go.Shape,
+        "Circle",
+        {
+            width: 100,
+            height: 100,
+            stroke: null,
+            maxSize: new go.Size(15, 15),
+            fill: "white",
+            visible: false,
+            position: new go.Point(9, 9)
+        },
+        new go.Binding("fill", "colorForContainGenCircle"),
+        new go.Binding("visible", "containGenVisible")
+    )
+    return tempShape
+}
+
+//*********************************************
+// Textblock with char P Definition
+// Input Data Control:
+// - isPVisable: does the P visible
+// - colorForP: color of the char P
+//*********************************************
+function generatePTextBlock(){
+    var tempTextBlock = goObject(
+        go.TextBlock,
+        "P",
+        {
+            font: "10pt sans-serif",
+            stroke: "white",
+            visible: false,
+            position: new go.Point(13, 11)
+        },
+        new go.Binding("visible", "isPVisable"),
+        new go.Binding("stroke", "colorForP")
+    )
+    return tempTextBlock;
+}
+
+//*********************************************
+// Textblock with arraow
+//*********************************************
+function generateArrowPointToPatient() {
+    var tempTextBlock = goObject(
+        go.TextBlock,
+        "↗",
+        {
+            font: "10pt sans-serif ",
+            stroke: "black",
+            background: "lightblue", //backgrond is for debug use
+            alignment: new go.Spot(1, 1, 0, 20)
+        }
+    )
+    return tempTextBlock;
+}
+
+//*********************************************
 // Adornment Definition
 //*********************************************
 function generateMainAdornment() {
     var tempAdornment = goObject(
         go.Adornment,
-        "Spot",
+        "Position",
         goObject(
             go.Shape,
             "Square",
@@ -101,7 +160,8 @@ function generateMainAdornment() {
                 width: 50,
                 fill: null,
                 stroke: "blue",
-                strokeWidth: 3
+                strokeWidth: 3,
+                position: new go.Point(-9, -9)
             }
         ),
         goObject(go.Placeholder), // make sure the admornment's position will not at a weird place(according to API it should be inside a panel or a group)

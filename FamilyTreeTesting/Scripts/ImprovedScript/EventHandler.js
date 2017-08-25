@@ -88,9 +88,7 @@ function isPregnant(e, object) {
 // ***************************************
 function isDead(e,object) {
     var nodeData = object.part.data;
-    if (!nodeData.deadSymbolVisible)
-        nodeData.deadSymbolVisible = true;
-    else
-        nodeData.deadSymbolVisible = false;
+    nodeData.deadSymbolVisible = !nodeData.deadSymbolVisible
+
     mainDiagram.model = generateGoModel(globalDataModel);
 }
