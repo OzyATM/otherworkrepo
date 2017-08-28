@@ -11,34 +11,50 @@ function initializeDataModel() {
         {
             key: "1",
             figure: "circle",
+            isPatient: true,
             fill: "transparent",
             isPVisable: false,
             colorForP: "white",
-            deadSymbolVisible: false
+            deadSymbolVisible: false,
+            noteOne: "1",
+            noteTwo: "",
+            noteThree: ""
         },
         {
             key: "2",
             figure: "circle",
+            isPatient: false,
             fill: "transparent",
             isPVisable: false,
             colorForP: "white",
-            deadSymbolVisible: false
+            deadSymbolVisible: false,
+            noteOne: "",
+            noteTwo: "2",
+            noteThree: ""
         },
         {
             key: "3",
             figure: "square",
+            isPatient: false,
             fill: "transparent",
             isPVisable: false,
             colorForP: "white",
-            deadSymbolVisible: false
+            deadSymbolVisible: false,
+            noteOne: "",
+            noteTwo: "",
+            noteThree: "3"
         },
         {
             key: "4",
             figure: "square",
+            isPatient: false,
             fill: "transparent",
             isPVisable: false,
             colorForP: "white",
-            deadSymbolVisible: false
+            deadSymbolVisible: false,
+            noteOne: "1",
+            noteTwo: "2",
+            noteThree: "3"
         }
     ];
 

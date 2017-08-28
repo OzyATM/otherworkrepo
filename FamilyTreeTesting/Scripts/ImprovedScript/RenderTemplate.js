@@ -15,30 +15,20 @@ function generateNodeTemplate() {
     var personNodeTemplate = goObject(
         go.Node,
         "Position", // Alignment setting is not used, we manually set item position
-        goObject(
-            go.Shape,
-            "Line2",
-            {
-                width: 42,
-                height: 42,
-                stroke: "black",
-                visible: false,
-                strokeWidth: 3,
-                //position: new go.Point(-5, -5)
-            },
-            new go.Binding("visible", "deadSymbolVisible")
-        ),
         generateMainShape(),
         {
             selectionAdornmentTemplate: generateMainAdornment()
         },
+        generateSlashLineInPanel(),
         generateContainGenCircle(),
         generatePTextBlock(),
-        generateArrowPointToPatient()
+        generateArrowPointToPatient(),
+        generateTextBlockForNote(50, "noteOne"),
+        generateTextBlockForNote(65, "noteTwo"),
+        generateTextBlockForNote(80, "noteThree")
     );
     return personNodeTemplate;
 }
-
 
 //*********************************************
 // Main Shape Definition
@@ -59,8 +49,7 @@ function generateMainShape() {
         },
         new go.Binding("figure"),
         new go.Binding("fill")
-    )     
-
+    )
     return tempShape;
 }
 
@@ -69,12 +58,14 @@ function generateMainShape() {
 // Input Data Control:
 // - deadSymbolVisible: make the Line2 Visible or not
 //*********************************************
-function generateSlashLineInAPanel() {
+function generateSlashLineInPanel() {
     var tempPanel = goObject(
         go.Panel,
+        "Position",
         {
             width: 45,
             height: 45,
+            position: new go.Point(-5, -5)
         },
         goObject(
             go.Shape,
@@ -85,7 +76,7 @@ function generateSlashLineInAPanel() {
                 stroke: "black",
                 visible: false,
                 strokeWidth: 3,
-                //position: new go.Point(5, 5)
+                position: new go.Point(-5, -5)
             },
             new go.Binding("visible", "deadSymbolVisible")
         )
@@ -148,11 +139,34 @@ function generateArrowPointToPatient() {
         go.TextBlock,
         "↗",
         {
-            font: "10pt sans-serif ",
+            font: "10pt sans-serif",
             stroke: "black",
-            //alignment: new go.Spot(1, 1, 0, 20)
+            visible: false,
             position: new go.Point(0, 35)
-        }
+        },
+        new go.Binding("visible", "isPatient")
+    )
+    return tempTextBlock;
+}
+
+//*********************************************
+// Create Textblock for Note
+// Input Data Control:
+// - inputDataBoundTo: set a property on node that is bound to text
+//*********************************************
+function generateTextBlockForNote(positionY, dataBoundTo) {
+    var inputDataBoundTo = dataBoundTo
+    var inputPositionY = positionY
+    var tempTextBlock = goObject(
+        go.TextBlock,
+        {
+            text: "",
+            font: "10pt sans-serif",
+            stroke: "black",
+            visible: true,
+            position: new go.Point(0, inputPositionY)
+        },
+        new go.Binding("text", inputDataBoundTo)
     )
     return tempTextBlock;
 }
@@ -164,73 +178,103 @@ function generateMainAdornment() {
     var tempAdornment = goObject(
         go.Adornment,
         "Position",
-        goObject(
-            go.Shape,
-            "Square",
-            {
-                height: 50,
-                width: 50,
-                fill: null,
-                stroke: "blue",
-                strokeWidth: 3,
-                position: new go.Point(-9, -9)
-            }
-        ),
         goObject(go.Placeholder), // make sure the admornment's position will not at a weird place(according to API it should be inside a panel or a group)
-        goObject(
-            go.Panel,
-            "Horizontal",
-            {
-                position: new go.Point(-12, 50)
-            },
-            createDeleteBtn(EventHandler.deleteNode, "刪除", 50)
-        ),
-        goObject(
-            go.Panel,
-            "Vertical",
-            {
-                position: new go.Point(50, -100)
-            },
-            createBtn(null, "換性別", null, null),
-            createBtn(null, "父　母", null, null),
-            createBtn(null, "配　偶", null, null),
-            goObject(
-                go.Panel,
-                "Horizontal",
-                createBtn(null, "兄", null, 32),
-                createBtn(null, "弟", null, 32)
-            ),
-            goObject(
-                go.Panel,
-                "Horizontal",
-                createBtn(null, "姊", null, 32),
-                createBtn(null, "妹", null, 32)
-            ),
-            goObject(
-                go.Panel,
-                "Horizontal",
-                createBtn(null, "兒", null, 32),
-                createBtn(null, "女", null, 32)
-            )
-        ),
-        goObject(
-            go.Panel,
-            "Vertical",
-            {
-                position: new go.Point(-100, -100)
-            },
-            createBtn(EventHandler.sameDisease, "相同疾病", "#FFBD9D", 80),
-            createBtn(EventHandler.containGen, "帶基因者", "#FFBD9D", 80),
-            createBtn(EventHandler.isPregnant, "懷   孕", "#FFBD9D", 80),
-            createBtn(null, "多個體", "#FFBD9D", 80),
-            createBtn(EventHandler.isDead, "死   亡", "#FFBD9D", 80),
-            createBtn(null, "註   解", "#FFBD9D", 80)
-        )
+        generateMainShapeForAdornment(),
+        generateHorizontalPanelWithDelBtn(),
+        generateRightVerticalPanelWithBtn(),
+        generateLeftVerticalPanelWithBtn()
     );
     return tempAdornment;
 }
 
+//*********************************************
+// Adornment's Shape and its Definition
+//*********************************************
+function generateMainShapeForAdornment(){
+    var tempShapeForAdm = goObject(
+        go.Shape,
+        "Square",
+        {
+            height: 50,
+            width: 50,
+            fill: null,
+            stroke: "blue",
+            strokeWidth: 3,
+            position: new go.Point(-4, -4)
+        }
+    )
+    return tempShapeForAdm
+}
 
+//*********************************************
+// Create a Horizontal Panel and Put Delete Btn 
+//*********************************************
+function generateHorizontalPanelWithDelBtn() {
+    var tempHorizontalPanel = goObject(
+        go.Panel,
+        "Horizontal",
+        {
+            position: new go.Point(-8, 50)
+        },
+        createDeleteBtn(EventHandler.deleteNode, "刪除", 50)
+    )
+    return tempHorizontalPanel;
+}
+
+//*********************************************
+// Create a Vertical Panel on the Right Hand Side and put btn in it
+//*********************************************
+function generateRightVerticalPanelWithBtn() {
+    var thempRightVerticalPanel = goObject(
+        go.Panel,
+        "Vertical",
+        {
+            position: new go.Point(54, -100)
+        },
+        createBtn(null, "換性別", null, null),
+        createBtn(null, "父　母", null, null),
+        createBtn(null, "配　偶", null, null),
+        goObject(
+            go.Panel,
+            "Horizontal",
+            createBtn(null, "兄", null, 32),
+            createBtn(null, "弟", null, 32)
+        ),
+        goObject(
+            go.Panel,
+            "Horizontal",
+            createBtn(null, "姊", null, 32),
+            createBtn(null, "妹", null, 32)
+        ),
+        goObject(
+            go.Panel,
+            "Horizontal",
+            createBtn(null, "兒", null, 32),
+            createBtn(null, "女", null, 32)
+        )
+    )
+    return thempRightVerticalPanel;
+}
+
+//*********************************************
+// Create a Vertical Panel on the Left Hand Side and put btn in it
+//*********************************************
+function generateLeftVerticalPanelWithBtn() {
+    var thempLeftVerticalPanel = goObject(
+        go.Panel,
+        "Vertical",
+        {
+            position: new go.Point(-96, -100)
+        },
+        createBtn(EventHandler.sameDisease, "相同疾病", "#FFBD9D", 80),
+        createBtn(EventHandler.containGen, "帶基因者", "#FFBD9D", 80),
+        createBtn(EventHandler.isPregnant, "懷   孕", "#FFBD9D", 80),
+        createBtn(null, "多個體", "#FFBD9D", 80),
+        createBtn(EventHandler.isDead, "死   亡", "#FFBD9D", 80),
+        createBtn(null, "註   解", "#FFBD9D", 80)
+    )
+    return thempLeftVerticalPanel;
+}
 
 //*********************************************
 // Create Button Definition
