@@ -10,19 +10,35 @@ function initializeDataModel() {
     globalDataModel.nodeArray = [
         {
             key: "1",
-            figure: "Circle"
+            figure: "circle",
+            fill: "transparent",
+            isPVisable: false,
+            colorForP: "white",
+            deadSymbolVisible: false
         },
         {
             key: "2",
-            figure: "Circle"
+            figure: "circle",
+            fill: "transparent",
+            isPVisable: false,
+            colorForP: "white",
+            deadSymbolVisible: false
         },
         {
             key: "3",
-            figure: "Square"
+            figure: "square",
+            fill: "transparent",
+            isPVisable: false,
+            colorForP: "white",
+            deadSymbolVisible: false
         },
         {
             key: "4",
-            figure: "Square"
+            figure: "square",
+            fill: "transparent",
+            isPVisable: false,
+            colorForP: "white",
+            deadSymbolVisible: false
         }
     ];
 
