@@ -38,20 +38,53 @@ function generateNodeTemplate() {
 //*********************************************
 function generateMainShape() {
     var tempShape = goObject(
-        go.Shape,
-        {
-            width: 30,
-            height: 30,
-            strokeWidth: 5,
-            maxSize: new go.Size(40, 40),
-            cursor: "pointer",
-            fill: "transparent"
-        },
-        new go.Binding("figure"),
-        new go.Binding("fill")
-    )
+            go.Panel,
+            {
+                background: "lightgreen",
+
+            },
+            goObject(
+                go.Shape,
+                {
+                    figure: "circle",
+                    desiredSize: new go.Size(1, 1),
+                    stroke: "black",
+                    position: new go.Point(16, 0),
+                    portId: "T",  // now the Shape is the port, not the whole Node
+                    fromSpot: go.Spot.Top,  // port properties go on the port!
+                    toSpot: go.Spot.Top
+                }
+            ),
+            goObject(
+                go.Shape,
+                {
+                    figure: "circle",
+                    desiredSize: new go.Size(1, 1),
+                    stroke: "black",
+                    position: new go.Point(29, 16),
+                    portId: "L",  // now the Shape is the port, not the whole Node
+                    fromSpot: go.Spot.Right,  // port properties go on the port!
+                    toSpot: go.Spot.Right
+                }
+            ),
+            goObject(
+                go.Shape,
+                {
+                    width: 30,
+                    height: 30,
+                    strokeWidth: 5,
+                    maxSize: new go.Size(40, 40),
+                    cursor: "pointer",
+                    fill: "transparent",
+                },
+                new go.Binding("figure"),
+                new go.Binding("fill")
+            )
+        )
     return tempShape;
 }
+
+
 
 //*********************************************
 // Panel With Line2(slash line) Definition
