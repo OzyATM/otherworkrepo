@@ -7,6 +7,8 @@ var globalDataModel;
 //*********************************************
 function initializeDataModel() {
     globalDataModel = {};
+    globalDataModel.linkFromPortIdProperty = "fromPort"
+    globalDataModel.linkToPortIdProperty = "toPort"
     globalDataModel.nodeArray = [
         {
             key: "1",
@@ -60,7 +62,7 @@ function initializeDataModel() {
 
     globalDataModel.linkArray = [
         {
-            from: "1", to: "2"
+            from: "1", fromPort:"R", to: "2", toPort: "L" 
         }
     ];
     return globalDataModel;
@@ -71,6 +73,8 @@ function initializeDataModel() {
 //***********************************************
 function generateGoModel(inputModel) {
     var model = goObject(go.GraphLinksModel);
+    model.linkFromPortIdProperty = "fromPort"
+    model.linkToPortIdProperty = "toPort"
     model.nodeDataArray = inputModel.nodeArray.slice(0);
     model.linkDataArray = inputModel.linkArray.slice(0);
     return model;

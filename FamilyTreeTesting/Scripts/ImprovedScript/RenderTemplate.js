@@ -39,34 +39,10 @@ function generateNodeTemplate() {
 function generateMainShape() {
     var tempShape = goObject(
             go.Panel,
-            {
-                background: "lightgreen",
-
-            },
-            goObject(
-                go.Shape,
-                {
-                    figure: "circle",
-                    desiredSize: new go.Size(1, 1),
-                    stroke: "black",
-                    position: new go.Point(16, 0),
-                    portId: "T",  // now the Shape is the port, not the whole Node
-                    fromSpot: go.Spot.Top,  // port properties go on the port!
-                    toSpot: go.Spot.Top
-                }
-            ),
-            goObject(
-                go.Shape,
-                {
-                    figure: "circle",
-                    desiredSize: new go.Size(1, 1),
-                    stroke: "black",
-                    position: new go.Point(29, 16),
-                    portId: "L",  // now the Shape is the port, not the whole Node
-                    fromSpot: go.Spot.Right,  // port properties go on the port!
-                    toSpot: go.Spot.Right
-                }
-            ),
+            createPort("T", new go.Point(16, 0)),
+            createPort("R", new go.Point(32, 16)),
+            createPort("B", new go.Point(16, 32)),
+            createPort("L", new go.Point(0, 16)),
             goObject(
                 go.Shape,
                 {
@@ -134,7 +110,7 @@ function generateContainGenCircle() {
             maxSize: new go.Size(15, 15),
             fill: "white",
             visible: false,
-            position: new go.Point(9.5, 9.5)
+            position: new go.Point(9.5, 9.5),
         },
         new go.Binding("fill", "colorForContainGenCircle"),
         new go.Binding("visible", "containGenVisible")
@@ -371,4 +347,23 @@ function createBtn(event, btnText, btnColor, width) {
             )
         )
     return createdBtn
+}
+
+//*********************************************
+// Create Port on Node Definition
+//*********************************************
+function createPort(protName,portPosition){
+    var inputPortName = protName;
+    var inputPortPosition = portPosition
+    var tempPort = goObject(
+        go.Shape,
+        {
+            fill: null,
+            stroke: null,
+            desiredSize: new go.Size(1, 1),
+            portId: inputPortName,
+            position: inputPortPosition
+        }
+    )
+    return tempPort;
 }
