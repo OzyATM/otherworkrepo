@@ -24,7 +24,7 @@ function initializeDataModel() {
         },
         {
             key: "2",
-            figure: "circle",
+            figure: "square",
             isPatient: false,
             fill: "transparent",
             isPVisable: false,
@@ -36,7 +36,7 @@ function initializeDataModel() {
         },
         {
             key: "3",
-            figure: "square",
+            figure: "circle",
             isPatient: false,
             fill: "transparent",
             isPVisable: false,
