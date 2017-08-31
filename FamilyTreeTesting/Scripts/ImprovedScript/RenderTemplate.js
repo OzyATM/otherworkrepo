@@ -288,7 +288,7 @@ function generateLeftVerticalPanelWithBtn() {
         },
         createBtn(EventHandler.sameDisease, "相同疾病", "#FFBD9D", 80),
         createBtn(EventHandler.containGen, "帶基因者", "#FFBD9D", 80),
-        createVisibleBtn(EventHandler.isPregnant, "懷   孕", "#FFBD9D", 80, "gender"),
+        createVisibleBtn(EventHandler.isPregnant, "懷   孕", "#FFBD9D", 80, "gender", getPragnentVisible),
         createBtn(null, "多個體", "#FFBD9D", 80),
         createBtn(EventHandler.isDead, "死   亡", "#FFBD9D", 80),
         createBtn(EventHandler.loadComment, "註   解", "#FFBD9D", 80)
@@ -360,7 +360,7 @@ function createBtn(event, btnText, btnColor, width) {
     return createdBtn
 }
 
-function createVisibleBtn(event, btnText, btnColor, width, controlVariable) {
+function createVisibleBtn(event, btnText, btnColor, width, controlVariable, inputFunction) {
     var inputEvent = event
     var inputText = btnText
     var inputBtnColor = "#B8B8DC";
@@ -384,7 +384,7 @@ function createVisibleBtn(event, btnText, btnColor, width, controlVariable) {
                 "_buttonStrokeOver": null,
                 click: inputEvent
             },
-            new go.Binding("visible", controlVariable, function (v) { return getPragnentVisible(v); }),
+            new go.Binding("visible", controlVariable, function (v) { return inputFunction(v); }),
             goObject(
                 go.TextBlock,
                 inputText,
