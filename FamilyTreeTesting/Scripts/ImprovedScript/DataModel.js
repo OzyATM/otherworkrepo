@@ -62,7 +62,7 @@ function initializeDataModel() {
 
     globalDataModel.linkArray = [
         {
-            from: "1", fromPort:"R", to: "2", toPort: "L" 
+            from: "1", fromPort: "R", to: "2", toPort: "L"
         }
     ];
     return globalDataModel;

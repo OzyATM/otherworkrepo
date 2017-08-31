@@ -8,8 +8,6 @@
 // Main Node Template Definition
 // Input Data Control:
 // Main Shape
-//     - figure: shape of main object
-//     - fill: the shape's color
 //*********************************************
 function generateNodeTemplate() {
     var personNodeTemplate = goObject(
@@ -124,7 +122,7 @@ function generateContainGenCircle() {
 // - isPVisable: does the P visible
 // - colorForP: color of the char P
 //*********************************************
-function generatePTextBlock(){
+function generatePTextBlock() {
     var tempTextBlock = goObject(
         go.TextBlock,
         "P",
@@ -199,7 +197,7 @@ function generateMainAdornment() {
 //*********************************************
 // Adornment's Shape and its Definition
 //*********************************************
-function generateMainShapeForAdornment(){
+function generateMainShapeForAdornment() {
     var tempShapeForAdm = goObject(
         go.Shape,
         "Square",
@@ -280,7 +278,7 @@ function generateLeftVerticalPanelWithBtn() {
         createBtn(EventHandler.isPregnant, "懷   孕", "#FFBD9D", 80),
         createBtn(null, "多個體", "#FFBD9D", 80),
         createBtn(EventHandler.isDead, "死   亡", "#FFBD9D", 80),
-        createBtn(null, "註   解", "#FFBD9D", 80)
+        createBtn(EventHandler.loadComment, "註   解", "#FFBD9D", 80)
     )
     return thempLeftVerticalPanel;
 }
@@ -352,7 +350,7 @@ function createBtn(event, btnText, btnColor, width) {
 //*********************************************
 // Create Port on Node Definition
 //*********************************************
-function createPort(protName,portPosition){
+function createPort(protName, portPosition) {
     var inputPortName = protName;
     var inputPortPosition = portPosition
     var tempPort = goObject(
@@ -366,4 +364,29 @@ function createPort(protName,portPosition){
         }
     )
     return tempPort;
+}
+
+//*********************************************
+// Create LinkLabel on Link
+//*********************************************
+function generateLinkTemplate() {
+    var tempLinkTemplate;
+    tempLinkTemplate = goObject(
+        go.Link,
+        goObject( // link shape of the line
+            go.Shape
+        ),
+        goObject(
+            go.Shape,
+            {
+                figure: "circle",
+                desiredSize: new go.Size(5, 5),
+                fill: "green",
+                stroke: "green",
+                cursor: "pointer",
+                portId: ""
+            }
+        )
+    );
+    return tempLinkTemplate
 }

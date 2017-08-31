@@ -18,5 +18,7 @@ function initializeDiagram() {
     )
     mainDiagram.nodeTemplate = generateNodeTemplate();
     mainDiagram.model = generateGoModel(initialDataModel);
+    mainDiagram.linkTemplate = generateLinkTemplate();
+    btnRegistration();
 }
 

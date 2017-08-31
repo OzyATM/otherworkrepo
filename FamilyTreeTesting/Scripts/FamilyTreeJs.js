@@ -380,9 +380,9 @@ function init() {
             go.Shape,
             "Circle",
             {
-                width: 1, height: 1, stroke: "black", strokeWidth: 2,
+                width: 10, height: 10, stroke: "black", strokeWidth: 2,
                 portId: "", fromLinkable: false, toLinkable: false,
-                angle: 315, visible: false
+                angle: 315, visible: true
             },
             new go.Binding("figure", "adopt"),
             new go.Binding("visible"),
