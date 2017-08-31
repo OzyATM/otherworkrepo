@@ -55,9 +55,7 @@
 </body>
 <!-- Button trigger modal -->
 <button type="button" data-toggle="modal" data-target="#commentBox" style="display: none" id="addCommentBtn">備註</button>
-
-
-
+<button type="button" data-toggle="modal" data-target="#multiIndividualBox" style="display: none" id="addMultiIndividualBtn">多個體</button>
 
 <!-- Modal -->
 <div class="modal fade" id="commentBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -80,6 +78,27 @@
                 <div class="col-sm-6">
                     <img width="90%" height="90%" src="~/Content/example.jpg" />
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Multi-Individual-->
+<div class="modal fade" id="multiIndividualBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">多個體</h4>
+            </div>
+            <div class="modal-body">
+                <h4>請輸入個體數: <input type="text" id="textForMultiIndividual"></h4><br />
+                <h5 class="text-danger">＊個體數若未知則為 n</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="clearMultiIndividual">移除多個體</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" id="confirmBtnOnMultiIndividual">確定</button>
             </div>
         </div>
     </div>

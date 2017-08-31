@@ -15,6 +15,8 @@
 // - containGenVisible: the circle's color
 // - isPVisable: does the P visible
 // - colorForP: color of the char P
+// - textForMultiIndividual: text for the Multi-Individual
+// - isMultiIndividualVisable: does the text of Multi-Individual visible
 //*********************************************
 function generateNodeTemplate() {
     var personNodeTemplate = goObject(
@@ -27,6 +29,7 @@ function generateNodeTemplate() {
         generateSlashLineInPanel(),
         generateContainGenCircle(),
         generatePTextBlock(),
+        generateMultiIndividualTextBlock(),
         generateArrowPointToPatient(),
         generateTextBlockForNote(50, "noteOne"),
         generateTextBlockForNote(65, "noteTwo"),
@@ -143,7 +146,7 @@ function generatePTextBlock() {
             font: "10pt sans-serif",
             stroke: "white",
             visible: false,
-            position: new go.Point(13, 11)
+            position: new go.Point(14, 11)
         },
         new go.Binding("visible", "isPVisable"),
         new go.Binding("stroke", "colorForP")
@@ -151,6 +154,27 @@ function generatePTextBlock() {
     return tempTextBlock;
 }
 
+//*********************************************
+// Textblock for Multi-Individual Definition
+// Input Data Control:
+// - textForMultiIndividual: text for the Multi-Individual
+// - isMultiIndividualVisable: does the text of Multi-Individual visible
+//*********************************************
+function generateMultiIndividualTextBlock() {
+    var tempTextBlock = goObject(
+        go.TextBlock,
+        {
+            text: "",
+            font: "10pt sans-serif",
+            stroke: "black",
+            visible: false,
+            position: new go.Point(14, 11)
+        },
+        new go.Binding("text", "textForMultiIndividual"),
+        new go.Binding("visible", "isMultiIndividualVisable")
+    )
+    return tempTextBlock;
+}
 //*********************************************
 // Textblock with arraow
 //*********************************************
@@ -289,7 +313,7 @@ function generateLeftVerticalPanelWithBtn() {
         createBtn(EventHandler.sameDisease, "相同疾病", "#FFBD9D", 80),
         createBtn(EventHandler.containGen, "帶基因者", "#FFBD9D", 80),
         createVisibleBtn(EventHandler.isPregnant, "懷   孕", "#FFBD9D", 80, "gender", getPragnentVisible),
-        createBtn(null, "多個體", "#FFBD9D", 80),
+        createBtn(EventHandler.loadMultiIndividual, "多個體", "#FFBD9D", 80),
         createBtn(EventHandler.isDead, "死   亡", "#FFBD9D", 80),
         createBtn(EventHandler.loadComment, "註   解", "#FFBD9D", 80)
     )

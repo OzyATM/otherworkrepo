@@ -7,7 +7,8 @@ var EventHandler = {
     sameDisease: sameDisease,
     isPregnant: isPregnant,
     isDead: isDead,
-    loadComment: loadComment
+    loadComment: loadComment,
+    loadMultiIndividual: loadMultiIndividual
 }
 
 // ***************************************
@@ -72,10 +73,6 @@ function sameDisease(e, object) {
 // ***************************************
 function isPregnant(e, object) {
     var nodeData = object.part.data;
-    if (nodeData.figure === "square") {
-        alert("It is Male!!!");
-        return
-    }
     if (!nodeData.isPVisable) {
         nodeData.isPVisable = true;
         nodeData.colorForP = "black";
@@ -84,6 +81,21 @@ function isPregnant(e, object) {
     if (nodeData.fill === "black" || nodeData.colorForContainGenCircle === "black")
         nodeData.colorForP = "white";
     mainDiagram.model = generateGoModel(globalDataModel);
+}
+
+// ***************************************
+// Load MultiIndividual Event Handler
+// Load the value from textForMultiIndividual
+// ***************************************
+function loadMultiIndividual(e, object) {
+    var nodeData = object.part.data;
+    tempNodeKey = nodeData.key;
+    var objIndex = findCurrentIndex(tempNodeKey);
+    document.getElementById("addMultiIndividualBtn").click();
+    if (globalDataModel.nodeArray[objIndex].textForMultiIndividual != undefined)
+        document.getElementById('textForMultiIndividual').value = globalDataModel.nodeArray[objIndex].textForMultiIndividual;
+    else
+        document.getElementById('textForMultiIndividual').value = "";
 }
 
 // ***************************************
@@ -123,7 +135,9 @@ function loadComment(e, object) {
 // ***************************************
 function btnRegistration() {
     document.getElementById("confirmBtnOnComment").onclick = addComment;
-    document.getElementById("clearAllComment").onclick = clearAllComment;
+    document.getElementById("clearAllComment").onclick = clearAllComment; 
+    document.getElementById("confirmBtnOnMultiIndividual").onclick = addMultiIndividual; 
+    document.getElementById("clearMultiIndividual").onclick = clearMultiIndividualText;
 }
 
 // ***************************************
@@ -149,5 +163,26 @@ function clearAllComment() {
     globalDataModel.nodeArray[objIndex].noteOne = "";
     globalDataModel.nodeArray[objIndex].noteTwo = "";
     globalDataModel.nodeArray[objIndex].noteThree = "";
+    mainDiagram.model = generateGoModel(globalDataModel);
+}
+
+// ***************************************
+// The confirm Button on CSS for add MultiIndividual Modal
+// ***************************************
+function addMultiIndividual() {
+    var multiIndividualText = document.getElementById('textForMultiIndividual').value;
+    var objIndex = findCurrentIndex(tempNodeKey);
+    globalDataModel.nodeArray[objIndex].textForMultiIndividual = multiIndividualText;
+    globalDataModel.nodeArray[objIndex].isMultiIndividualVisable = true;
+    mainDiagram.model = generateGoModel(globalDataModel);
+}
+
+// ***************************************
+// Clear the Multi_Individual value
+// ***************************************
+function clearMultiIndividualText() {
+    var objIndex = findCurrentIndex(tempNodeKey);
+    globalDataModel.nodeArray[objIndex].textForMultiIndividual = "";
+    globalDataModel.nodeArray[objIndex].isMultiIndividualVisable = false;
     mainDiagram.model = generateGoModel(globalDataModel);
 }
