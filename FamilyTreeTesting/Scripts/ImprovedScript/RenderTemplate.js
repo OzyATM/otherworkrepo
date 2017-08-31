@@ -8,6 +8,13 @@
 // Main Node Template Definition
 // Input Data Control:
 // Main Shape
+// - figure: shape of the main object
+// - fill: the shape's color
+// - deadSymbolVisible: make the Line2 Visible or not
+// - colorForContainGenCircle: the color of the circle for ceotainGen
+// - containGenVisible: the circle's color
+// - isPVisable: does the P visible
+// - colorForP: color of the char P
 //*********************************************
 function generateNodeTemplate() {
     var personNodeTemplate = goObject(
@@ -57,8 +64,6 @@ function generateMainShape() {
         )
     return tempShape;
 }
-
-
 
 //*********************************************
 // Panel With Line2(slash line) Definition
