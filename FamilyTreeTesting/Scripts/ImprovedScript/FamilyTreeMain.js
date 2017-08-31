@@ -20,5 +20,5 @@ function initializeDiagram() {
     mainDiagram.model = generateGoModel(initialDataModel);
     mainDiagram.linkTemplate = generateLinkTemplate();
     btnRegistration();
+    createStuffOnNaviBar();
 }
-

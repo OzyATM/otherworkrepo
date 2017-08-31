@@ -445,3 +445,12 @@ function generateLinkTemplate() {
     );
     return tempLinkTemplate
 }
+
+// ***************************************
+// Initialized and create the font select stuff on the navi bar
+// ***************************************
+function createStuffOnNaviBar() {
+    // created the font select btn
+    $('#fontstyle').fontselect();
+    $('#fontselect').addClass("disabledbutton");
+}   
