@@ -16,5 +16,43 @@
 <h2>FamilyTreeImproved</h2>
 
 <body onload="initializeDiagram()" class="body">
-    <div id="mainDiagramDiv" class="mainDiagram"></div>
+    <div style="position:relative">
+        <div id="mainDiagramDiv" class="mainDiagram"></div>
+        <div style="position:absolute;right:20px;bottom:10px;z-index:1000; width: 50px">
+            <button class="btn btn-sm btn-primary" id="increaseZoom" style="float:right"><span class="glyphicon glyphicon-plus"></span></button>
+            <button id="zoomToFit" class="btn btn-sm" style="float:right"><span class="glyphicon glyphicon-fullscreen"></span></button>
+            <button class="btn btn-sm btn-primary" id="decreaseZoom" style="float:right"><span class="glyphicon glyphicon-minus"></span></button>
+        </div>
+    </div>
 </body>
+<!-- Button trigger modal -->
+<button type="button" data-toggle="modal" data-target="#commentBox" style="display: none" id="addCommentBtn">備註</button>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="commentBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">請輸入註解</h4>
+            </div>
+            <div class="modal-body row">
+                <div class="col-sm-6">
+                    <p>註解第一行: <input type="text" id="NoteOneOnHTML"></p>
+                    <p>註解第二行: <input type="text" id="NoteTwoOnHTML"></p>
+                    <p>註解第三行: <input type="text" id="NoteThreeOnHTML"></p>
+                    <br/>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="clearAllComment">移除所有註解</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" id="confirmBtnOnComment">確定</button>
+                </div>
+                <div class="col-sm-6">
+                    <img width="90%" height="90%" src="~/Content/example.jpg" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,28 +7,62 @@ var globalDataModel;
 //*********************************************
 function initializeDataModel() {
     globalDataModel = {};
+    globalDataModel.linkFromPortIdProperty = "fromPort"
+    globalDataModel.linkToPortIdProperty = "toPort"
     globalDataModel.nodeArray = [
         {
             key: "1",
-            figure: "Circle"
+            figure: "circle",
+            isPatient: true,
+            fill: "transparent",
+            isPVisable: false,
+            colorForP: "white",
+            deadSymbolVisible: false,
+            noteOne: "1",
+            noteTwo: "",
+            noteThree: ""
         },
         {
             key: "2",
-            figure: "Circle"
+            figure: "square",
+            isPatient: false,
+            fill: "transparent",
+            isPVisable: false,
+            colorForP: "white",
+            deadSymbolVisible: false,
+            noteOne: "",
+            noteTwo: "2",
+            noteThree: ""
         },
         {
             key: "3",
-            figure: "Square"
+            figure: "circle",
+            isPatient: false,
+            fill: "transparent",
+            isPVisable: false,
+            colorForP: "white",
+            deadSymbolVisible: false,
+            noteOne: "",
+            noteTwo: "",
+            noteThree: "3"
         },
         {
             key: "4",
-            figure: "Square"
+            figure: "square",
+            isPatient: false,
+            fill: "transparent",
+            isPVisable: false,
+            colorForP: "white",
+            deadSymbolVisible: false,
+            noteOne: "1",
+            noteTwo: "2",
+            noteThree: "3"
         }
     ];
 
     globalDataModel.linkArray = [
         {
-            from: "1", to: "2"
+            from: "1", fromPort: "R", to: "2", toPort: "L"
         }
     ];
     return globalDataModel;
@@ -39,6 +73,8 @@ function initializeDataModel() {
 //***********************************************
 function generateGoModel(inputModel) {
     var model = goObject(go.GraphLinksModel);
+    model.linkFromPortIdProperty = "fromPort"
+    model.linkToPortIdProperty = "toPort"
     model.nodeDataArray = inputModel.nodeArray.slice(0);
     model.linkDataArray = inputModel.linkArray.slice(0);
     return model;
