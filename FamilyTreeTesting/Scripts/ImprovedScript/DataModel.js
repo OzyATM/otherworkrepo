@@ -7,12 +7,14 @@ var globalDataModel;
 //*********************************************
 function initializeDataModel() {
     globalDataModel = {};
+
     globalDataModel.linkFromPortIdProperty = "fromPort"
     globalDataModel.linkToPortIdProperty = "toPort"
+
     globalDataModel.nodeArray = [
         {
             key: "1",
-            figure: "circle",
+            gender: "female",
             isPatient: true,
             fill: "transparent",
             isPVisable: false,
@@ -24,7 +26,7 @@ function initializeDataModel() {
         },
         {
             key: "2",
-            figure: "square",
+            gender: "male",
             isPatient: false,
             fill: "transparent",
             isPVisable: false,
@@ -36,7 +38,7 @@ function initializeDataModel() {
         },
         {
             key: "3",
-            figure: "circle",
+            gender: "female",
             isPatient: false,
             fill: "transparent",
             isPVisable: false,
@@ -48,7 +50,7 @@ function initializeDataModel() {
         },
         {
             key: "4",
-            figure: "square",
+            gender: "male",
             isPatient: false,
             fill: "transparent",
             isPVisable: false,
