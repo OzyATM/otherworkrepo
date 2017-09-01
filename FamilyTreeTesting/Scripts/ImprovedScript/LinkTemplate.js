@@ -3,18 +3,38 @@
 //*********************************************
 function generateParentLinkTemplate() {
     var tempLinkTemplate;
-    tempLinkTemplate = goObject("Link",
-        { relinkableFrom: false, relinkableTo: false },
-        goObject("Shape", { stroke: "green", strokeWidth: 2 })
+    tempLinkTemplate = goObject(
+        "Link",
+        {
+            relinkableFrom: false,
+            relinkableTo: false
+        },
+        goObject(
+            "Shape",
+            {
+                stroke: "green",
+                strokeWidth: 2
+            }
+        )
     );
     return tempLinkTemplate
 }
 
 function generateChildLinkTemplate() {
     var tempLinkTemplate;
-    tempLinkTemplate = goObject("Link",
-        { relinkableFrom: false, relinkableTo: false },
-        goObject("Shape", { stroke: "blue", strokeWidth: 2 })
+    tempLinkTemplate = goObject(
+        "Link",
+        {
+            relinkableFrom: false,
+            relinkableTo: false
+        },
+        goObject(
+            "Shape",
+            {
+                stroke: "blue",
+                strokeWidth: 2
+            }
+        )
     );
     return tempLinkTemplate
 }

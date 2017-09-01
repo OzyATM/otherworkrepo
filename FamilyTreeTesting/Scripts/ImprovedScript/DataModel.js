@@ -16,7 +16,7 @@ function initializeDataModel() {
         {
             key: "1",
             gender: "female",
-            isPatient: true,
+            isPatient: false,
             fill: "transparent",
             isPVisable: false,
             colorForP: "white",
@@ -48,7 +48,7 @@ function initializeDataModel() {
         {
             key: "3",
             gender: "male",
-            isPatient: false,
+            isPatient: true,
             fill: "transparent",
             isPVisable: false,
             colorForP: "white",
