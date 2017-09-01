@@ -17,8 +17,29 @@ function initializeDiagram() {
         }
     )
     mainDiagram.nodeTemplate = generateNodeTemplate();
+    mainDiagram.nodeTemplateMap.add(
+        "LinkLabel",
+        generateLinkLabel()
+    )
+    mainDiagram.linkTemplate = generateParentLinkTemplate();
+    mainDiagram.linkTemplateMap.add(
+        "ChildrenLink",
+        generateChildLinkTemplate()
+    )
     mainDiagram.model = generateGoModel(initialDataModel);
-    mainDiagram.linkTemplate = generateLinkTemplate();
     btnRegistration();
 }
 
+
+
+//*********************************************
+// Generate Main Link Template
+//*********************************************
+function generateLinkTemplate() {
+    var tempLinkTemplate;
+    tempLinkTemplate = goObject("Link",
+        { relinkableFrom: false, relinkableTo: false },
+        goObject("Shape", { stroke: "#2D9945", strokeWidth: 2 })
+    );
+    return tempLinkTemplate
+}

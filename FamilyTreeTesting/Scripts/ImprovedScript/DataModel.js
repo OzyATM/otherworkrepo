@@ -8,8 +8,9 @@ var globalDataModel;
 function initializeDataModel() {
     globalDataModel = {};
 
-    globalDataModel.linkFromPortIdProperty = "fromPort"
-    globalDataModel.linkToPortIdProperty = "toPort"
+    globalDataModel.linkFromPortIdProperty = "fromPort";
+    globalDataModel.linkToPortIdProperty = "toPort";
+    globalDataModel.linkLabelKeysProperty = "labelKeys";
 
     globalDataModel.nodeArray = [
         {
@@ -20,9 +21,10 @@ function initializeDataModel() {
             isPVisable: false,
             colorForP: "white",
             deadSymbolVisible: false,
-            noteOne: "1",
+            noteOne: "",
             noteTwo: "",
-            noteThree: ""
+            noteThree: "",
+            loc: "-50 0"
         },
         {
             key: "2",
@@ -33,12 +35,13 @@ function initializeDataModel() {
             colorForP: "white",
             deadSymbolVisible: false,
             noteOne: "",
-            noteTwo: "2",
-            noteThree: ""
+            noteTwo: "",
+            noteThree: "",
+            loc: "50 0"
         },
         {
             key: "3",
-            gender: "female",
+            gender: "male",
             isPatient: false,
             fill: "transparent",
             isPVisable: false,
@@ -46,26 +49,18 @@ function initializeDataModel() {
             deadSymbolVisible: false,
             noteOne: "",
             noteTwo: "",
-            noteThree: "3"
+            noteThree: "",
+            loc: "0 100"
         },
         {
-            key: "4",
-            gender: "male",
-            isPatient: false,
-            fill: "transparent",
-            isPVisable: false,
-            colorForP: "white",
-            deadSymbolVisible: false,
-            noteOne: "1",
-            noteTwo: "2",
-            noteThree: "3"
+            key: "1-2",
+            category: "LinkLabel"
         }
     ];
 
     globalDataModel.linkArray = [
-        {
-            from: "1", fromPort: "R", to: "2", toPort: "L"
-        }
+        { from: "1", fromPort: "R", to: "2", toPort: "L", labelKeys: ["1-2"] },
+        { from: "1-2", to: "3", toPort: "T", category: "ChildrenLink"}
     ];
     return globalDataModel;
 }
@@ -74,9 +69,13 @@ function initializeDataModel() {
 // Generate go data model from our own data model
 //***********************************************
 function generateGoModel(inputModel) {
-    var model = goObject(go.GraphLinksModel);
-    model.linkFromPortIdProperty = "fromPort"
-    model.linkToPortIdProperty = "toPort"
+    var model = goObject(go.GraphLinksModel,
+        // Supporting link from line to line
+        { linkLabelKeysProperty: inputModel.linkLabelKeysProperty }
+    );
+    // Supporting port on main nodes
+    model.linkFromPortIdProperty = inputModel.linkFromPortIdProperty
+    model.linkToPortIdProperty = inputModel.linkToPortIdProperty
     model.nodeDataArray = inputModel.nodeArray.slice(0);
     model.linkDataArray = inputModel.linkArray.slice(0);
     return model;

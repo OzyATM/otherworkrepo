@@ -24,6 +24,7 @@ function generateNodeTemplate() {
         {
             selectionAdornmentTemplate: generateMainAdornment()
         },
+        new go.Binding("location","loc", go.Point.parse),
         generateSlashLineInPanel(),
         generateContainGenCircle(),
         generatePTextBlock(),
@@ -419,29 +420,4 @@ function createPort(protName, portPosition) {
         }
     )
     return tempPort;
-}
-
-//*********************************************
-// Create LinkLabel on Link
-//*********************************************
-function generateLinkTemplate() {
-    var tempLinkTemplate;
-    tempLinkTemplate = goObject(
-        go.Link,
-        goObject( // link shape of the line
-            go.Shape
-        ),
-        goObject(
-            go.Shape,
-            {
-                figure: "circle",
-                desiredSize: new go.Size(5, 5),
-                fill: "green",
-                stroke: "green",
-                cursor: "pointer",
-                portId: ""
-            }
-        )
-    );
-    return tempLinkTemplate
 }
