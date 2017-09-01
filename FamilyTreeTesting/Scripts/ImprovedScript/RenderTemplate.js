@@ -73,6 +73,10 @@ function getGenderShape(gender){
         return "Square";
     } else if (gender === "female" ) {
         return "circle";
+    } else if (gender === "unknown") {
+        return "Diamond"
+    } else if (gender === "baby") {
+        return "Triangle"
     }
 }
 
@@ -275,7 +279,7 @@ function generateRightVerticalPanelWithBtn() {
         {
             position: new go.Point(54, -100)
         },
-        createBtn(null, "換性別", null, null),
+        createBtn(EventHandler.loadGenderType, "換性別", null, null),
         createBtn(null, "父　母", null, null),
         createBtn(null, "配　偶", null, null),
         goObject(

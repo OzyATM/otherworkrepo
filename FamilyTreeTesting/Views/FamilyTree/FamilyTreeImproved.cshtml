@@ -1,7 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "FamilyTreeImproved";
-    Layout = "~/Views/Shared/_LayoutInsert.cshtml";
+    Layout = "~/Views/Shared/_LayoutForInsert.cshtml";
    
 }
 
@@ -56,6 +56,7 @@
 <!-- Button trigger modal -->
 <button type="button" data-toggle="modal" data-target="#commentBox" style="display: none" id="addCommentBtn">備註</button>
 <button type="button" data-toggle="modal" data-target="#multiIndividualBox" style="display: none" id="addMultiIndividualBtn">多個體</button>
+<button type="button" data-toggle="modal" data-target="#changeGenderBox" style="display: none" id="changeGenderBtn">換性別</button>
 
 <!-- Modal -->
 <div class="modal fade" id="commentBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -100,6 +101,45 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
                 <button type="button" class="btn btn-success" data-dismiss="modal" id="confirmBtnOnMultiIndividual">確定</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!--Change Gender-->
+<div class="modal fade" id="changeGenderBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">換個體</h4>
+            </div>
+            <div class="modal-body">
+                <h5>
+                    <input type="radio" name="genderRadio" id="changeGenderMale"> 男性
+                    <input type="radio" name="genderRadio" id="changeGenderFemale"> 女性
+                    <input type="radio" name="genderRadio" id="changeGenderBaby"> 胎兒
+                    <input type="radio" name="genderRadio" id="changeGenderUnknown"> 未明
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" id="confirmBtnOnChangeGender">確定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--User Manual-->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <h4 class="text-center"><img style="width:10%" src="~/Content/guides_blue.png">操作說明</h4>
+            <p></p>
+            <h5><span>一、點擊子女線條可設定(1)親生、(2)領養。</span></h5>
+            <h5>二、點擊夫妻線條可設定(1)結婚、(2)離婚、(3)分居、(4)同居。</h5>
+            <h5>三、點擊圈選同住者，可將同住在一起的家庭成員或主要照顧者圈起來。</h5>
+            <h5>四、點擊個體可以註記死亡、同疾病、基因帶原者。</h5>
         </div>
     </div>
 </div>

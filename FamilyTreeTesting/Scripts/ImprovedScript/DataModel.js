@@ -20,7 +20,7 @@ function initializeDataModel() {
             isPVisable: false,
             colorForP: "white",
             textForMultiIndividual: "",
-            isMultiIndividualVisable: true,
+            isMultiIndividualVisable: false,
             deadSymbolVisible: false,
             noteOne: "1",
             noteTwo: "",

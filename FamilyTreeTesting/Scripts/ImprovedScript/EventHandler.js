@@ -8,7 +8,8 @@ var EventHandler = {
     isPregnant: isPregnant,
     isDead: isDead,
     loadComment: loadComment,
-    loadMultiIndividual: loadMultiIndividual
+    loadMultiIndividual: loadMultiIndividual,
+    loadGenderType: loadGenderType
 }
 
 // ***************************************
@@ -84,21 +85,6 @@ function isPregnant(e, object) {
 }
 
 // ***************************************
-// Load MultiIndividual Event Handler
-// Load the value from textForMultiIndividual
-// ***************************************
-function loadMultiIndividual(e, object) {
-    var nodeData = object.part.data;
-    tempNodeKey = nodeData.key;
-    var objIndex = findCurrentIndex(tempNodeKey);
-    document.getElementById("addMultiIndividualBtn").click();
-    if (globalDataModel.nodeArray[objIndex].textForMultiIndividual != undefined)
-        document.getElementById('textForMultiIndividual').value = globalDataModel.nodeArray[objIndex].textForMultiIndividual;
-    else
-        document.getElementById('textForMultiIndividual').value = "";
-}
-
-// ***************************************
 // Dead Symbol Event Handler
 // Add a slash line
 // ***************************************
@@ -131,16 +117,6 @@ function loadComment(e, object) {
 }
 
 // ***************************************
-// Button registration
-// ***************************************
-function btnRegistration() {
-    document.getElementById("confirmBtnOnComment").onclick = addComment;
-    document.getElementById("clearAllComment").onclick = clearAllComment; 
-    document.getElementById("confirmBtnOnMultiIndividual").onclick = addMultiIndividual; 
-    document.getElementById("clearMultiIndividual").onclick = clearMultiIndividualText;
-}
-
-// ***************************************
 // The confirm Button on CSS for add comment Modal
 // ***************************************
 function addComment() {
@@ -167,6 +143,35 @@ function clearAllComment() {
 }
 
 // ***************************************
+// Button registration
+// ***************************************
+function btnRegistration() {
+    document.getElementById("confirmBtnOnComment").onclick = addComment;
+    document.getElementById("clearAllComment").onclick = clearAllComment; 
+    document.getElementById("confirmBtnOnMultiIndividual").onclick = addMultiIndividual; 
+    document.getElementById("clearMultiIndividual").onclick = clearMultiIndividualText;
+    document.getElementById("confirmBtnOnChangeGender").onclick = changeGenderType; 
+    document.getElementById("increaseZoom").onclick = increaseZoom;
+    document.getElementById("decreaseZoom").onclick = decreaseZoom; 
+    document.getElementById("zoomToFit").onclick = zoomToFit;
+}
+
+// ***************************************
+// Load MultiIndividual Event Handler
+// Load the value from textForMultiIndividual
+// ***************************************
+function loadMultiIndividual(e, object) {
+    var nodeData = object.part.data;
+    tempNodeKey = nodeData.key;
+    var objIndex = findCurrentIndex(tempNodeKey);
+    document.getElementById("addMultiIndividualBtn").click();
+    if (globalDataModel.nodeArray[objIndex].textForMultiIndividual != undefined)
+        document.getElementById('textForMultiIndividual').value = globalDataModel.nodeArray[objIndex].textForMultiIndividual;
+    else
+        document.getElementById('textForMultiIndividual').value = "";
+}
+
+// ***************************************
 // The confirm Button on CSS for add MultiIndividual Modal
 // ***************************************
 function addMultiIndividual() {
@@ -185,4 +190,60 @@ function clearMultiIndividualText() {
     globalDataModel.nodeArray[objIndex].textForMultiIndividual = "";
     globalDataModel.nodeArray[objIndex].isMultiIndividualVisable = false;
     mainDiagram.model = generateGoModel(globalDataModel);
+}
+
+// ***************************************
+// Load GenderType Event Handler
+// Load the value from gender
+// ***************************************
+function loadGenderType(e, object) {
+    var nodeData = object.part.data;
+    tempNodeKey = nodeData.key;
+    var objIndex = findCurrentIndex(tempNodeKey);
+    document.getElementById("changeGenderBtn").click();
+    var currentGenderType = globalDataModel.nodeArray[objIndex].gender
+    if (currentGenderType === "male")
+        changeGenderMale.checked = true
+    else if (currentGenderType === "female")
+        changeGenderFemale.checked = true
+    else if (currentGenderType === "baby")
+        changeGenderBaby.checked = true
+    else if (currentGenderType === "unknown")
+        changeGenderUnknown.checked = true
+}
+
+// ***************************************
+// The confirm Button on CSS for add changeGender Modal
+// ***************************************
+function changeGenderType() {
+    var objIndex = findCurrentIndex(tempNodeKey);
+    if (changeGenderMale.checked)
+        globalDataModel.nodeArray[objIndex].gender = "male"
+    else if (changeGenderFemale.checked)
+        globalDataModel.nodeArray[objIndex].gender = "female"
+    else if (changeGenderBaby.checked)
+        globalDataModel.nodeArray[objIndex].gender = "baby"
+    else if (changeGenderUnknown.checked)
+        globalDataModel.nodeArray[objIndex].gender = "unknown"
+    mainDiagram.model = generateGoModel(globalDataModel);
+}
+
+// ***************************************
+// The Zooming function
+// incraseZoom - increaase zoom
+// decraseZoom - decrease zoom
+// zoomToFit - move the oject to center
+// ***************************************
+function increaseZoom() {
+    var increaseZoomOriginalSize = 1.1;
+    mainDiagram.commandHandler.increaseZoom(increaseZoomOriginalSize);
+}
+function decreaseZoom() {
+    var decreaseZoomOriginalSize = 0.9;
+    mainDiagram.commandHandler.increaseZoom(decreaseZoomOriginalSize);
+}
+function zoomToFit() {
+    mainDiagram.zoomToFit();
+    mainDiagram.contentAlignment = go.Spot.Center;
+    mainDiagram.contentAlignment = go.Spot.Default;
 }
