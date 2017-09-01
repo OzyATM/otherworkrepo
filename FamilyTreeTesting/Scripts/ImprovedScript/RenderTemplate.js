@@ -31,6 +31,7 @@ function generateNodeTemplate() {
         generatePTextBlock(),
         generateMultiIndividualTextBlock(),
         generateArrowPointToPatient(),
+        generateAdoptSignInPanel(),
         generateTextBlockForNote(50, "noteOne"),
         generateTextBlockForNote(65, "noteTwo"),
         generateTextBlockForNote(80, "noteThree")
@@ -220,6 +221,34 @@ function generateTextBlockForNote(positionY, dataBoundTo) {
 }
 
 //*********************************************
+// Panel With textBlock(adopted sign) Definition
+// Input Data Control:
+// - isAdoptedSignVisible: make the adopted sign Visible or not
+//*********************************************
+function generateAdoptSignInPanel() {
+    var tempPanel = goObject(
+        go.Panel,
+        "Position",
+        {
+            width: 65,
+            height: 50,
+            position: new go.Point(-14.5,-8)
+        },
+        goObject(
+            go.TextBlock,
+            {
+                text: "[   ]",
+                font: "34pt sans-serif",
+                stroke: "black",
+                visible: false
+            },
+            new go.Binding("visible", "isAdoptedSignVisible")
+        )
+    )
+    return tempPanel
+}
+
+//*********************************************
 // Adornment Definition
 //*********************************************
 function generateMainAdornment() {
@@ -248,7 +277,7 @@ function generateMainShapeForAdornment() {
             fill: null,
             stroke: "blue",
             strokeWidth: 3,
-            position: new go.Point(-4, -4)
+            position: new go.Point(5, -1)
         }
     )
     return tempShapeForAdm
@@ -262,7 +291,7 @@ function generateHorizontalPanelWithDelBtn() {
         go.Panel,
         "Horizontal",
         {
-            position: new go.Point(-8, 50)
+            position: new go.Point(2, 55)
         },
         createDeleteBtn(EventHandler.deleteNode, "刪除", 50)
     )
@@ -277,7 +306,7 @@ function generateRightVerticalPanelWithBtn() {
         go.Panel,
         "Vertical",
         {
-            position: new go.Point(54, -100)
+            position: new go.Point(64, -100)
         },
         createBtn(EventHandler.loadGenderType, "換性別", null, null),
         createBtn(null, "父　母", null, null),
@@ -312,7 +341,7 @@ function generateLeftVerticalPanelWithBtn() {
         go.Panel,
         "Vertical",
         {
-            position: new go.Point(-96, -100)
+            position: new go.Point(-86, -100)
         },
         createBtn(EventHandler.sameDisease, "相同疾病", "#FFBD9D", 80),
         createBtn(EventHandler.containGen, "帶基因者", "#FFBD9D", 80),

@@ -24,7 +24,8 @@ function initializeDataModel() {
             deadSymbolVisible: false,
             noteOne: "1",
             noteTwo: "",
-            noteThree: ""
+            noteThree: "",
+            isAdoptedSignVisible: false
         },
         {
             key: "2",
@@ -38,7 +39,8 @@ function initializeDataModel() {
             deadSymbolVisible: false,
             noteOne: "",
             noteTwo: "2",
-            noteThree: ""
+            noteThree: "",
+            isAdoptedSignVisible: false
         },
         {
             key: "3",
@@ -52,7 +54,8 @@ function initializeDataModel() {
             deadSymbolVisible: false,
             noteOne: "",
             noteTwo: "",
-            noteThree: "3"
+            noteThree: "3",
+            isAdoptedSignVisible: false
         },
         {
             key: "4",
@@ -66,7 +69,8 @@ function initializeDataModel() {
             deadSymbolVisible: false,
             noteOne: "1",
             noteTwo: "2",
-            noteThree: "3"
+            noteThree: "3",
+            isAdoptedSignVisible: false
         }
     ];
 
