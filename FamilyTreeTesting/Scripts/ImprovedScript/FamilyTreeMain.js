@@ -17,8 +17,16 @@ function initializeDiagram() {
         }
     )
     mainDiagram.nodeTemplate = generateNodeTemplate();
+    mainDiagram.nodeTemplateMap.add(
+        "LinkLabel",
+        generateLinkLabel()
+    )
+    mainDiagram.linkTemplate = generateParentLinkTemplate();
+    mainDiagram.linkTemplateMap.add(
+        "ChildrenLink",
+        generateChildLinkTemplate()
+    )
     mainDiagram.model = generateGoModel(initialDataModel);
-    mainDiagram.linkTemplate = generateLinkTemplate();
     btnRegistration();
     createStuffOnNaviBar();
 }

@@ -39,6 +39,7 @@ namespace FamilyTreeTesting
                       "~/Scripts/ImprovedScript/DataModel.js",
                       "~/Scripts/ImprovedScript/EventHandler.js",
                       "~/Scripts/ImprovedScript/RenderTemplate.js",
+                      "~/Scripts/ImprovedScript/LinkTemplate.js",
                       "~/Scripts/ImprovedScript/FamilyTreeMain.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/GoJS").Include(

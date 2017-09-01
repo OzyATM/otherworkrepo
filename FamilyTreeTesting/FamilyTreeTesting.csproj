@@ -233,6 +233,7 @@
     <Content Include="Scripts\ImprovedScript\DataModel.js" />
     <Content Include="Scripts\ImprovedScript\EventHandler.js" />
     <Content Include="Scripts\ImprovedScript\FamilyTreeMain.js" />
+    <Content Include="Scripts\ImprovedScript\LinkTemplate.js" />
     <Content Include="Scripts\ImprovedScript\RenderTemplate.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
