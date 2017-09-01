@@ -29,17 +29,3 @@ function initializeDiagram() {
     mainDiagram.model = generateGoModel(initialDataModel);
     btnRegistration();
 }
-
-
-
-//*********************************************
-// Generate Main Link Template
-//*********************************************
-function generateLinkTemplate() {
-    var tempLinkTemplate;
-    tempLinkTemplate = goObject("Link",
-        { relinkableFrom: false, relinkableTo: false },
-        goObject("Shape", { stroke: "#2D9945", strokeWidth: 2 })
-    );
-    return tempLinkTemplate
-}
