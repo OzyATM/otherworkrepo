@@ -15,6 +15,8 @@
 // - containGenVisible: the circle's color
 // - isPVisable: does the P visible
 // - colorForP: color of the char P
+// - textForMultiIndividual: text for the Multi-Individual
+// - isMultiIndividualVisable: does the text of Multi-Individual visible
 //*********************************************
 function generateNodeTemplate() {
     var personNodeTemplate = goObject(
@@ -28,7 +30,9 @@ function generateNodeTemplate() {
         generateSlashLineInPanel(),
         generateContainGenCircle(),
         generatePTextBlock(),
+        generateMultiIndividualTextBlock(),
         generateArrowPointToPatient(),
+        generateAdoptSignInPanel(),
         generateTextBlockForNote(50, "noteOne"),
         generateTextBlockForNote(65, "noteTwo"),
         generateTextBlockForNote(80, "noteThree")
@@ -71,6 +75,10 @@ function getGenderShape(gender){
         return "Square";
     } else if (gender === "female" ) {
         return "circle";
+    } else if (gender === "unknown") {
+        return "Diamond"
+    } else if (gender === "baby") {
+        return "Triangle"
     }
 }
 
@@ -144,7 +152,7 @@ function generatePTextBlock() {
             font: "10pt sans-serif",
             stroke: "white",
             visible: false,
-            position: new go.Point(13, 11)
+            position: new go.Point(14, 11)
         },
         new go.Binding("visible", "isPVisable"),
         new go.Binding("stroke", "colorForP")
@@ -152,6 +160,27 @@ function generatePTextBlock() {
     return tempTextBlock;
 }
 
+//*********************************************
+// Textblock for Multi-Individual Definition
+// Input Data Control:
+// - textForMultiIndividual: text for the Multi-Individual
+// - isMultiIndividualVisable: does the text of Multi-Individual visible
+//*********************************************
+function generateMultiIndividualTextBlock() {
+    var tempTextBlock = goObject(
+        go.TextBlock,
+        {
+            text: "",
+            font: "10pt sans-serif",
+            stroke: "black",
+            visible: false,
+            position: new go.Point(14, 11)
+        },
+        new go.Binding("text", "textForMultiIndividual"),
+        new go.Binding("visible", "isMultiIndividualVisable")
+    )
+    return tempTextBlock;
+}
 //*********************************************
 // Textblock with arraow
 //*********************************************
@@ -193,6 +222,34 @@ function generateTextBlockForNote(positionY, dataBoundTo) {
 }
 
 //*********************************************
+// Panel With textBlock(adopted sign) Definition
+// Input Data Control:
+// - isAdoptedSignVisible: make the adopted sign Visible or not
+//*********************************************
+function generateAdoptSignInPanel() {
+    var tempPanel = goObject(
+        go.Panel,
+        "Position",
+        {
+            width: 65,
+            height: 50,
+            position: new go.Point(-14.5,-8)
+        },
+        goObject(
+            go.TextBlock,
+            {
+                text: "[   ]",
+                font: "34pt sans-serif",
+                stroke: "black",
+                visible: false
+            },
+            new go.Binding("visible", "isAdoptedSignVisible")
+        )
+    )
+    return tempPanel
+}
+
+//*********************************************
 // Adornment Definition
 //*********************************************
 function generateMainAdornment() {
@@ -221,7 +278,7 @@ function generateMainShapeForAdornment() {
             fill: null,
             stroke: "blue",
             strokeWidth: 3,
-            position: new go.Point(-4, -4)
+            position: new go.Point(5, -1)
         }
     )
     return tempShapeForAdm
@@ -235,7 +292,7 @@ function generateHorizontalPanelWithDelBtn() {
         go.Panel,
         "Horizontal",
         {
-            position: new go.Point(-8, 50)
+            position: new go.Point(2, 55)
         },
         createDeleteBtn(EventHandler.deleteNode, "刪除", 50)
     )
@@ -250,9 +307,9 @@ function generateRightVerticalPanelWithBtn() {
         go.Panel,
         "Vertical",
         {
-            position: new go.Point(54, -100)
+            position: new go.Point(64, -100)
         },
-        createBtn(null, "換性別", null, null),
+        createBtn(EventHandler.loadGenderType, "換性別", null, null),
         createBtn(null, "父　母", null, null),
         createBtn(null, "配　偶", null, null),
         goObject(
@@ -285,12 +342,12 @@ function generateLeftVerticalPanelWithBtn() {
         go.Panel,
         "Vertical",
         {
-            position: new go.Point(-96, -100)
+            position: new go.Point(-86, -100)
         },
         createBtn(EventHandler.sameDisease, "相同疾病", "#FFBD9D", 80),
         createBtn(EventHandler.containGen, "帶基因者", "#FFBD9D", 80),
         createVisibleBtn(EventHandler.isPregnant, "懷   孕", "#FFBD9D", 80, "gender", getPragnentVisible),
-        createBtn(null, "多個體", "#FFBD9D", 80),
+        createBtn(EventHandler.loadMultiIndividual, "多個體", "#FFBD9D", 80),
         createBtn(EventHandler.isDead, "死   亡", "#FFBD9D", 80),
         createBtn(EventHandler.loadComment, "註   解", "#FFBD9D", 80)
     )
@@ -420,4 +477,13 @@ function createPort(protName, portPosition) {
         }
     )
     return tempPort;
+}
+
+// ***************************************
+// Initialized and create the font select stuff on the navi bar
+// ***************************************
+function createStuffOnNaviBar() {
+    // created the font select btn
+    $('#fontstyle').fontselect();
+    $('#fontselect').addClass("disabledbutton");
 }

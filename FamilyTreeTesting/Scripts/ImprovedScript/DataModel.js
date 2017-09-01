@@ -20,11 +20,14 @@ function initializeDataModel() {
             fill: "transparent",
             isPVisable: false,
             colorForP: "white",
+            textForMultiIndividual: "",
+            isMultiIndividualVisable: false,
             deadSymbolVisible: false,
             noteOne: "",
             noteTwo: "",
             noteThree: "",
-            loc: "-50 0"
+            loc: "-50 0",
+            isAdoptedSignVisible: false
         },
         {
             key: "2",
@@ -33,11 +36,14 @@ function initializeDataModel() {
             fill: "transparent",
             isPVisable: false,
             colorForP: "white",
+            textForMultiIndividual: "",
+            isMultiIndividualVisable: false,
             deadSymbolVisible: false,
             noteOne: "",
             noteTwo: "",
             noteThree: "",
-            loc: "50 0"
+            loc: "50 0",
+            isAdoptedSignVisible: false
         },
         {
             key: "3",
@@ -46,16 +52,19 @@ function initializeDataModel() {
             fill: "transparent",
             isPVisable: false,
             colorForP: "white",
+            textForMultiIndividual: "",
+            isMultiIndividualVisable: false,
             deadSymbolVisible: false,
             noteOne: "",
             noteTwo: "",
             noteThree: "",
-            loc: "0 100"
+            loc: "0 100",
+            isAdoptedSignVisible: false
         },
         {
             key: "1-2",
-            category: "LinkLabel"
-        }
+            category: "LinkLabel",
+        },
     ];
 
     globalDataModel.linkArray = [

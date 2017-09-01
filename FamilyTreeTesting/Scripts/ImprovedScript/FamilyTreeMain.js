@@ -28,4 +28,5 @@ function initializeDiagram() {
     )
     mainDiagram.model = generateGoModel(initialDataModel);
     btnRegistration();
+    createStuffOnNaviBar();
 }
