@@ -1,6 +1,5 @@
 ﻿var goObject = go.GraphObject.make;
 // Initialize an empty datamodel
-var globalRenderData;
 var globalLogicData;
 
 function getDefaultLogitUnitData(inputId) {
@@ -43,15 +42,64 @@ function initializeGlobalLogicData() {
     return globalLogicData;
 }
 
+//*********************************************
+// Helper functions
+//*********************************************
+function findCurrentIndex(inputKey) {
+    globalRenderData.nodeArray.forEach(function (obj, index) {
+        if (obj.key === inputKey)
+            tempIndex = index
+    });
+    return tempIndex;
+}
+
+// ************************************************
+// Logic to render data structure conversion
+// ************************************************
+
 function logicDataToRenderData(logicData) {
     var baseDistance = 100;
     var baseHeight = 100;
     var basePosition = { x: 0, y: 0 };
     var result = { nodeArray: [], linkArray: [] };
-    var parentTreeRenderData = getParentRenderData(basePosition, baseDistance, logicData.parentTree);
+
+    var parentTreeRenderData =
+        getParentRenderData(
+            basePosition,
+            baseDistance,
+            logicData.parentTree
+        );
+
+    var childrenTreeRenderData =
+        getChildrenRenderData(
+            basePosition,
+            baseHeight,
+            parentTreeRenderData.linkNode,
+            logicData.childrenList
+        );
+
     result.nodeArray = result.nodeArray.concat(parentTreeRenderData.nodeArray);
     result.linkArray = result.linkArray.concat(parentTreeRenderData.linkArray);
-    // var childrenTreeNodes = generateChildrenTreeNodes(basePosition, distance, parentTreeRenderData.linkNode, input.childrenList);
+    result.nodeArray = result.nodeArray.concat(childrenTreeRenderData.nodeArray);
+    result.linkArray = result.linkArray.concat(childrenTreeRenderData.linkArray);
+
+    return result;
+}
+
+function getChildrenRenderData(basePos, height, linkNode, logicData) {
+    var result = { nodeArray: [], linkArray: [] };
+    var middlePos = {
+        x: basePos.x,
+        y: basePos.y + height
+    };
+
+    var childRenderNode = getNodeData(logicData[0], middlePos);
+    var linkData = getChildLinkData(childRenderNode, linkNode)
+
+    result.nodeArray.push(childRenderNode);
+    result.nodeArray = result.nodeArray.concat(linkData.nodeArray);
+    result.linkArray = result.linkArray.concat(linkData.linkArray);
+
     return result;
 }
 
@@ -67,12 +115,16 @@ function getParentRenderData(pos, distance, logicData) {
     var result = {
         nodeArray: [],
         linkArray: [],
-        childLinkNode: ""
+        linkNode: {}
     };
 
-    result.nodeArray.push(getNodeData(logicData.left, leftPos));
-    result.nodeArray.push(getNodeData(logicData.right, rightPos));
-    var linkData = getPartenerLinkData(logicData.left, logicData.right);
+    var leftPNode = getNodeData(logicData.left, leftPos);
+    var rightPNode = getNodeData(logicData.right, rightPos);
+    var linkData = getPartenerLinkData(leftPNode, rightPNode);
+
+
+    result.nodeArray.push(leftPNode);
+    result.nodeArray.push(rightPNode);
     result.nodeArray = result.nodeArray.concat(linkData.nodeArray);
     result.linkArray = result.linkArray.concat(linkData.linkArray);
     result.linkNode = linkData.linkNode;
@@ -81,7 +133,7 @@ function getParentRenderData(pos, distance, logicData) {
 }
 
 // *******************************************************
-//      Logic to Render data conversion
+//      Logic to Render data Unit Conversion
 // *******************************************************
 // Note: This part of the code handles converting logical
 // data that is understandble by human into data that makes
@@ -102,26 +154,37 @@ function getParentRenderData(pos, distance, logicData) {
 //  - notes (array)
 
 function getPartenerLinkData(left, right) {
-    var result = {
-        nodeArray: [],
-        linkArray: [],
-        linkName: ""
-    };
+    var result = { nodeArray: [], linkArray: [], linkNode: {} };
 
-    result.linkName = "" + left.id + "-" + right.id, // combine left and right id to make a readble id
+    result.linkName = "" + left.key + "-" + right.key; // combine left and right id to make a readble id
+    result.linkNode = { key: result.linkName, category: "LinkLabel" }
+    result.nodeArray.push(result.linkNode);
 
-    result.nodeArray.push(
-        {
-            key: result.linkName,
-            category: "LinkLabel",
-        });
     result.linkArray.push(
         {
-            from: left.id,
+            from: left.key,
             fromPort: "R",
-            to: right.id,
+            to: right.key,
             toPort: "L",
-            labelKeys: result.linkName
+            labelKeys: [ result.linkName ]
+        }
+    )
+    return result;
+}
+
+function getChildLinkData(child, linkNode) {
+    var result = { nodeArray: [], linkArray: [], linkNode: {} };
+
+    var linkName = "" + linkNode.key + "-Link-" + child.key; // combine left and right id to make a readble id
+    result.linkNode = { key: linkName, category: "LinkLabel" }
+    result.nodeArray.push(result.linkNode);
+
+    result.linkArray.push(
+        {
+            from: linkNode.key,
+            to: child.key,
+            toPort: "T",
+            labelKeys: [linkName]
         }
     )
     return result;
@@ -204,15 +267,4 @@ function logicModelToGoModel(logicData) {
     model.nodeDataArray = renderData.nodeArray;
     model.linkDataArray = renderData.linkArray;
     return model;
-}
-
-//*********************************************
-// Helper functions
-//*********************************************
-function findCurrentIndex(inputKey) {
-    globalRenderData.nodeArray.forEach(function (obj, index) {
-        if (obj.key === inputKey)
-            tempIndex = index
-    });
-    return tempIndex;
 }
