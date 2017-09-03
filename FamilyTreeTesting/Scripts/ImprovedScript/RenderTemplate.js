@@ -8,15 +8,17 @@
 // Main Node Template Definition
 // Input Data Control:
 // Main Shape
-// - figure: shape of the main object
-// - fill: the shape's color
-// - deadSymbolVisible: make the Line2 Visible or not
-// - colorForContainGenCircle: the color of the circle for ceotainGen
-// - containGenVisible: the circle's color
-// - isPVisable: does the P visible
-// - colorForP: color of the char P
+// - mainFigure: shape of the main object
+// - fill: color of the main object
+// - isPatient: show or hide the patient arrow
+// - deadSymbolVisible: show or hide the death cross line
+// - containGenVisible: show or hide the contain gen circle
+// - isPVisable: show or hide the pragnent label
+// - colorForP: color of the pragnent label
 // - textForMultiIndividual: text for the Multi-Individual
-// - isMultiIndividualVisable: does the text of Multi-Individual visible
+// - colorForMultiIndividual: color of multi individual text
+// - isMultiIndividualVisable: show or hide multi individual text
+// - isAdoptedSignVisible: show or hide the adoption sign
 //*********************************************
 function generateNodeTemplate() {
     var personNodeTemplate = goObject(
@@ -43,7 +45,7 @@ function generateNodeTemplate() {
 //*********************************************
 // Main Shape Definition
 // Input Data Control:
-// - figure: shape of the main object
+// - mainFigure: shape of the main object
 // - fill: the shape's color
 //*********************************************
 function generateMainShape() {
@@ -61,25 +63,12 @@ function generateMainShape() {
                     strokeWidth: 5,
                     maxSize: new go.Size(40, 40),
                     cursor: "pointer",
-                    fill: "transparent",
                 },
-                new go.Binding("figure", "gender", function (v) { return getGenderShape(v); }),
+                new go.Binding("figure", "mainFigure"),
                 new go.Binding("fill")
             )
         )
     return tempShape;
-}
-
-function getGenderShape(gender){
-    if (gender === "male") {
-        return "Square";
-    } else if (gender === "female" ) {
-        return "circle";
-    } else if (gender === "unknown") {
-        return "Diamond"
-    } else if (gender === "baby") {
-        return "Triangle"
-    }
 }
 
 //*********************************************
@@ -103,7 +92,6 @@ function generateSlashLineInPanel() {
                 width: 42,
                 height: 42,
                 stroke: "black",
-                visible: false,
                 strokeWidth: 3,
                 position: new go.Point(-5, -5)
             },
@@ -116,7 +104,6 @@ function generateSlashLineInPanel() {
 //*********************************************
 // The circle for containGen Definition
 // Input Data Control:
-// - colorForContainGenCircle: the color of the circle for ceotainGen
 // - containGenVisible: the circle's color
 //*********************************************
 function generateContainGenCircle() {
@@ -127,12 +114,10 @@ function generateContainGenCircle() {
             width: 100,
             height: 100,
             stroke: null,
+            fill: "black",
             maxSize: new go.Size(15, 15),
-            fill: "white",
-            visible: false,
             position: new go.Point(9.5, 9.5),
         },
-        new go.Binding("fill", "colorForContainGenCircle"),
         new go.Binding("visible", "containGenVisible")
     )
     return tempShape
@@ -150,8 +135,6 @@ function generatePTextBlock() {
         "P",
         {
             font: "10pt sans-serif",
-            stroke: "white",
-            visible: false,
             position: new go.Point(14, 11)
         },
         new go.Binding("visible", "isPVisable"),
@@ -164,19 +147,19 @@ function generatePTextBlock() {
 // Textblock for Multi-Individual Definition
 // Input Data Control:
 // - textForMultiIndividual: text for the Multi-Individual
+// - colorForMultiIndividual: color of multi individual
 // - isMultiIndividualVisable: does the text of Multi-Individual visible
 //*********************************************
 function generateMultiIndividualTextBlock() {
     var tempTextBlock = goObject(
         go.TextBlock,
         {
-            text: "",
             font: "10pt sans-serif",
             stroke: "black",
-            visible: false,
             position: new go.Point(14, 11)
         },
         new go.Binding("text", "textForMultiIndividual"),
+        new go.Binding("stroke", "colorForMultiIndividual"),
         new go.Binding("visible", "isMultiIndividualVisable")
     )
     return tempTextBlock;
@@ -191,7 +174,6 @@ function generateArrowPointToPatient() {
         {
             font: "10pt sans-serif",
             stroke: "black",
-            visible: false,
             position: new go.Point(0, 35)
         },
         new go.Binding("visible", "isPatient")
@@ -346,7 +328,7 @@ function generateLeftVerticalPanelWithBtn() {
         },
         createBtn(EventHandler.sameDisease, "相同疾病", "#FFBD9D", 80),
         createBtn(EventHandler.containGen, "帶基因者", "#FFBD9D", 80),
-        createVisibleBtn(EventHandler.isPregnant, "懷   孕", "#FFBD9D", 80, "gender", getPragnentVisible),
+        createBtn(EventHandler.isPregnant, "懷   孕", "#FFBD9D", 80),
         createBtn(EventHandler.loadMultiIndividual, "多個體", "#FFBD9D", 80),
         createBtn(EventHandler.isDead, "死   亡", "#FFBD9D", 80),
         createBtn(EventHandler.loadComment, "註   解", "#FFBD9D", 80)
@@ -450,14 +432,6 @@ function createVisibleBtn(event, btnText, btnColor, width, controlVariable, inpu
             )
         )
     return createdBtn
-}
-
-function getPragnentVisible(gender) {
-    if (gender === "male") {
-        return false;
-    } else if (gender === "female") {
-        return true;
-    }
 }
 
 //*********************************************

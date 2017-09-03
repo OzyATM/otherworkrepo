@@ -13,6 +13,20 @@ var EventHandler = {
 }
 
 // ***************************************
+// Button registration
+// ***************************************
+function btnRegistration() {
+    document.getElementById("confirmBtnOnComment").onclick = addComment;
+    document.getElementById("clearAllComment").onclick = clearAllComment;
+    document.getElementById("confirmBtnOnMultiIndividual").onclick = addMultiIndividual;
+    document.getElementById("clearMultiIndividual").onclick = clearMultiIndividualText;
+    document.getElementById("confirmBtnOnChangeGender").onclick = changeGenderType;
+    document.getElementById("increaseZoom").onclick = increaseZoom;
+    document.getElementById("decreaseZoom").onclick = decreaseZoom;
+    document.getElementById("zoomToFit").onclick = zoomToFit;
+}
+
+// ***************************************
 // Delete Node Event Handler
 // Remove specific node from DataModel, then re-render
 // ***************************************
@@ -20,8 +34,8 @@ function deleteNode(e, object) {
     var node = object.part.adornedPart;
     var nodeKey = node.data.key;
     var objIndex = findCurrentIndex(nodeKey);
-    globalDataModel.nodeArray.splice(objIndex, 1);
-    mainDiagram.model = generateGoModel(globalDataModel);
+    globalRenderData.nodeArray.splice(objIndex, 1);
+    mainDiagram.model = generateGoModel(globalRenderData);
 }
 
 // ***************************************
@@ -42,7 +56,7 @@ function containGen(e, object) {
         nodeData.colorForP = "white";
     else
         nodeData.colorForP = "black";
-    mainDiagram.model = generateGoModel(globalDataModel);
+    mainDiagram.model = generateGoModel(globalRenderData);
 }
 
 // ***************************************
@@ -65,7 +79,7 @@ function sameDisease(e, object) {
         nodeData.colorForP = "white";
     else
         nodeData.colorForP = "black";
-    mainDiagram.model = generateGoModel(globalDataModel);
+    mainDiagram.model = generateGoModel(globalRenderData);
 }
 
 // ***************************************
@@ -81,7 +95,7 @@ function isPregnant(e, object) {
         nodeData.isPVisable = false;
     if (nodeData.fill === "black" || nodeData.colorForContainGenCircle === "black")
         nodeData.colorForP = "white";
-    mainDiagram.model = generateGoModel(globalDataModel);
+    mainDiagram.model = generateGoModel(globalRenderData);
 }
 
 // ***************************************
@@ -92,7 +106,7 @@ function isDead(e,object) {
     var nodeData = object.part.data;
     nodeData.deadSymbolVisible = !nodeData.deadSymbolVisible;
 
-    mainDiagram.model = generateGoModel(globalDataModel);
+    mainDiagram.model = generateGoModel(globalRenderData);
 }
 
 // ***************************************
@@ -104,10 +118,10 @@ function loadComment(e, object) {
     tempNodeKey = nodeData.key;
     var objIndex = findCurrentIndex(tempNodeKey);
     document.getElementById("addCommentBtn").click();
-    if (globalDataModel.nodeArray[objIndex].noteOne != undefined) {
-        document.getElementById('NoteOneOnHTML').value = globalDataModel.nodeArray[objIndex].noteOne;
-        document.getElementById('NoteTwoOnHTML').value = globalDataModel.nodeArray[objIndex].noteTwo;
-        document.getElementById('NoteThreeOnHTML').value = globalDataModel.nodeArray[objIndex].noteThree;
+    if (globalRenderData.nodeArray[objIndex].noteOne != undefined) {
+        document.getElementById('NoteOneOnHTML').value = globalRenderData.nodeArray[objIndex].noteOne;
+        document.getElementById('NoteTwoOnHTML').value = globalRenderData.nodeArray[objIndex].noteTwo;
+        document.getElementById('NoteThreeOnHTML').value = globalRenderData.nodeArray[objIndex].noteThree;
     }
     else {
         document.getElementById('NoteOneOnHTML').value = "";
@@ -125,10 +139,10 @@ function addComment() {
     var noteThree = document.getElementById('NoteThreeOnHTML').value;
 
     var objIndex = findCurrentIndex(tempNodeKey);
-    globalDataModel.nodeArray[objIndex].noteOne = noteOne;
-    globalDataModel.nodeArray[objIndex].noteTwo = noteTwo;
-    globalDataModel.nodeArray[objIndex].noteThree = noteThree;
-    mainDiagram.model = generateGoModel(globalDataModel);
+    globalRenderData.nodeArray[objIndex].noteOne = noteOne;
+    globalRenderData.nodeArray[objIndex].noteTwo = noteTwo;
+    globalRenderData.nodeArray[objIndex].noteThree = noteThree;
+    mainDiagram.model = generateGoModel(globalRenderData);
 }
 
 // ***************************************
@@ -136,24 +150,10 @@ function addComment() {
 // ***************************************
 function clearAllComment() {
     var objIndex = findCurrentIndex(tempNodeKey);
-    globalDataModel.nodeArray[objIndex].noteOne = "";
-    globalDataModel.nodeArray[objIndex].noteTwo = "";
-    globalDataModel.nodeArray[objIndex].noteThree = "";
-    mainDiagram.model = generateGoModel(globalDataModel);
-}
-
-// ***************************************
-// Button registration
-// ***************************************
-function btnRegistration() {
-    document.getElementById("confirmBtnOnComment").onclick = addComment;
-    document.getElementById("clearAllComment").onclick = clearAllComment; 
-    document.getElementById("confirmBtnOnMultiIndividual").onclick = addMultiIndividual; 
-    document.getElementById("clearMultiIndividual").onclick = clearMultiIndividualText;
-    document.getElementById("confirmBtnOnChangeGender").onclick = changeGenderType; 
-    document.getElementById("increaseZoom").onclick = increaseZoom;
-    document.getElementById("decreaseZoom").onclick = decreaseZoom; 
-    document.getElementById("zoomToFit").onclick = zoomToFit;
+    globalRenderData.nodeArray[objIndex].noteOne = "";
+    globalRenderData.nodeArray[objIndex].noteTwo = "";
+    globalRenderData.nodeArray[objIndex].noteThree = "";
+    mainDiagram.model = generateGoModel(globalRenderData);
 }
 
 // ***************************************
@@ -165,8 +165,8 @@ function loadMultiIndividual(e, object) {
     tempNodeKey = nodeData.key;
     var objIndex = findCurrentIndex(tempNodeKey);
     document.getElementById("addMultiIndividualBtn").click();
-    if (globalDataModel.nodeArray[objIndex].textForMultiIndividual != undefined)
-        document.getElementById('textForMultiIndividual').value = globalDataModel.nodeArray[objIndex].textForMultiIndividual;
+    if (globalRenderData.nodeArray[objIndex].textForMultiIndividual != undefined)
+        document.getElementById('textForMultiIndividual').value = globalRenderData.nodeArray[objIndex].textForMultiIndividual;
     else
         document.getElementById('textForMultiIndividual').value = "";
 }
@@ -177,9 +177,9 @@ function loadMultiIndividual(e, object) {
 function addMultiIndividual() {
     var multiIndividualText = document.getElementById('textForMultiIndividual').value;
     var objIndex = findCurrentIndex(tempNodeKey);
-    globalDataModel.nodeArray[objIndex].textForMultiIndividual = multiIndividualText;
-    globalDataModel.nodeArray[objIndex].isMultiIndividualVisable = true;
-    mainDiagram.model = generateGoModel(globalDataModel);
+    globalRenderData.nodeArray[objIndex].textForMultiIndividual = multiIndividualText;
+    globalRenderData.nodeArray[objIndex].isMultiIndividualVisable = true;
+    mainDiagram.model = generateGoModel(globalRenderData);
 }
 
 // ***************************************
@@ -187,9 +187,9 @@ function addMultiIndividual() {
 // ***************************************
 function clearMultiIndividualText() {
     var objIndex = findCurrentIndex(tempNodeKey);
-    globalDataModel.nodeArray[objIndex].textForMultiIndividual = "";
-    globalDataModel.nodeArray[objIndex].isMultiIndividualVisable = false;
-    mainDiagram.model = generateGoModel(globalDataModel);
+    globalRenderData.nodeArray[objIndex].textForMultiIndividual = "";
+    globalRenderData.nodeArray[objIndex].isMultiIndividualVisable = false;
+    mainDiagram.model = generateGoModel(globalRenderData);
 }
 
 // ***************************************
@@ -201,7 +201,7 @@ function loadGenderType(e, object) {
     tempNodeKey = nodeData.key;
     var objIndex = findCurrentIndex(tempNodeKey);
     document.getElementById("changeGenderBtn").click();
-    var currentGenderType = globalDataModel.nodeArray[objIndex].gender
+    var currentGenderType = globalRenderData.nodeArray[objIndex].gender
     if (currentGenderType === "male")
         changeGenderMale.checked = true
     else if (currentGenderType === "female")
@@ -218,14 +218,14 @@ function loadGenderType(e, object) {
 function changeGenderType() {
     var objIndex = findCurrentIndex(tempNodeKey);
     if (changeGenderMale.checked)
-        globalDataModel.nodeArray[objIndex].gender = "male"
+        globalRenderData.nodeArray[objIndex].gender = "male"
     else if (changeGenderFemale.checked)
-        globalDataModel.nodeArray[objIndex].gender = "female"
+        globalRenderData.nodeArray[objIndex].gender = "female"
     else if (changeGenderBaby.checked)
-        globalDataModel.nodeArray[objIndex].gender = "baby"
+        globalRenderData.nodeArray[objIndex].gender = "baby"
     else if (changeGenderUnknown.checked)
-        globalDataModel.nodeArray[objIndex].gender = "unknown"
-    mainDiagram.model = generateGoModel(globalDataModel);
+        globalRenderData.nodeArray[objIndex].gender = "unknown"
+    mainDiagram.model = generateGoModel(globalRenderData);
 }
 
 // ***************************************

@@ -6,7 +6,7 @@ var mainDiagram
 //*********************************************
 function initializeDiagram() {
     // Initialize Our DataModel, in the future, support load from file
-    var initialDataModel = initializeDataModel();
+    var logicModel = initializeGlobalLogicData();
     mainDiagram = goObject(
         go.Diagram, // go Type
         "mainDiagramDiv", // div id
@@ -26,7 +26,7 @@ function initializeDiagram() {
         "ChildrenLink",
         generateChildLinkTemplate()
     )
-    mainDiagram.model = generateGoModel(initialDataModel);
+    mainDiagram.model = logicModelToGoModel(logicModel);
     btnRegistration();
     createStuffOnNaviBar();
 }
