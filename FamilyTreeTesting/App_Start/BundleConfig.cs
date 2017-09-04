@@ -37,7 +37,8 @@ namespace FamilyTreeTesting
 
             bundles.Add(new StyleBundle("~/bundles/FamilyTreeImproved").Include(
                       "~/Scripts/ImprovedScript/DataModel.js",
-                      "~/Scripts/ImprovedScript/DataConversion.js",
+                      "~/Scripts/ImprovedScript/LogicToRenderGraphDataConversion.js",
+                      "~/Scripts/ImprovedScript/LogicToRenderUnitDataConversion.js",
                       "~/Scripts/ImprovedScript/EventHandler.js",
                       "~/Scripts/ImprovedScript/RenderTemplate.js",
                       "~/Scripts/ImprovedScript/LinkTemplate.js",

@@ -14,7 +14,7 @@
 //  - gender
 //  - containGen
 //  - hasSameDisease
-//  - isPragment
+//  - isPragnent
 //  - multiInvididualText
 //  - isDead
 //  - isAdopted
@@ -28,7 +28,7 @@ function getNodeData(inputData, pos) {
         isPatient: inputData.isPatient,
         fill: getSameDiseaseNodeFill(inputData.hasSameDisease),
         containGenVisible: inputData.containGen,
-        isPVisable: inputData.isPragment,
+        isPVisable: inputData.isPragnent,
         colorForP: getPregantTextColor(inputData.hasSameDisease, inputData.containGen),
         textForMultiIndividual: inputData.multiInvididualText,
         isMultiIndividualVisable: getMultiTextVisibility(inputData.multiInvididualText),
