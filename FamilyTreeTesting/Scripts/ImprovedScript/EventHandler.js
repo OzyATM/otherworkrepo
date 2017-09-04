@@ -1,5 +1,7 @@
 ﻿// This key is for other function to know the current selected node's key
-var tempNodeKey;
+var commentNodeKey;
+var multiIndividualNodeKey;
+var genderNodeKey;
 
 var EventHandler = {
     deleteNode: deleteNode,
@@ -13,6 +15,20 @@ var EventHandler = {
 }
 
 // ***************************************
+// Button registration
+// ***************************************
+function btnRegistration() {
+    document.getElementById("confirmBtnOnComment").onclick = changeComment;
+    document.getElementById("clearAllComment").onclick = clearAllComment;
+    document.getElementById("confirmBtnOnMultiIndividual").onclick = changeMultiIndividualText;
+    document.getElementById("clearMultiIndividual").onclick = clearMultiIndividualText;
+    document.getElementById("confirmBtnOnChangeGender").onclick = changeGenderType;
+    document.getElementById("increaseZoom").onclick = increaseZoom;
+    document.getElementById("decreaseZoom").onclick = decreaseZoom;
+    document.getElementById("zoomToFit").onclick = zoomToFit;
+}
+
+// ***************************************
 // Delete Node Event Handler
 // Remove specific node from DataModel, then re-render
 // ***************************************
@@ -20,29 +36,31 @@ function deleteNode(e, object) {
     var node = object.part.adornedPart;
     var nodeKey = node.data.key;
     var objIndex = findCurrentIndex(nodeKey);
-    globalDataModel.nodeArray.splice(objIndex, 1);
-    mainDiagram.model = generateGoModel(globalDataModel);
+    globalRenderData.nodeArray.splice(objIndex, 1);
+    mainDiagram.model = generateGoModel(globalRenderData);
 }
-
+// Generate NodeData based on data storage
+// Node data contains:
+//  - id
+//  - patient
+//  - gender
+//  - containGen
+//  - hasSameDisease
+//  - isPragment
+//  - multiInvididualText
+//  - isDead
+//  - isAdopted
+//  - notes (array)
 // ***************************************
 // Contain Gen Event Handler
 // Add a small black circle
 // ***************************************
 function containGen(e, object) {
-    var nodeData = object.part.data;
-    if (nodeData.colorForContainGenCircle != "black") {
-        nodeData.colorForContainGenCircle = "black";
-        nodeData.containGenVisible = true;
-    }
-    else {
-        nodeData.colorForContainGenCircle = "white";
-        nodeData.containGenVisible = false;
-    }
-    if (nodeData.isPVisable && (nodeData.fill === "black" || nodeData.colorForContainGenCircle === "black"))
-        nodeData.colorForP = "white";
-    else
-        nodeData.colorForP = "black";
-    mainDiagram.model = generateGoModel(globalDataModel);
+    var key = object.part.data.key;
+    var node = findNode(key, globalLogicData);
+    node.containGen = !node.containGen;
+    node.hasSameDisease = false;
+    reRender(key);
 }
 
 // ***************************************
@@ -50,22 +68,11 @@ function containGen(e, object) {
 // Change the fill properties of MainNode
 // ***************************************
 function sameDisease(e, object) {
-    var nodeData = object.part.data;
-    if (nodeData.fill != "black") {
-        nodeData.fill = "black";
-        nodeData.colorForContainGenCircle = "white";
-        nodeData.containGenVisible = false;
-    }
-    else {
-        nodeData.fill = "transparent";
-        nodeData.colorForContainGenCircle = "white";
-        nodeData.containGenVisible = false;
-    }
-    if (nodeData.isPVisable && (nodeData.fill === "black" || nodeData.colorForContainGenCircle === "black"))
-        nodeData.colorForP = "white";
-    else
-        nodeData.colorForP = "black";
-    mainDiagram.model = generateGoModel(globalDataModel);
+    var key = object.part.data.key;
+    var node = findNode(key, globalLogicData);
+    node.hasSameDisease = !node.hasSameDisease;
+    node.containGen = false;
+    reRender(key);
 }
 
 // ***************************************
@@ -73,26 +80,21 @@ function sameDisease(e, object) {
 // Add a text "P" at the middle and change the color if the background is blacks
 // ***************************************
 function isPregnant(e, object) {
-    var nodeData = object.part.data;
-    if (!nodeData.isPVisable) {
-        nodeData.isPVisable = true;
-        nodeData.colorForP = "black";
-    } else
-        nodeData.isPVisable = false;
-    if (nodeData.fill === "black" || nodeData.colorForContainGenCircle === "black")
-        nodeData.colorForP = "white";
-    mainDiagram.model = generateGoModel(globalDataModel);
+    var key = object.part.data.key;
+    var node = findNode(key, globalLogicData);
+    node.isPragment = !node.isPragment;
+    reRender(key);
 }
 
 // ***************************************
 // Dead Symbol Event Handler
 // Add a slash line
 // ***************************************
-function isDead(e,object) {
-    var nodeData = object.part.data;
-    nodeData.deadSymbolVisible = !nodeData.deadSymbolVisible;
-
-    mainDiagram.model = generateGoModel(globalDataModel);
+function isDead(e, object) {
+    var key = object.part.data.key;
+    var node = findNode(key, globalLogicData);
+    node.isDead = !node.isDead;
+    reRender(key);
 }
 
 // ***************************************
@@ -100,60 +102,36 @@ function isDead(e,object) {
 // Load Comment on Node and Display on HTML
 // ***************************************
 function loadComment(e, object) {
-    var nodeData = object.part.data;
-    tempNodeKey = nodeData.key;
-    var objIndex = findCurrentIndex(tempNodeKey);
+    commentNodeKey = object.part.data.key;
+    var node = findNode(commentNodeKey, globalLogicData);
+    document.getElementById('NoteOneOnHTML').value = node.notes[0];
+    document.getElementById('NoteTwoOnHTML').value = node.notes[1];
+    document.getElementById('NoteThreeOnHTML').value = node.notes[2];
     document.getElementById("addCommentBtn").click();
-    if (globalDataModel.nodeArray[objIndex].noteOne != undefined) {
-        document.getElementById('NoteOneOnHTML').value = globalDataModel.nodeArray[objIndex].noteOne;
-        document.getElementById('NoteTwoOnHTML').value = globalDataModel.nodeArray[objIndex].noteTwo;
-        document.getElementById('NoteThreeOnHTML').value = globalDataModel.nodeArray[objIndex].noteThree;
-    }
-    else {
-        document.getElementById('NoteOneOnHTML').value = "";
-        document.getElementById('NoteTwoOnHTML').value = "";
-        document.getElementById('NoteThreeOnHTML').value = "";
-    }
 }
 
 // ***************************************
 // The confirm Button on CSS for add comment Modal
 // ***************************************
-function addComment() {
+function changeComment() {
     var noteOne = document.getElementById('NoteOneOnHTML').value;
     var noteTwo = document.getElementById('NoteTwoOnHTML').value;
     var noteThree = document.getElementById('NoteThreeOnHTML').value;
 
-    var objIndex = findCurrentIndex(tempNodeKey);
-    globalDataModel.nodeArray[objIndex].noteOne = noteOne;
-    globalDataModel.nodeArray[objIndex].noteTwo = noteTwo;
-    globalDataModel.nodeArray[objIndex].noteThree = noteThree;
-    mainDiagram.model = generateGoModel(globalDataModel);
+    var node = findNode(commentNodeKey, globalLogicData);
+    node.notes[0] = noteOne;
+    node.notes[1] = noteTwo;
+    node.notes[2] = noteThree;
+    reRender(commentNodeKey);
 }
 
 // ***************************************
 // Clear all Comment on Node
 // ***************************************
 function clearAllComment() {
-    var objIndex = findCurrentIndex(tempNodeKey);
-    globalDataModel.nodeArray[objIndex].noteOne = "";
-    globalDataModel.nodeArray[objIndex].noteTwo = "";
-    globalDataModel.nodeArray[objIndex].noteThree = "";
-    mainDiagram.model = generateGoModel(globalDataModel);
-}
-
-// ***************************************
-// Button registration
-// ***************************************
-function btnRegistration() {
-    document.getElementById("confirmBtnOnComment").onclick = addComment;
-    document.getElementById("clearAllComment").onclick = clearAllComment; 
-    document.getElementById("confirmBtnOnMultiIndividual").onclick = addMultiIndividual; 
-    document.getElementById("clearMultiIndividual").onclick = clearMultiIndividualText;
-    document.getElementById("confirmBtnOnChangeGender").onclick = changeGenderType; 
-    document.getElementById("increaseZoom").onclick = increaseZoom;
-    document.getElementById("decreaseZoom").onclick = decreaseZoom; 
-    document.getElementById("zoomToFit").onclick = zoomToFit;
+    var node = findNode(commentNodeKey, globalLogicData);
+    node.notes = ["", "", ""];
+    reRender(commentNodeKey);
 }
 
 // ***************************************
@@ -161,35 +139,28 @@ function btnRegistration() {
 // Load the value from textForMultiIndividual
 // ***************************************
 function loadMultiIndividual(e, object) {
-    var nodeData = object.part.data;
-    tempNodeKey = nodeData.key;
-    var objIndex = findCurrentIndex(tempNodeKey);
+    multiIndividualNodeKey = object.part.data.key;
+    var node = findNode(multiIndividualNodeKey, globalLogicData);
+    document.getElementById('textForMultiIndividual').value = node.multiInvididualText;
     document.getElementById("addMultiIndividualBtn").click();
-    if (globalDataModel.nodeArray[objIndex].textForMultiIndividual != undefined)
-        document.getElementById('textForMultiIndividual').value = globalDataModel.nodeArray[objIndex].textForMultiIndividual;
-    else
-        document.getElementById('textForMultiIndividual').value = "";
 }
 
 // ***************************************
 // The confirm Button on CSS for add MultiIndividual Modal
 // ***************************************
-function addMultiIndividual() {
-    var multiIndividualText = document.getElementById('textForMultiIndividual').value;
-    var objIndex = findCurrentIndex(tempNodeKey);
-    globalDataModel.nodeArray[objIndex].textForMultiIndividual = multiIndividualText;
-    globalDataModel.nodeArray[objIndex].isMultiIndividualVisable = true;
-    mainDiagram.model = generateGoModel(globalDataModel);
+function changeMultiIndividualText() {
+    var node = findNode(multiIndividualNodeKey, globalLogicData);
+    node.multiInvididualText = document.getElementById('textForMultiIndividual').value;
+    reRender(multiIndividualNodeKey);
 }
 
 // ***************************************
 // Clear the Multi_Individual value
 // ***************************************
 function clearMultiIndividualText() {
-    var objIndex = findCurrentIndex(tempNodeKey);
-    globalDataModel.nodeArray[objIndex].textForMultiIndividual = "";
-    globalDataModel.nodeArray[objIndex].isMultiIndividualVisable = false;
-    mainDiagram.model = generateGoModel(globalDataModel);
+    var node = findNode(multiIndividualNodeKey, globalLogicData);
+    node.multiInvididualText = "";
+    reRender(multiIndividualNodeKey);
 }
 
 // ***************************************
@@ -197,11 +168,9 @@ function clearMultiIndividualText() {
 // Load the value from gender
 // ***************************************
 function loadGenderType(e, object) {
-    var nodeData = object.part.data;
-    tempNodeKey = nodeData.key;
-    var objIndex = findCurrentIndex(tempNodeKey);
-    document.getElementById("changeGenderBtn").click();
-    var currentGenderType = globalDataModel.nodeArray[objIndex].gender
+    genderNodeKey = object.part.data.key;
+    var node = findNode(genderNodeKey, globalLogicData);
+    var currentGenderType = node.gender
     if (currentGenderType === "male")
         changeGenderMale.checked = true
     else if (currentGenderType === "female")
@@ -210,22 +179,24 @@ function loadGenderType(e, object) {
         changeGenderBaby.checked = true
     else if (currentGenderType === "unknown")
         changeGenderUnknown.checked = true
+
+    document.getElementById("changeGenderBtn").click();
 }
 
 // ***************************************
 // The confirm Button on CSS for add changeGender Modal
 // ***************************************
 function changeGenderType() {
-    var objIndex = findCurrentIndex(tempNodeKey);
+    var node = findNode(genderNodeKey, globalLogicData);
     if (changeGenderMale.checked)
-        globalDataModel.nodeArray[objIndex].gender = "male"
+        node.gender = "male"
     else if (changeGenderFemale.checked)
-        globalDataModel.nodeArray[objIndex].gender = "female"
+        node.gender = "female"
     else if (changeGenderBaby.checked)
-        globalDataModel.nodeArray[objIndex].gender = "baby"
+        node.gender = "baby"
     else if (changeGenderUnknown.checked)
-        globalDataModel.nodeArray[objIndex].gender = "unknown"
-    mainDiagram.model = generateGoModel(globalDataModel);
+        node.gender = "unknown"
+    reRender(genderNodeKey);
 }
 
 // ***************************************

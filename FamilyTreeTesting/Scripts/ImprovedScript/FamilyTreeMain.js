@@ -6,7 +6,7 @@ var mainDiagram
 //*********************************************
 function initializeDiagram() {
     // Initialize Our DataModel, in the future, support load from file
-    var initialDataModel = initializeDataModel();
+    var logicModel = initializeGlobalLogicData();
     mainDiagram = goObject(
         go.Diagram, // go Type
         "mainDiagramDiv", // div id
@@ -20,13 +20,26 @@ function initializeDiagram() {
     mainDiagram.nodeTemplateMap.add(
         "LinkLabel",
         generateLinkLabel()
-    )
+    );
+    mainDiagram.nodeTemplateMap.add(
+        "LinkPoint",
+        generateLinkPointTemplate()
+    );
+
     mainDiagram.linkTemplate = generateParentLinkTemplate();
     mainDiagram.linkTemplateMap.add(
         "ChildrenLink",
         generateChildLinkTemplate()
     )
-    mainDiagram.model = generateGoModel(initialDataModel);
+    mainDiagram.model = logicModelToGoModel(logicModel);
     btnRegistration();
     createStuffOnNaviBar();
+}
+
+function reRender(key) {
+    mainDiagram.model = logicModelToGoModel(globalLogicData);
+    if (key) {
+        var node = mainDiagram.findNodeForKey(key);
+        if (node !== null) node.isSelected = true;
+    }
 }
