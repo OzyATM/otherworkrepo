@@ -5,11 +5,11 @@ var globalLogicData;
 // *****************************************
 // Get Templated Default data structure
 //*********************************************
-function getDefaultLogicUnitData(inputId) {
+function getDefaultLogicUnitData(inputId, inputGender) {
     var tempStorageTemplate = {
         id: inputId,
         isPatient: false,
-        gender: "female",
+        gender: inputGender,
         hasSameDisease: false,
         containGen: false,
         isPragnent: false,
@@ -24,37 +24,37 @@ function getDefaultLogicUnitData(inputId) {
 function initializeGlobalLogicData() {
     globalLogicData = {};
 
-    var dad = getDefaultLogicUnitData("A100");
-    dad.gender = "male";
+    var dad = getDefaultLogicUnitData("A100", "male");
 
-    var daddad = getDefaultLogicUnitData("A100");
-    daddad.gender = "male";
-    var dadmom = getDefaultLogicUnitData("A100");
-    dadmom.gender = "female";
+
+    var daddad = getDefaultLogicUnitData("A100", "male");
+
+    var dadmom = getDefaultLogicUnitData("A100", "female");
+
 
     dad.left = daddad;
     dad.right = dadmom;
 
-    var mom = getDefaultLogicUnitData("A200");
-    mom.gender = "female";
+    var mom = getDefaultLogicUnitData("A200", "female");
 
-    var momdad = getDefaultLogicUnitData("A100");
-    momdad.gender = "male";
-    var mommom = getDefaultLogicUnitData("A100");
-    mommom.gender = "female";
+
+    var momdad = getDefaultLogicUnitData("A100", "male");
+
+    var mommom = getDefaultLogicUnitData("A100", "female");
+
 
     mom.left = momdad;
     mom.right = mommom;
 
-    var patient = getDefaultLogicUnitData("B100");
-    patient.gender = "male";
+    var patient = getDefaultLogicUnitData("B100", "male");
+
     patient.isPatient = true;
 
-    var sister1 = getDefaultLogicUnitData("B200");
-    sister1.gender = "female";
+    var sister1 = getDefaultLogicUnitData("B200", "female");
 
-    var sister2 = getDefaultLogicUnitData("B300");
-    sister2.gender = "female";
+
+    var sister2 = getDefaultLogicUnitData("B300", "female");
+
 
     globalLogicData = {
         parentTree: {
