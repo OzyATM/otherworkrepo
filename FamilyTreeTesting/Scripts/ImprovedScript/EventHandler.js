@@ -39,6 +39,7 @@ function deleteNode(e, object) {
     globalRenderData.nodeArray.splice(objIndex, 1);
     mainDiagram.model = generateGoModel(globalRenderData);
 }
+
 // Generate NodeData based on data storage
 // Node data contains:
 //  - id
@@ -46,7 +47,7 @@ function deleteNode(e, object) {
 //  - gender
 //  - containGen
 //  - hasSameDisease
-//  - isPragment
+//  - isPragnent
 //  - multiInvididualText
 //  - isDead
 //  - isAdopted
@@ -82,7 +83,7 @@ function sameDisease(e, object) {
 function isPregnant(e, object) {
     var key = object.part.data.key;
     var node = findNode(key, globalLogicData);
-    node.isPragment = !node.isPragment;
+    node.isPragnent = !node.isPragnent;
     reRender(key);
 }
 

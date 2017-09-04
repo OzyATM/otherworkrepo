@@ -230,7 +230,8 @@
     <Content Include="Scripts\GeometryReshapingTool.js" />
     <Content Include="Scripts\go-1.7.7-debug.js" />
     <Content Include="Scripts\go-1.7.7.js" />
-    <Content Include="Scripts\ImprovedScript\DataConversion.js" />
+    <Content Include="Scripts\ImprovedScript\LogicToRenderGraphDataConversion.js" />
+    <Content Include="Scripts\ImprovedScript\LogicToRenderUnitDataConversion.js" />
     <Content Include="Scripts\ImprovedScript\DataModel.js" />
     <Content Include="Scripts\ImprovedScript\EventHandler.js" />
     <Content Include="Scripts\ImprovedScript\FamilyTreeMain.js" />
