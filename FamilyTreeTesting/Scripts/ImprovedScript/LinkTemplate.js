@@ -9,6 +9,7 @@ function generateParentLinkTemplate() {
         {
             relinkableFrom: false,
             relinkableTo: false,
+            selectionAdornmentTemplate: generateLinkAdornment()
         },
         goObject(
             "Shape",
@@ -90,4 +91,52 @@ function generateLinkPointTemplate() {
             createPort("M", new go.Point(0, 0)),
         );
     return linkPointTemplate
+}
+
+//*********************************************
+// Adornment Definition for Link  
+//*********************************************
+function generateLinkAdornment() {
+    var tempAdornment = goObject(
+        go.Adornment,
+        "Spot",
+        goObject(go.Placeholder), // make sure the admornment's position will not at a weird place(according to API it should be inside a panel or a group)
+        generateLinkAdornmentShape(),
+        generateHorizontalPanelWithBtn()
+    );
+    return tempAdornment;
+}
+
+//*********************************************
+// Link's Adornment's Shape and its Definition
+//*********************************************
+function generateLinkAdornmentShape() {
+    var tempShapeForAdm = goObject(
+        go.Shape,
+        {
+            height: 10,
+            width: 50,
+            fill: null,
+            stroke: null,
+            strokeWidth: 3,
+        }
+    )
+    return tempShapeForAdm
+}
+
+//*********************************************
+// Create a Horizontal Panel and Put MarrageStatus Btn 
+//*********************************************
+function generateHorizontalPanelWithBtn() {
+    var tempHorizontalPanel = goObject(
+        go.Panel,
+        "Horizontal",
+        {
+            alignment: go.Spot.Top, alignmentFocus: go.Spot.Bottom
+        },
+        createBtn(null, "結婚", null, 50),
+        createBtn(null, "離婚", null, 50)                                                                                                                                                                                                                              ,
+        createBtn(null, "未婚", null, 50)
+    )
+    return tempHorizontalPanel;
 }
