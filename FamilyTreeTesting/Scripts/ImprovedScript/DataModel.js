@@ -2,7 +2,10 @@
 // Initialize an empty datamodel
 var globalLogicData;
 
-function getDefaultLogitUnitData(inputId) {
+// *****************************************
+// Get Templated Default data structure
+//*********************************************
+function getDefaultLogicUnitData(inputId) {
     var tempStorageTemplate = {
         id: inputId,
         isPatient: false,
@@ -20,13 +23,22 @@ function getDefaultLogitUnitData(inputId) {
 
 function initializeGlobalLogicData() {
     globalLogicData = {};
-    var dad = getDefaultLogitUnitData("A100");
+    var dad = getDefaultLogicUnitData("A100");
     dad.gender = "male";
-    var mom = getDefaultLogitUnitData("A200");
+    var mom = getDefaultLogicUnitData("A200");
     mom.gender = "female";
-    var patient = getDefaultLogitUnitData("B100");
+    var patient = getDefaultLogicUnitData("B100");
     patient.gender = "male";
     patient.isPatient = true;
+
+    var sister1 = getDefaultLogicUnitData("B200");
+    sister1.gender = "female";
+    sister1.isPragment = "true";
+
+    var sister2 = getDefaultLogicUnitData("B300");
+    sister2.gender = "female";
+    sister2.isPragment = "true";
+
     globalLogicData = {
         parentTree: {
             left: dad,
@@ -36,7 +48,9 @@ function initializeGlobalLogicData() {
             }
         },
         childrenList: [
-            patient
+            patient,
+            sister1,
+            sister2
         ]
     }
     return globalLogicData;
@@ -53,13 +67,49 @@ function findCurrentIndex(inputKey) {
     return tempIndex;
 }
 
+function findNode(id, logicData) {
+    var resultNode = null;
+    resultNode = searchParentTreeForNode(logicData.parentTree, id);
+    if (resultNode === null) {
+        resultNode = searchChildTreeForNode(logicData.childrenList,id);
+    }
+    return resultNode;
+}
+
+function searchParentTreeForNode(currentBranchNode, inputId) {
+    var resultNode = null;
+    if (currentBranchNode.id === inputId) {
+        resultNode = currentBranchNode;
+    }
+    if (resultNode === null && currentBranchNode.left) {
+        resultNode = searchParentTreeForNode(currentBranchNode.left, inputId);
+    }
+    if (resultNode === null && currentBranchNode.right) {
+        resultNode = searchParentTreeForNode(currentBranchNode.right, inputId);
+    }
+
+    return resultNode;
+}
+
+function searchChildTreeForNode(childrenList, inputId) {
+    var resultNode = null;
+    for (i = 0; i < childrenList.length; i++) {
+        var item = childrenList[i];
+        if (item.id === inputId) {
+            resultNode = item;
+        }
+    }
+    return resultNode;
+}
+
 // ************************************************
 // Logic to render data structure conversion
+// Render Parent and Child
 // ************************************************
 
 function logicDataToRenderData(logicData) {
     var baseDistance = 100;
-    var baseHeight = 100;
+    var baseHeight = 50;
     var basePosition = { x: 0, y: 0 };
     var result = { nodeArray: [], linkArray: [] };
 
@@ -86,22 +136,8 @@ function logicDataToRenderData(logicData) {
     return result;
 }
 
-function getChildrenRenderData(basePos, height, linkNode, logicData) {
-    var result = { nodeArray: [], linkArray: [] };
-    var middlePos = {
-        x: basePos.x,
-        y: basePos.y + height
-    };
-
-    var childRenderNode = getNodeData(logicData[0], middlePos);
-    var linkData = getChildLinkData(childRenderNode, linkNode)
-
-    result.nodeArray.push(childRenderNode);
-    result.nodeArray = result.nodeArray.concat(linkData.nodeArray);
-    result.linkArray = result.linkArray.concat(linkData.linkArray);
-
-    return result;
-}
+// *****************************************************
+// Parent Tree Rendering
 
 function getParentRenderData(pos, distance, logicData) {
     var leftPos = {
@@ -132,27 +168,6 @@ function getParentRenderData(pos, distance, logicData) {
     return result;
 }
 
-// *******************************************************
-//      Logic to Render data Unit Conversion
-// *******************************************************
-// Note: This part of the code handles converting logical
-// data that is understandble by human into data that makes
-// sense to our rendering engine, below are the current
-// format of each model
-// *******************************************************
-// Generate NodeData based on data storage
-// Node data contains:
-//  - id
-//  - patient
-//  - gender
-//  - containGen
-//  - hasSameDisease
-//  - isPragment
-//  - multiInvididualText
-//  - isDead
-//  - isAdopted
-//  - notes (array)
-
 function getPartenerLinkData(left, right) {
     var result = { nodeArray: [], linkArray: [], linkNode: {} };
 
@@ -166,97 +181,93 @@ function getPartenerLinkData(left, right) {
             fromPort: "R",
             to: right.key,
             toPort: "L",
-            labelKeys: [ result.linkName ]
+            labelKeys: [result.linkName]
         }
     )
     return result;
 }
 
-function getChildLinkData(child, linkNode) {
+// *****************************************************
+// Child Tree Rendering
+
+function getChildrenRenderData(basePos, initialHeight, linkNode, logicData) {
+    var childNodeSecondHeight = 40;
+    var childGap = 100;
+    var result = { nodeArray: [], linkArray: [] };
+
+    var initX = 0 - (childGap * (logicData.length - 1) / 2);
+    var initY = basePos.y + initialHeight + childNodeSecondHeight;
+
+    logicData.forEach((item, index) => {
+        var currentPos = { x: initX + index * childGap, y: initY }
+        var childRenderNode = getNodeData(item, currentPos);
+        var linkData = getChildLinkData(childRenderNode, linkNode, basePos, initialHeight);
+
+        result.nodeArray.push(childRenderNode);
+        result.nodeArray = result.nodeArray.concat(linkData.nodeArray);
+        result.linkArray = result.linkArray.concat(linkData.linkArray);
+    });
+
+    return result;
+}
+
+function getChildLinkData(childNode, linkNode, basePos, initHeight) {
     var result = { nodeArray: [], linkArray: [], linkNode: {} };
 
-    var linkName = "" + linkNode.key + "-Link-" + child.key; // combine left and right id to make a readble id
-    result.linkNode = { key: linkName, category: "LinkLabel" }
-    result.nodeArray.push(result.linkNode);
+    var mainDropPos = { x: basePos.x, y: basePos.y + initHeight };
+    var subDropPos = { x: getPosFromString(childNode.loc).x, y: mainDropPos.y };
+    var mainPosNode = {
+        key: uuidv4(),
+        loc: getPosString(mainDropPos),
+        category: "LinkPoint"
+    };
+    var subPosNode = {
+        key: uuidv4(),
+        loc: getPosString(subDropPos),
+        category: "LinkPoint"
+    };
 
-    result.linkArray.push(
-        {
-            from: linkNode.key,
-            to: child.key,
-            toPort: "T",
-            labelKeys: [linkName]
-        }
-    )
+    var linkNodeToMainPosNodeLink = {
+        from: linkNode.key,
+        to: mainPosNode.key,
+        category: "ChildrenLink",
+        childKey: childNode.key
+    }
+
+    var mainPosNodeToSubPosNodeLink = {
+        from: mainPosNode.key,
+        to: subPosNode.key,
+        category: "ChildrenLink",
+        childKey: childNode.key
+    }
+
+    var subPosNodeToChildLink = {
+        from: subPosNode.key,
+        to: childNode.key,
+        toPort: "T",
+        category: "ChildrenLink",
+        childKey: childNode.key
+    }
+
+    result.nodeArray.push(mainPosNode);
+    result.nodeArray.push(subPosNode);
+    result.linkArray.push(linkNodeToMainPosNodeLink);
+    result.linkArray.push(mainPosNodeToSubPosNodeLink);
+    result.linkArray.push(subPosNodeToChildLink);
     return result;
 }
 
-function getNodeData(inputData, pos) {
-    // Make sure no pointers is used in this method
-    var tempNode = {
-        key: inputData.id,
-        mainFigure: getGenderShape(inputData.gender),
-        isPatient: inputData.isPatient,
-        fill: getSameDiseaseNodeFill(inputData.hasSameDisease),
-        containGenVisible: inputData.containGen,
-        isPVisable: inputData.isPragment,
-        colorForP: getPregantTextColor(inputData.hasSameDisease, inputData.containGen),
-        textForMultiIndividual: inputData.multiInvididualText,
-        isMultiIndividualVisable: getMultiTextVisibility(inputData.multiInvididualText),
-        deadSymbolVisible: inputData.isDead,
-        noteOne: inputData.notes[0],
-        noteTwo: inputData.notes[1],
-        noteThree: inputData.notes[2],
-        isAdoptedSignVisible: inputData.isAdopted,
-        loc: getPosString(pos),
-    }
-    return tempNode;
-}
 
-function getPosString(pos) {
-    return "" + pos.x + " " + pos.y;
-}
-
-function getGenderShape(gender) {
-    if (gender === "male") {
-        return "Square";
-    } else if (gender === "female") {
-        return "circle";
-    } else if (gender === "unknown") {
-        return "Diamond"
-    } else if (gender === "baby") {
-        return "Triangle"
-    }
-}
-
-function getSameDiseaseNodeFill(sameDisease){
-    if (!sameDisease) {
-        return "transparent"
-    } else {
-        return "black"
-    }
-}
-
-function getPregantTextColor(sameDisease, containGen) {
-    if (sameDisease || containGen) {
-        return "white";
-    } else {
-        return "black";
-    }
-}
-
-function getMultiTextVisibility(multiText) {
-    if (multiText === "") {
-        return false;
-    } else {
-        return true;
-    }
-}
 
 //***********************************************
 // Generate go data model from logic data model
 //***********************************************
 function logicModelToGoModel(logicData) {
     var renderData = logicDataToRenderData(logicData);
+    return renderDataToGoModel(renderData);
+}
+
+function renderDataToGoModel(renderData) {
     var model = goObject(go.GraphLinksModel,
         // Supporting link from line to line
         { linkLabelKeysProperty: "labelKeys" }
@@ -264,7 +275,37 @@ function logicModelToGoModel(logicData) {
     // Supporting port on main nodes
     model.linkFromPortIdProperty = "fromPort"
     model.linkToPortIdProperty = "toPort"
-    model.nodeDataArray = renderData.nodeArray;
+
+    // Apply offset based on Render Template
+    model.nodeDataArray = renderData.nodeArray.map((item) => {
+        if (item.category) {
+            return item;
+        } else {
+            return applyOffSet(item, getMainShapeOffSet());
+        }
+    });
+
     model.linkDataArray = renderData.linkArray;
     return model;
+}
+
+function applyOffSet(renderData, offSet) {
+    var resultPos = getPosFromString(renderData.loc);
+    resultPos.x = resultPos.x + offSet.x;
+    resultPos.y = resultPos.y + offSet.y;
+    renderData.loc = getPosString(resultPos);
+    return renderData;
+}
+
+function getMainShapeOffSet() {
+    return { x: -30, y: -23 };
+}
+// ***********************************************
+// Helper function to generate unique ID
+// ***********************************************
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
 }

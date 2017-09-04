@@ -1,8 +1,4 @@
 ﻿var goObject = go.GraphObject.make;
-// *******************************************
-// Static Definitions
-// *******************************************
-
 
 //*********************************************
 // Main Node Template Definition
@@ -62,7 +58,7 @@ function generateMainShape() {
                     height: 30,
                     strokeWidth: 5,
                     maxSize: new go.Size(40, 40),
-                    cursor: "pointer",
+                    cursor: "pointer"
                 },
                 new go.Binding("figure", "mainFigure"),
                 new go.Binding("fill")

@@ -20,7 +20,12 @@ function initializeDiagram() {
     mainDiagram.nodeTemplateMap.add(
         "LinkLabel",
         generateLinkLabel()
-    )
+    );
+    mainDiagram.nodeTemplateMap.add(
+        "LinkPoint",
+        generateLinkPointTemplate()
+    );
+
     mainDiagram.linkTemplate = generateParentLinkTemplate();
     mainDiagram.linkTemplateMap.add(
         "ChildrenLink",
@@ -29,4 +34,12 @@ function initializeDiagram() {
     mainDiagram.model = logicModelToGoModel(logicModel);
     btnRegistration();
     createStuffOnNaviBar();
+}
+
+function reRender(key) {
+    mainDiagram.model = logicModelToGoModel(globalLogicData);
+    if (key) {
+        var node = mainDiagram.findNodeForKey(key);
+        if (node !== null) node.isSelected = true;
+    }
 }
