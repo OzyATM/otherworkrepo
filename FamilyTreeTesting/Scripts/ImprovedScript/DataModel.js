@@ -25,36 +25,24 @@ function initializeGlobalLogicData() {
     globalLogicData = {};
 
     var dad = getDefaultLogicUnitData("A100", "male");
-
-
     var daddad = getDefaultLogicUnitData("A100", "male");
-
     var dadmom = getDefaultLogicUnitData("A100", "female");
-
 
     dad.left = daddad;
     dad.right = dadmom;
 
     var mom = getDefaultLogicUnitData("A200", "female");
-
-
     var momdad = getDefaultLogicUnitData("A100", "male");
-
     var mommom = getDefaultLogicUnitData("A100", "female");
-
 
     mom.left = momdad;
     mom.right = mommom;
 
     var patient = getDefaultLogicUnitData("B100", "male");
-
     patient.isPatient = true;
 
     var sister1 = getDefaultLogicUnitData("B200", "female");
-
-
     var sister2 = getDefaultLogicUnitData("B300", "female");
-
 
     globalLogicData = {
         parentTree: {
