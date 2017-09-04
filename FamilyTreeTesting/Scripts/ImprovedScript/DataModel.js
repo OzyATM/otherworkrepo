@@ -76,14 +76,6 @@ function initializeGlobalLogicData() {
 //*********************************************
 // Helper functions
 //*********************************************
-function findCurrentIndex(inputKey) {
-    globalRenderData.nodeArray.forEach(function (obj, index) {
-        if (obj.key === inputKey)
-            tempIndex = index
-    });
-    return tempIndex;
-}
-
 function findNode(id, logicData) {
     var resultNode = null;
     resultNode = searchParentTreeForNode(logicData.parentTree, id);
