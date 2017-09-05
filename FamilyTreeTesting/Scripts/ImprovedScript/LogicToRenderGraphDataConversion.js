@@ -5,22 +5,26 @@
 // ************************************************
 
 function logicDataToRenderData(logicData) {
-    var baseDistance = 100;
-    var baseHeight = 50;
+    var baseChildHeight = 50;
+
+    var baseParentDistance = 100;
+    var baseParentHeight = 70;
+
     var basePosition = { x: 0, y: 0 };
     var result = { nodeArray: [], linkArray: [] };
 
     var parentTreeRenderData =
-        getParentRenderData(
+        getParentTreeRenderData(
             basePosition,
-            baseDistance,
+            baseParentDistance,
+            baseParentHeight,
             logicData.parentTree
         );
 
     var childrenTreeRenderData =
         getChildrenRenderData(
             basePosition,
-            baseHeight,
+            baseChildHeight,
             parentTreeRenderData.linkNode,
             logicData.childrenList
         );
@@ -33,10 +37,62 @@ function logicDataToRenderData(logicData) {
     return result;
 }
 
+function findLayer(layerControl) {
+    if (!layerControl)
+        return 0;
+    let result = 1;
+    let leftLayer = 0;
+    let rightLayer = 0;
+    if (layerControl.left)
+        leftLayer = findLayer(layerControl.left);
+    if (layerControl.right)
+        rightLayer = findLayer(layerControl.right);
+    result += Math.max(leftLayer, rightLayer);
+    return result;
+}
+
+function mergeRenderData(baseData, mergeData) {
+    var result = generateEmptyRenderData();
+    result.nodeArray = baseData.nodeArray.concat(mergeData.nodeArray);
+    result.linkArray = baseData.linkArray.concat(mergeData.linkArray);
+    result.linkNode = mergeData.linkNode;
+    return result;
+}
+
+function generateEmptyRenderData() {
+    return { nodeArray: [], linkArray: [], linkNode: {} };
+}
+
 // *****************************************************
 // Parent Tree Rendering
 
-function getParentRenderData(pos, distance, logicData) {
+function getParentTreeRenderData(basePos, distance, height, logicData) {
+    let distModifier = Math.pow(2, findLayer(logicData) - 2); // minus 2: as 1 is child layer, 2 is current layer
+    var result = getParentBranchRenderData(basePos, distance * distModifier, height, logicData);
+    return result;
+}
+
+function getParentBranchRenderData(pos, distance, height, logicData) {
+    var leftBranchData = generateEmptyRenderData();
+    var rightBranchData = generateEmptyRenderData();
+    var currentLayer = generateEmptyRenderData();
+    if (logicData.left && logicData.right) {
+
+        var leftPos = { x: pos.x - (distance / 2), y: pos.y - height };
+        leftBranchData = getParentBranchRenderData(leftPos, (distance / 2), height, logicData.left);
+
+        var rightPos = { x: pos.x + (distance / 2), y: pos.y - height };
+        rightBranchData = getParentBranchRenderData(rightPos, (distance / 2), height, logicData.right);
+
+        currentLayer = getParentNodeRenderData(pos, distance, logicData, leftBranchData.linkNode, rightBranchData.linkNode);
+    }
+
+    var result = mergeRenderData(leftBranchData, rightBranchData);
+    result = mergeRenderData(result, currentLayer);
+    return result;
+}
+
+function getParentNodeRenderData(pos, distance, logicData, leftLinkNode, rightLinkNode) {
     var leftPos = {
         x: pos.x - (distance / 2),
         y: pos.y,
@@ -52,9 +108,32 @@ function getParentRenderData(pos, distance, logicData) {
     };
 
     var leftPNode = getNodeData(logicData.left, leftPos);
-    var rightPNode = getNodeData(logicData.right, rightPos);
-    var linkData = getPartenerLinkData(leftPNode, rightPNode);
+    if (leftLinkNode && leftLinkNode.key) {
+        var leftLink = {
+            from: leftLinkNode.key,
+            fromPort: "B",
+            to: leftPNode.key,
+            toPort: "T",
+            category: "ChildrenLink",
+            childKey: leftPNode.key
+        }
+        result.linkArray.push(leftLink);
+    }
 
+    var rightPNode = getNodeData(logicData.right, rightPos);
+    if (rightLinkNode && rightLinkNode.key) {
+        var leftLink = {
+            from: rightLinkNode.key,
+            fromPort: "B",
+            to: rightPNode.key,
+            toPort: "T",
+            category: "ChildrenLink",
+            childKey: rightPNode.key
+        }
+        result.linkArray.push(leftLink);
+    }
+
+    var linkData = getPartenerLinkData(leftPNode, rightPNode);
 
     result.nodeArray.push(leftPNode);
     result.nodeArray.push(rightPNode);
