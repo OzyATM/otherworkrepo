@@ -358,7 +358,8 @@ function createDeleteBtn(event, btnText, btnWidth) {
                 go.TextBlock,
                 inputText,
                 { font: "10pt sans-serif ", stroke: "white" }
-            )
+            ),
+            new go.Binding("visible", "isDeleteBtnVisible"),
         )
     return deleteBtn
 }
