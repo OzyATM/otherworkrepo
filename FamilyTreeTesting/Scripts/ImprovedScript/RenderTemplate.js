@@ -288,7 +288,7 @@ function generateRightVerticalPanelWithBtn() {
             position: new go.Point(64, -100)
         },
         createBtn(EventHandler.loadGenderType, "換性別", null, null),
-        createBtn(null, "父　母", null, null),
+        createVisibleBtn(null, "父　母", null, null, "isAddParentBtnVisible"),
         createBtn(null, "配　偶", null, null),
         goObject(
             go.Panel,
@@ -397,7 +397,7 @@ function createBtn(event, btnText, btnColor, width) {
     return createdBtn
 }
 
-function createVisibleBtn(event, btnText, btnColor, width, controlVariable, inputFunction) {
+function createVisibleBtn(event, btnText, btnColor, width, controlVariable) {
     var inputEvent = event
     var inputText = btnText
     var inputBtnColor = "#B8B8DC";
@@ -421,7 +421,7 @@ function createVisibleBtn(event, btnText, btnColor, width, controlVariable, inpu
                 "_buttonStrokeOver": null,
                 click: inputEvent
             },
-            new go.Binding("visible", controlVariable, function (v) { return inputFunction(v); }),
+            new go.Binding("visible", controlVariable),
             goObject(
                 go.TextBlock,
                 inputText,

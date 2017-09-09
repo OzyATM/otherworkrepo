@@ -17,7 +17,8 @@ function getDefaultLogicUnitData(inputId, inputGender) {
         isDead: false,
         isAdopted: false,
         notes: ["", "", ""],
-        canBeDeleted: true
+        canBeDeleted: true,
+        hasParent: false,
     }
     return tempStorageTemplate;
 }
@@ -27,7 +28,9 @@ function initializeGlobalLogicData() {
 
     var dad = getDefaultLogicUnitData("A100", "male");
     dad.canBeDeleted = false;
+    dad.hasParent = true;
     var daddad = getDefaultLogicUnitData("A110", "male");
+    daddad.hasParent = true;
     var dadmom = getDefaultLogicUnitData("A120", "female");
 
     var daddaddad = getDefaultLogicUnitData("A111", "male");
@@ -40,6 +43,7 @@ function initializeGlobalLogicData() {
 
     var mom = getDefaultLogicUnitData("A200", "female");
     mom.canBeDeleted = false;
+    mom.hasParent = true;
     var momdad = getDefaultLogicUnitData("A210", "male");
     var mommom = getDefaultLogicUnitData("A220", "female");
 
@@ -49,9 +53,12 @@ function initializeGlobalLogicData() {
     var patient = getDefaultLogicUnitData("B100", "male");
     patient.isPatient = true;
     patient.canBeDeleted = false;
+    patient.hasParent = true;
 
     var sister1 = getDefaultLogicUnitData("B200", "female");
+    sister1.hasParent = true;
     var sister2 = getDefaultLogicUnitData("B300", "female");
+    sister2.hasParent = true;
 
     globalLogicData = {
         parentTree: {

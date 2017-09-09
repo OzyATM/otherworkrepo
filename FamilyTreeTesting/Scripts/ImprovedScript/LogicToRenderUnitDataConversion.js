@@ -38,7 +38,8 @@ function getNodeData(inputData, pos) {
         noteThree: inputData.notes[2],
         isAdoptedSignVisible: inputData.isAdopted,
         loc: getPosString(pos),
-        isDeleteBtnVisible: inputData.canBeDeleted
+        isDeleteBtnVisible: inputData.canBeDeleted,
+        isAddParentBtnVisible: !inputData.hasParent
     }
     return tempNode;
 }
