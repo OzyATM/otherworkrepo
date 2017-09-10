@@ -11,7 +11,8 @@ var EventHandler = {
     isDead: isDead,
     loadComment: loadComment,
     loadMultiIndividual: loadMultiIndividual,
-    loadGenderType: loadGenderType
+    loadGenderType: loadGenderType,
+    addParent: addParent
 }
 
 // ***************************************
@@ -213,4 +214,19 @@ function zoomToFit() {
     mainDiagram.zoomToFit();
     mainDiagram.contentAlignment = go.Spot.Center;
     mainDiagram.contentAlignment = go.Spot.Default;
+}
+
+// ***************************************
+// Add Parent Event Handler
+// Add Parent On the Graph
+// ***************************************
+function addParent(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var currentNode = findNode(currentObjectKey, globalLogicData);
+
+    var dad = getDefaultLogicUnitData(uuidv4(), "male");
+    var mom = getDefaultLogicUnitData(uuidv4(), "female");
+    currentNode.left = dad;
+    currentNode.right = mom;
+    reRender(currentObjectKey);
 }
