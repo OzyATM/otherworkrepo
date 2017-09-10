@@ -93,7 +93,7 @@ function getMultiTextVisibility(multiText) {
 
 function getParentBtnVisibility(inputData) {
     if (inputData.left || inputData.right || inputData.isPatient)
-        return true
-    else 
-        return false
+        return true;
+    else
+        return false;
 }

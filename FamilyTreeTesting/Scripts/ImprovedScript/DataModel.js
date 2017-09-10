@@ -27,24 +27,9 @@ function initializeGlobalLogicData() {
 
     var dad = getDefaultLogicUnitData("A100", "male");
     dad.canBeDeleted = false;
-    var daddad = getDefaultLogicUnitData("A110", "male");
-    var dadmom = getDefaultLogicUnitData("A120", "female");
-
-    var daddaddad = getDefaultLogicUnitData("A111", "male");
-    var daddadmom = getDefaultLogicUnitData("A112", "female");
-    daddad.left = daddaddad;
-    daddad.right = daddadmom;
-
-    dad.left = daddad;
-    dad.right = dadmom;
 
     var mom = getDefaultLogicUnitData("A200", "female");
     mom.canBeDeleted = false;
-    var momdad = getDefaultLogicUnitData("A210", "male");
-    var mommom = getDefaultLogicUnitData("A220", "female");
-
-    mom.left = momdad;
-    mom.right = mommom;
 
     // Patient Family
     var patient = getDefaultLogicUnitData("B100", "male");
@@ -160,6 +145,21 @@ function searchChildTreeForNode(childrenList, inputId) {
             resultNode = child;
         }
     });
+    return resultNode;
+}
+
+function searchParentTreeNodePreviousNode(currentBranchNode, inputId) {
+    var resultNode = null;
+    if (currentBranchNode.left.id === inputId || currentBranchNode.right.id === inputId) {
+        resultNode = currentBranchNode;
+    }
+    if (resultNode === null && currentBranchNode.left.left && currentBranchNode.left.right) {
+        resultNode = searchParentTreeNodePreviousNode(currentBranchNode.left, inputId);
+    }
+    if (resultNode === null && currentBranchNode.right.left && currentBranchNode.right.right) {
+        resultNode = searchParentTreeNodePreviousNode(currentBranchNode.right, inputId);
+    }
+
     return resultNode;
 }
 
