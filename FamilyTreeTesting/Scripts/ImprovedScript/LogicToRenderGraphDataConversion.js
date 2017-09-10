@@ -1,17 +1,20 @@
 ﻿var goObject = go.GraphObject.make;
+
+// ************************************************
+// Global Base Setting
+// ************************************************
+var baseChildHeight = 50;
+var baseParentDistance = 100;
+var baseParentHeight = 70;
+var baseChildGap = 100;
+var childNodeSecondHeight = 40;
+
 // ************************************************
 // Logic to render data structure conversion
 // Render Parent and Child
 // ************************************************
-
-function logicDataToRenderData(logicData) {
-    var baseChildHeight = 50;
-
-    var baseParentDistance = 100;
-    var baseParentHeight = 70;
-
-    var basePosition = { x: 0, y: 0 };
-    var result = { nodeArray: [], linkArray: [] };
+function logicDataToRenderData(logicData, basePosition) {
+    var result = generateEmptyRenderData();
 
     var parentTreeRenderData =
         getParentTreeRenderData(
@@ -21,19 +24,19 @@ function logicDataToRenderData(logicData) {
             logicData.parentTree
         );
 
-    var childrenTreeRenderData =
-        getChildrenRenderData(
-            basePosition,
-            baseChildHeight,
-            parentTreeRenderData.linkNode,
-            logicData.childrenList
-        );
+    if (logicData.childrenList) {
+        var childrenTreeRenderData =
+            getChildrenRenderData(
+                basePosition,
+                baseChildHeight,
+                parentTreeRenderData.linkNode,
+                logicData.childrenList
+            );
+        result.nodeArray = result.nodeArray.concat(childrenTreeRenderData.nodeArray);
+        result.linkArray = result.linkArray.concat(childrenTreeRenderData.linkArray);
+    }
 
-    result.nodeArray = result.nodeArray.concat(parentTreeRenderData.nodeArray);
-    result.linkArray = result.linkArray.concat(parentTreeRenderData.linkArray);
-    result.nodeArray = result.nodeArray.concat(childrenTreeRenderData.nodeArray);
-    result.linkArray = result.linkArray.concat(childrenTreeRenderData.linkArray);
-
+    result = mergeRenderData(result, parentTreeRenderData);
     return result;
 }
 
@@ -56,15 +59,21 @@ function mergeRenderData(baseData, mergeData) {
     result.nodeArray = baseData.nodeArray.concat(mergeData.nodeArray);
     result.linkArray = baseData.linkArray.concat(mergeData.linkArray);
     result.linkNode = mergeData.linkNode;
+    result.linkParentNode = mergeData.linkParentNode;
     return result;
 }
 
 function generateEmptyRenderData() {
-    return { nodeArray: [], linkArray: [], linkNode: {} };
+    return { nodeArray: [], linkArray: [], linkNode: {}, linkParentNode: {} };
 }
 
 // *****************************************************
 // Parent Tree Rendering
+
+function getParentTreeRequiredDistance(logicData) {
+    let distModifier = Math.pow(2, findLayer(logicData) - 1); // minus 1: as childLayer counts as 1
+    return baseParentDistance * distModifier;
+}
 
 function getParentTreeRenderData(basePos, distance, height, logicData) {
     let distModifier = Math.pow(2, findLayer(logicData) - 2); // minus 2: as 1 is child layer, 2 is current layer
@@ -140,6 +149,10 @@ function getParentNodeRenderData(pos, distance, logicData, leftLinkNode, rightLi
     result.nodeArray = result.nodeArray.concat(linkData.nodeArray);
     result.linkArray = result.linkArray.concat(linkData.linkArray);
     result.linkNode = linkData.linkNode;
+    if (logicData.linkNode === "left")
+        result.linkParentNode = leftPNode;
+    if (logicData.linkNode === "right")
+        result.linkParentNode = rightPNode;
 
     return result;
 }
@@ -167,24 +180,81 @@ function getPartenerLinkData(left, right) {
 // Child Tree Rendering
 
 function getChildrenRenderData(basePos, initialHeight, linkNode, logicData) {
-    var childNodeSecondHeight = 40;
-    var childGap = 100;
-    var result = { nodeArray: [], linkArray: [] };
-
-    var initX = 0 - (childGap * (logicData.length - 1) / 2);
+    var result = generateEmptyRenderData();
+    var lineLength = 0;
+    var childGapList = getChildrenGapList(logicData);
+    childGapList.forEach((item, index) => {
+        if (index < logicData.length) {
+            lineLength += item;
+        }
+    });
+    var initX = basePos.x - (lineLength / 2);
     var initY = basePos.y + initialHeight + childNodeSecondHeight;
-
+    var lastPos = { x: initX, y: initY };
     logicData.forEach((item, index) => {
-        var currentPos = { x: initX + index * childGap, y: initY }
-        var childRenderNode = getNodeData(item, currentPos);
-        var linkData = getChildLinkData(childRenderNode, linkNode, basePos, initialHeight);
-
-        result.nodeArray.push(childRenderNode);
-        result.nodeArray = result.nodeArray.concat(linkData.nodeArray);
-        result.linkArray = result.linkArray.concat(linkData.linkArray);
+        var currentPos = { x: lastPos.x + childGapList[index], y: lastPos.y }
+        var childRenderData = generateEmptyRenderData();
+        if (item.parentTree) {
+            childRenderData = getSubChildrenRenderData(item, currentPos, childGapList[index+1]);
+            var linkData = getChildLinkData(childRenderData.linkParentNode, linkNode, basePos, initialHeight);
+            childRenderData = mergeRenderData(linkData, childRenderData);
+        } else {
+            childRenderData = getSingleChildNode(item, currentPos, linkNode, basePos, initialHeight);
+        }
+        result = mergeRenderData(result, childRenderData);
+        lastPos = currentPos;
     });
 
     return result;
+}
+
+// *****************************************************
+// Child Node Rendering
+function getSubChildrenRenderData(item, currentPos, currentGap) {
+    var renderPos = { x: currentPos.x + ((currentGap - 100) / 2), y: currentPos.y };
+    var renderData = logicDataToRenderData(item, renderPos);
+    return renderData;
+}
+
+function getSingleChildNode(item, currentPos, linkNode, basePos, initialHeight) {
+    result = generateEmptyRenderData();
+    var childRenderNode = getNodeData(item, currentPos);
+    var linkData = getChildLinkData(childRenderNode, linkNode, basePos, initialHeight);
+
+    result.nodeArray.push(childRenderNode);
+    result.nodeArray = result.nodeArray.concat(linkData.nodeArray);
+    result.linkArray = result.linkArray.concat(linkData.linkArray);
+    return result;
+}
+
+
+// *****************************************************
+// Calculate Gap required for children
+
+function getChildrenGapList(logicData) {
+    var result = [];
+    result.push(0); // No gap for the first element
+    logicData.forEach((item, index) => {
+        if (item.parentTree) {
+            result.push(getRequiredNodeGap(item));
+        } else {
+            result.push(baseChildGap);
+        }
+    });
+    return result;
+}
+
+function getRequiredNodeGap(item) {
+    // as of right now, parent gap only works for single parent, fix this when there are multi parent support
+    var parentGap = getParentTreeRequiredDistance(item.parentTree);
+    var childrenGap = 0;
+    if (item.childrenList) {
+        var childrenGapList = getChildrenGapList(item.childrenList);
+        childrenGapList.forEach((childGap, index) => {
+            childrenGap += childGap;
+        });
+    }
+    return parentGap > childrenGap ? parentGap : childrenGap;
 }
 
 function getChildLinkData(childNode, linkNode, basePos, initHeight) {
