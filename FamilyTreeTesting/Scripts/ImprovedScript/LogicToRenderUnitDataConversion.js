@@ -39,7 +39,7 @@ function getNodeData(inputData, pos) {
         isAdoptedSignVisible: inputData.isAdopted,
         loc: getPosString(pos),
         isDeleteBtnVisible: inputData.canBeDeleted,
-        isAddParentBtnVisible: !inputData.hasParent
+        isAddParentBtnVisible: !getParentBtnVisibility(inputData)
     }
     return tempNode;
 }
@@ -89,4 +89,11 @@ function getMultiTextVisibility(multiText) {
     } else {
         return true;
     }
+}
+
+function getParentBtnVisibility(inputData) {
+    if (inputData.left || inputData.right || inputData.isPatient)
+        return true
+    else 
+        return false
 }
