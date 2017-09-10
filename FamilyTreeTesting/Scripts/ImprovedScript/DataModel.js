@@ -17,7 +17,7 @@ function getDefaultLogicUnitData(inputId, inputGender) {
         isDead: false,
         isAdopted: false,
         notes: ["", "", ""],
-        canBeDeleted: true
+        canBeDeleted: true,
     }
     return tempStorageTemplate;
 }
