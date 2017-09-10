@@ -288,7 +288,7 @@ function generateRightVerticalPanelWithBtn() {
             position: new go.Point(64, -100)
         },
         createBtn(EventHandler.loadGenderType, "換性別", null, null),
-        createVisibleBtn(null, "父　母", null, null, "isAddParentBtnVisible"),
+        createVisibleBtn(EventHandler.addParent, "父　母", null, null, "isAddParentBtnVisible"),
         createBtn(null, "配　偶", null, null),
         goObject(
             go.Panel,
