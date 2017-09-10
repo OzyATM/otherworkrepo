@@ -37,9 +37,11 @@ function deleteNode(e, object) {
     var currentObjectKey = object.part.data.key;
 
     var previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, currentObjectKey)
-    previousNode.left = null;
-    previousNode.right = null;
-    reRender(previousNode.id);
+    if (previousNode != null) {
+        previousNode.left = null;
+        previousNode.right = null;
+        reRender(previousNode.id);
+    }
 }
 
 // Generate NodeData based on data storage
