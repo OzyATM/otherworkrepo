@@ -1,7 +1,6 @@
 ﻿var goObject = go.GraphObject.make;
 // Initialize an empty datamodel
 var globalLogicData;
-var globalIDForParent;
 
 // *****************************************
 // Get Templated Default data structure
