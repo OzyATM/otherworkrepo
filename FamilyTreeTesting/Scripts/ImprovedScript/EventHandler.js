@@ -13,7 +13,10 @@ var EventHandler = {
     loadMultiIndividual: loadMultiIndividual,
     loadGenderType: loadGenderType,
     addParent: addParent,
-    addElderBrother: addElderBrother
+    addElderBrother: addElderBrother,
+    addYoungerBrother: addYoungerBrother,
+    addElderSister: addElderSister,
+    addYoungerSister: addYoungerSister
 }
 
 // ***************************************
@@ -36,13 +39,22 @@ function btnRegistration() {
 // ***************************************
 function deleteNode(e, object) {
     var currentObjectKey = object.part.data.key;
-
+    //delete parentTree's Node
     var previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, currentObjectKey)
     if (previousNode != null) {
         previousNode.left = null;
         previousNode.right = null;
         reRender(previousNode.id);
     }
+    // delete node on childrenList
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey);
+    var NodeCurrentIndex = currentNodeArrayData[1];
+    var NodeCurrentChildList = currentNodeArrayData[0];
+    if (NodeCurrentIndex) {
+        NodeCurrentChildList.splice(NodeCurrentIndex, 1);
+        reRender(currentObjectKey);
+    }
+
 }
 
 // Generate NodeData based on data storage
@@ -242,7 +254,7 @@ function addParent(e, object) {
 
 // ***************************************
 // Add Sibling Event Handler
-// Add BigBrother On the Graph
+// Add ElderBrother On the Graph
 // ***************************************
 function addElderBrother(e, object) {
     var currentObjectKey = object.part.data.key;
@@ -250,10 +262,60 @@ function addElderBrother(e, object) {
     var elderBrother = getDefaultLogicUnitData(uuidv4(), "male");
     var NodeCurrentIndex = currentNodeArrayData[1];
     var NodeCurrentChildList = currentNodeArrayData[0];
+
     if (NodeCurrentIndex === 0) {
         NodeCurrentChildList.unshift(elderBrother)
     } else {
         NodeCurrentChildList.splice(NodeCurrentIndex, 0, elderBrother);
     }
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Add Sibling Event Handler
+// Add ElderSister On the Graph
+// ***************************************
+function addElderSister(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    var elderSister = getDefaultLogicUnitData(uuidv4(), "female");
+    var NodeCurrentIndex = currentNodeArrayData[1];
+    var NodeCurrentChildList = currentNodeArrayData[0];
+
+    if (NodeCurrentIndex === 0) {
+        NodeCurrentChildList.unshift(elderSister)
+    } else {
+        NodeCurrentChildList.splice(NodeCurrentIndex, 0, elderSister);
+    }
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Add Sibling Event Handler
+// Add YoungerBrother On the Graph
+// ***************************************
+function addYoungerBrother(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    var youngerBrother = getDefaultLogicUnitData(uuidv4(), "male");
+    var NodeCurrentIndex = currentNodeArrayData[1];
+    var NodeCurrentChildList = currentNodeArrayData[0];
+
+    NodeCurrentChildList.splice(NodeCurrentIndex + 1, 0, youngerBrother);
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Add Sibling Event Handler
+// Add YoungerSister On the Graph
+// ***************************************
+function addYoungerSister(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    var youngerSister = getDefaultLogicUnitData(uuidv4(), "female");
+    var NodeCurrentIndex = currentNodeArrayData[1];
+    var NodeCurrentChildList = currentNodeArrayData[0];
+
+    NodeCurrentChildList.splice(NodeCurrentIndex + 1, 0, youngerSister);
     reRender(currentObjectKey);
 }
