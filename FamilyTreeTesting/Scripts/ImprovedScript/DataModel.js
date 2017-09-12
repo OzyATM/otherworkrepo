@@ -123,7 +123,7 @@ function searchNodeCurrentArray(childrenList, inputId) {
         if (child.id === inputId){
             resultListData.push(childrenList);
             resultListData.push(index);
-        } else if (child.parentTree) {
+        } else if (child.parentTree && child.parentTree.childrenList) {
             searchNodeCurrentArray(child.parentTree.childrenList);
         }
     })
