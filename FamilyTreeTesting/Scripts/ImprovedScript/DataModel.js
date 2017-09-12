@@ -118,13 +118,19 @@ function searchParentTreeNodePreviousNode(currentBranchNode, inputId) {
 }
 
 function searchNodeCurrentArray(childrenList, inputId) {
-    var resultListData = [];
+    resultListData = [];
     childrenList.forEach(function(child,index) {
         if (child.id === inputId){
             resultListData.push(childrenList);
             resultListData.push(index);
-        } else if (child.parentTree && child.parentTree.childrenList) {
-            searchNodeCurrentArray(child.parentTree.childrenList);
+            return resultListData;
+        } else if (child.parentTree && child.childrenList) {
+            if(child.parentTree.left.id === inputId || child.parentTree.right.id === inputId) {
+                resultListData.push(childrenList);
+                resultListData.push(index);
+                return resultListData;
+            } else 
+                searchNodeCurrentArray(child.childrenList, inputId);
         }
     })
     return resultListData;
