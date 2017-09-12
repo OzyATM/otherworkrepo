@@ -12,7 +12,8 @@ var EventHandler = {
     loadComment: loadComment,
     loadMultiIndividual: loadMultiIndividual,
     loadGenderType: loadGenderType,
-    addParent: addParent
+    addParent: addParent,
+    addElderBrother: addElderBrother
 }
 
 // ***************************************
@@ -236,5 +237,23 @@ function addParent(e, object) {
     var mom = getDefaultLogicUnitData(uuidv4(), "female");
     currentNode.left = dad;
     currentNode.right = mom;
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Add Sibling Event Handler
+// Add BigBrother On the Graph
+// ***************************************
+function addElderBrother(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    var elderBrother = getDefaultLogicUnitData(uuidv4(), "male");
+    var NodeCurrentIndex = currentNodeArrayData[1];
+    var NodeCurrentChildList = currentNodeArrayData[0];
+    if (NodeCurrentIndex === 0) {
+        NodeCurrentChildList.unshift(elderBrother)
+    } else {
+        NodeCurrentChildList.splice(NodeCurrentIndex, 0, elderBrother);
+    }
     reRender(currentObjectKey);
 }

@@ -59,8 +59,7 @@ function initializeGlobalLogicData() {
             }
         },
         childrenList: [
-            sister2,
-            patient,
+            patient
         ]
     }
     return globalLogicData;
@@ -118,6 +117,19 @@ function searchParentTreeNodePreviousNode(currentBranchNode, inputId) {
     }
 
     return resultNode;
+}
+
+function searchNodeCurrentArray(childrenList, inputId) {
+    var resultListData = [];
+    childrenList.forEach(function(child,index) {
+        if (child.id === inputId){
+            resultListData.push(childrenList);
+            resultListData.push(index);
+        } else if (child.parentTree) {
+            searchNodeCurrentArray(child.parentTree.childrenList);
+        }
+    })
+    return resultListData;
 }
 
 //***********************************************
