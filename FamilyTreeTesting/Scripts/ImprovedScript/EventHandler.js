@@ -16,7 +16,8 @@ var EventHandler = {
     addElderBrother: addElderBrother,
     addYoungerBrother: addYoungerBrother,
     addElderSister: addElderSister,
-    addYoungerSister: addYoungerSister
+    addYoungerSister: addYoungerSister,
+    addPartner: addPartner
 }
 
 // ***************************************
@@ -318,4 +319,43 @@ function addYoungerSister(e, object) {
 
     NodeCurrentChildList.splice(NodeCurrentIndex + 1, 0, youngerSister);
     reRender(currentObjectKey);
+}
+
+// ***************************************
+// Add Partner Event Handler
+// Add Partner On the Graph
+// ***************************************
+function addPartner(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var partnerNode;
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    var NodeCurrentIndex = currentNodeArrayData[1];
+    var NodeCurrentChildList = currentNodeArrayData[0];
+
+    if (object.part.data.mainFigure === "Square")
+        partnerNode = getDefaultLogicUnitData(uuidv4(), "female");
+    else if (object.part.data.mainFigure === "Circle")
+        partnerNode = getDefaultLogicUnitData(uuidv4(), "male");
+
+    var subTree = {};
+    subTree = {
+        parentTree: {
+            left:,
+            right:,
+
+        }
+    }
+
+
+    //var patientSubTree = {};
+    //patientSubTree = {
+    //    parentTree: {
+    //        left: patient,
+    //        right: patientWife,
+    //        linkNode: "left"
+    //    },
+    //    childrenList: [
+    //    ]
+    //}
+
 }

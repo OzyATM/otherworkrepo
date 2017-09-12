@@ -289,7 +289,7 @@ function generateRightVerticalPanelWithBtn() {
         },
         createBtn(EventHandler.loadGenderType, "換性別", null, null),
         createVisibleBtn(EventHandler.addParent, "父　母", null, null, "isAddParentBtnVisible"),
-        createBtn(null, "配　偶", null, null),
+        createBtn(EventHandler.addPartner, "配　偶", null, null),
         goObject(
             go.Panel,
             "Horizontal",

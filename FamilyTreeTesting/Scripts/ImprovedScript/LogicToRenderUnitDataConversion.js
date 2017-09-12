@@ -59,7 +59,7 @@ function getGenderShape(gender) {
     if (gender === "male") {
         return "Square";
     } else if (gender === "female") {
-        return "circle";
+        return "Circle";
     } else if (gender === "unknown") {
         return "Diamond"
     } else if (gender === "baby") {
