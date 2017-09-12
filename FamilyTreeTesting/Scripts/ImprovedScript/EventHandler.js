@@ -327,35 +327,46 @@ function addYoungerSister(e, object) {
 // ***************************************
 function addPartner(e, object) {
     var currentObjectKey = object.part.data.key;
-    var partnerNode;
+    var leftNode, rightNode
+    var linkNode;
     var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
     var NodeCurrentIndex = currentNodeArrayData[1];
     var NodeCurrentChildList = currentNodeArrayData[0];
 
-    if (object.part.data.mainFigure === "Square")
-        partnerNode = getDefaultLogicUnitData(uuidv4(), "female");
-    else if (object.part.data.mainFigure === "Circle")
-        partnerNode = getDefaultLogicUnitData(uuidv4(), "male");
+    if (object.part.data.mainFigure === "Square") {
+        leftNode = getDefaultLogicUnitData(uuidv4(), "male");
+        rightNode = getDefaultLogicUnitData(uuidv4(), "female");
+        linkNode = "left";
+        if (object.part.data.isPatient) {
+            leftNode.canBeDeleted = false;
+            leftNode.isPatient = true;
+        }
+    }
+    else if (object.part.data.mainFigure === "Circle"){
+        leftNode = getDefaultLogicUnitData(uuidv4(), "male");
+        rightNode = getDefaultLogicUnitData(uuidv4(), "female");
+        linkNode = "right";
+        if (object.part.data.isPatient) {
+            rightNode.canBeDeleted = false;
+            rightNode.isPatient = true;
+        }
+    }
 
     var subTree = {};
     subTree = {
         parentTree: {
-            left:,
-            right:,
-
-        }
+            left:leftNode,
+            right: rightNode,
+            linkNode: linkNode,
+            relation: {
+                marriageStatus: "married",
+            }
+        },
+        childrenList: [
+        ]
     }
 
-
-    //var patientSubTree = {};
-    //patientSubTree = {
-    //    parentTree: {
-    //        left: patient,
-    //        right: patientWife,
-    //        linkNode: "left"
-    //    },
-    //    childrenList: [
-    //    ]
-    //}
-
+    NodeCurrentChildList.splice(NodeCurrentIndex, 1);
+    NodeCurrentChildList.splice(NodeCurrentIndex, 0, subTree);
+    reRender(null);
 }
