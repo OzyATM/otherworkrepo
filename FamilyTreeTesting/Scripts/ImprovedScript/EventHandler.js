@@ -50,7 +50,7 @@ function deleteNode(e, object) {
     var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey);
     var NodeCurrentIndex = currentNodeArrayData[1];
     var NodeCurrentChildList = currentNodeArrayData[0];
-    if (NodeCurrentIndex != null) {
+    if (NodeCurrentIndex) {
         NodeCurrentChildList.splice(NodeCurrentIndex, 1);
         reRender(currentObjectKey);
     }
