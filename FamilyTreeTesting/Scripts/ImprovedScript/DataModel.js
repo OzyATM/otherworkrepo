@@ -37,7 +37,16 @@ function initializeGlobalLogicData() {
     patient.canBeDeleted = false;
     var patientWife = getDefaultLogicUnitData("B101", "female");
 
-    var sister2 = getDefaultLogicUnitData("B300", "female");
+    //var patientSubTree = {};
+    //patientSubTree = {
+    //    parentTree: {
+    //        left: patient,
+    //        right: patientWife,
+    //        linkNode: "left"
+    //    },
+    //    childrenList: [
+    //    ]
+    //}
 
     globalLogicData = {
         parentTree: {
