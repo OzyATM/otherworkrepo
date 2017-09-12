@@ -293,14 +293,14 @@ function generateRightVerticalPanelWithBtn() {
         goObject(
             go.Panel,
             "Horizontal",
-            createBtn(null, "兄", null, 32),
-            createBtn(null, "弟", null, 32)
+            createBtn(EventHandler.addElderBrother, "兄", null, 32),
+            createBtn(EventHandler.addYoungerBrother, "弟", null, 32)
         ),
         goObject(
             go.Panel,
             "Horizontal",
-            createBtn(null, "姊", null, 32),
-            createBtn(null, "妹", null, 32)
+            createBtn(EventHandler.addElderSister, "姊", null, 32),
+            createBtn(EventHandler.addYoungerSister, "妹", null, 32)
         ),
         goObject(
             go.Panel,
