@@ -37,17 +37,6 @@ function initializeGlobalLogicData() {
     patient.canBeDeleted = false;
     var patientWife = getDefaultLogicUnitData("B101", "female");
 
-    //var patientSubTree = {};
-    //patientSubTree = {
-    //    parentTree: {
-    //        left: patient,
-    //        right: patientWife,
-    //        linkNode: "left"
-    //    },
-    //    childrenList: [
-    //    ]
-    //}
-
     globalLogicData = {
         parentTree: {
             left: dad,
@@ -119,20 +108,20 @@ function searchParentTreeNodePreviousNode(currentBranchNode, inputId) {
 
 function searchNodeCurrentArray(childrenList, inputId) {
     resultListData = [];
-    childrenList.forEach(function(child,index) {
-        if (child.id === inputId){
+    for (var i = 0; i < childrenList.length; i++) {
+        if (childrenList[i].id === inputId){
             resultListData.push(childrenList);
-            resultListData.push(index);
+            resultListData.push(i);
             return resultListData;
-        } else if (child.parentTree && child.childrenList) {
-            if(child.parentTree.left.id === inputId || child.parentTree.right.id === inputId) {
+        } else if (childrenList[i].parentTree && childrenList[i].childrenList) {
+            if(childrenList[i].parentTree.left.id === inputId || childrenList[i].parentTree.right.id === inputId) {
                 resultListData.push(childrenList);
-                resultListData.push(index);
+                resultListData.push(i);
                 return resultListData;
             } else 
-                searchNodeCurrentArray(child.childrenList, inputId);
+                searchNodeCurrentArray(childrenList[i].childrenList, inputId);
         }
-    })
+    }
     return resultListData;
 }
 
