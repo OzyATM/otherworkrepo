@@ -324,8 +324,8 @@ function generateLeftVerticalPanelWithBtn() {
         },
         createBtn(EventHandler.sameDisease, "相同疾病", "#FFBD9D", 80),
         createBtn(EventHandler.containGen, "帶基因者", "#FFBD9D", 80),
-        createBtn(EventHandler.isPregnant, "懷   孕", "#FFBD9D", 80),
-        createBtn(EventHandler.loadMultiIndividual, "多個體", "#FFBD9D", 80),
+        createVisibleBtn(EventHandler.isPregnant, "懷   孕", "#FFBD9D", 80, "isPregnantBtnVisible"),
+        createVisibleBtn(EventHandler.loadMultiIndividual, "多個體", "#FFBD9D", 80, "isMultiInvididualTextBtnVisible"),
         createBtn(EventHandler.isDead, "死   亡", "#FFBD9D", 80),
         createBtn(EventHandler.loadComment, "註   解", "#FFBD9D", 80)
     )

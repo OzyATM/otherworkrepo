@@ -86,9 +86,9 @@ function generateLinkPointTemplate() {
                     fill: "blue"
                 },
                 new go.Binding("width"),
-                new go.Binding("height"),
+                new go.Binding("height")
             ),
-            createPort("M", new go.Point(0, 0)),
+            createPort("M", new go.Point(0, 0))
         );
     return linkPointTemplate
 }
