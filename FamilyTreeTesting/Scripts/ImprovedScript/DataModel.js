@@ -37,61 +37,6 @@ function initializeGlobalLogicData() {
     patient.canBeDeleted = false;
     var patientWife = getDefaultLogicUnitData("B101", "female");
 
-    var childTwo = getDefaultLogicUnitData("C300", "female");
-    var childTwoHusband = getDefaultLogicUnitData("C301", "male");
-    var childTwoChildOne = getDefaultLogicUnitData("D100", "male");
-    var childTwoChildTwo = getDefaultLogicUnitData("D200", "male");
-    var childTwoChildThree = getDefaultLogicUnitData("D300", "male");
-    var childTwoSubTree = {
-        parentTree: {
-            left: childTwoHusband,
-            right: childTwo,
-            linkNode: "right"
-        },
-        childrenList: [
-            childTwoChildOne,
-            childTwoChildTwo,
-            childTwoChildThree,
-        ]
-    }
-
-    var child3 = getDefaultLogicUnitData("C400", "female");
-    var child4 = getDefaultLogicUnitData("C500", "male");
-
-    var patientSubTree = {};
-    patientSubTree = {
-        parentTree: {
-            left: patient,
-            right: patientWife,
-            linkNode: "left"
-        },
-        childrenList: [
-            childTwoSubTree,
-            child3,
-            child4
-        ]
-    }
-
-    var sister1 = getDefaultLogicUnitData("B200", "female");
-    var sisterHusband = getDefaultLogicUnitData("B201", "male");
-    var sisChild1 = getDefaultLogicUnitData("C600", "male");
-    var sisChild2 = getDefaultLogicUnitData("C700", "female");
-    var sisChild3 = getDefaultLogicUnitData("C800", "female");
-    var sister1SubTree = {
-        parentTree: {
-            left: sisterHusband,
-            right: sister1,
-            linkNode: "right"
-        },
-        childrenList: [
-            sisChild1,
-            sisChild2,
-            sisChild3
-        ]
-    }
-
-    var sister2 = getDefaultLogicUnitData("B300", "female");
-
     globalLogicData = {
         parentTree: {
             left: dad,
@@ -101,9 +46,7 @@ function initializeGlobalLogicData() {
             }
         },
         childrenList: [
-            sister1SubTree,
-            patientSubTree,
-            sister2,
+            patient
         ]
     }
     return globalLogicData;
@@ -161,6 +104,28 @@ function searchParentTreeNodePreviousNode(currentBranchNode, inputId) {
     }
 
     return resultNode;
+}
+
+function searchNodeCurrentArray(childrenList, inputId, resultListData) {
+    // prevent resultListData set to default if it has data inside
+    if (!resultListData){
+        var resultListData = [];
+    }
+    childrenList.forEach(function(child,index){
+        if (child.id === inputId){
+            resultListData.push(childrenList);
+            resultListData.push(index);
+            return resultListData;
+        } else if (child.parentTree && child.childrenList) {
+            if(child.parentTree.left.id === inputId || child.parentTree.right.id === inputId) {
+                resultListData.push(childrenList);
+                resultListData.push(index);
+                return resultListData;
+            } else 
+                searchNodeCurrentArray(child.childrenList, inputId ,resultListData);
+        }
+    })
+    return resultListData;
 }
 
 //***********************************************
