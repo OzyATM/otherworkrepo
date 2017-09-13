@@ -72,6 +72,7 @@ function deleteNode(e, object) {
 //  - isDead
 //  - isAdopted
 //  - notes (array)
+//  - canBeDeleted
 // ***************************************
 // Contain Gen Event Handler
 // Add a small black circle
