@@ -184,10 +184,9 @@ function getChildrenRenderData(basePos, initialHeight, linkNode, logicData) {
     var lineLength = 0;
     var childGapList = getChildrenGapList(logicData);
     childGapList.forEach((item, index) => {
-        if (index < logicData.length) {
-            lineLength += item;
-        }
+        lineLength += item;
     });
+    lineLength -= 100; // Don't know why this works, but this fixed the line gap problem
     var initX = basePos.x - (lineLength / 2);
     var initY = basePos.y + initialHeight + childNodeSecondHeight;
     var lastPos = { x: initX, y: initY };
