@@ -106,22 +106,25 @@ function searchParentTreeNodePreviousNode(currentBranchNode, inputId) {
     return resultNode;
 }
 
-function searchNodeCurrentArray(childrenList, inputId) {
-    resultListData = [];
-    for (var i = 0; i < childrenList.length; i++) {
-        if (childrenList[i].id === inputId){
+function searchNodeCurrentArray(childrenList, inputId, resultListData) {
+    // prevent resultListData set to default if it has data inside
+    if (!resultListData){
+        var resultListData = [];
+    }
+    childrenList.forEach(function(child,index){
+        if (child.id === inputId){
             resultListData.push(childrenList);
-            resultListData.push(i);
+            resultListData.push(index);
             return resultListData;
-        } else if (childrenList[i].parentTree && childrenList[i].childrenList) {
-            if(childrenList[i].parentTree.left.id === inputId || childrenList[i].parentTree.right.id === inputId) {
+        } else if (child.parentTree && child.childrenList) {
+            if(child.parentTree.left.id === inputId || child.parentTree.right.id === inputId) {
                 resultListData.push(childrenList);
-                resultListData.push(i);
+                resultListData.push(index);
                 return resultListData;
             } else 
-                searchNodeCurrentArray(childrenList[i].childrenList, inputId);
+                searchNodeCurrentArray(child.childrenList, inputId ,resultListData);
         }
-    }
+    })
     return resultListData;
 }
 
