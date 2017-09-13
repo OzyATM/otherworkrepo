@@ -43,7 +43,6 @@ function btnRegistration() {
 function deleteNode(e, object) {
     var currentObjectKey = object.part.data.key;
     var newNode;
-    var isPatient;
     //delete parentTree's Node
     var previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, currentObjectKey)
     if (previousNode != null) {
@@ -52,6 +51,7 @@ function deleteNode(e, object) {
         reRender(previousNode.id);
         return;
     }
+
     // delete node on childrenList
     var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey);
     var NodeCurrentIndex = currentNodeArrayData[1];
@@ -59,20 +59,12 @@ function deleteNode(e, object) {
     if (NodeCurrentchildrenList[NodeCurrentIndex].parentTree) {
         var mainNodePosition = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.linkNode
         if (mainNodePosition === "left") {
-            isPatient = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left.isPatient;
+            newNode = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left;
             NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right = null;
         } else if (mainNodePosition === "right") {
-            isPatient = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right.isPatient;
+            newNode = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right;
             NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left = null;
         }
-        if (object.part.data.mainFigure === "Square") {
-            newNode = getDefaultLogicUnitData(uuidv4(), "female");
-        } else if (object.part.data.mainFigure === "Circle") {
-            newNode = getDefaultLogicUnitData(uuidv4(), "male");
-        }
-
-        newNode.canBeDeleted = !isPatient;
-        newNode.isPatient = isPatient;
 
         NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
         NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, newNode);
@@ -356,6 +348,7 @@ function addYoungerSister(e, object) {
 // ***************************************
 function addPartner(e, object) {
     var currentObjectKey = object.part.data.key;
+    var currentNodeDataOnGlobalLogicalData = findNode(currentObjectKey, globalLogicData)
     var leftNode, rightNode
     var linkNode;
     var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
@@ -363,21 +356,13 @@ function addPartner(e, object) {
     var NodeCurrentchildrenList = currentNodeArrayData[0];
 
     if (object.part.data.mainFigure === "Square") {
-        leftNode = getDefaultLogicUnitData(uuidv4(), "male");
+        leftNode = currentNodeDataOnGlobalLogicalData
         rightNode = getDefaultLogicUnitData(uuidv4(), "female");
         linkNode = "left";
-        if (object.part.data.isPatient) {
-            leftNode.canBeDeleted = false;
-            leftNode.isPatient = true;
-        }
     } else if (object.part.data.mainFigure === "Circle"){
         leftNode = getDefaultLogicUnitData(uuidv4(), "male");
-        rightNode = getDefaultLogicUnitData(uuidv4(), "female");
+        rightNode = currentNodeDataOnGlobalLogicalData
         linkNode = "right";
-        if (object.part.data.isPatient) {
-            rightNode.canBeDeleted = false;
-            rightNode.isPatient = true;
-        }
     }
 
     var subTree = {};

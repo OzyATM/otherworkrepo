@@ -55,17 +55,21 @@ function initializeGlobalLogicData() {
 //*********************************************
 // Helper functions
 //*********************************************
-function findNode(id, logicData) {
-    var resultNode = null;
-    resultNode = searchParentTreeForNode(logicData.parentTree, id);
+function findNode(id, logicData, resultNode) {
+    if (!resultNode) {
+        var resultNode = null;
+    }
+    resultNode = searchParentTreeForNode(logicData.parentTree, id, resultNode);
     if (resultNode === null) {
-        resultNode = searchChildTreeForNode(logicData.childrenList,id);
+        resultNode = searchChildTreeForNode(logicData.childrenList,id, resultNode);
     }
     return resultNode;
 }
 
-function searchParentTreeForNode(currentBranchNode, inputId) {
-    var resultNode = null;
+function searchParentTreeForNode(currentBranchNode, inputId, resultNode) {
+    if (!resultNode) {
+        var resultNode = null;
+    }
     if (currentBranchNode.id === inputId) {
         resultNode = currentBranchNode;
     }
@@ -79,11 +83,13 @@ function searchParentTreeForNode(currentBranchNode, inputId) {
     return resultNode;
 }
 
-function searchChildTreeForNode(childrenList, inputId) {
-    var resultNode = null;
+function searchChildTreeForNode(childrenList, inputId ,resultNode) {
+    if (!resultNode) {
+        var resultNode = null;
+    }
     childrenList.forEach((child) => {
         if (child.parentTree) {
-            resultNode = findNode(inputId, child);
+            resultNode = findNode(inputId, child, resultNode);
         } else if (child.id === inputId) {
             resultNode = child;
         }
