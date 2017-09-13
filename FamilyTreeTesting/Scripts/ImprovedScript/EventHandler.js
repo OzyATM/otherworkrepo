@@ -42,20 +42,46 @@ function btnRegistration() {
 // ***************************************
 function deleteNode(e, object) {
     var currentObjectKey = object.part.data.key;
+    var newNode;
+    var isPatient;
     //delete parentTree's Node
     var previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, currentObjectKey)
     if (previousNode != null) {
         previousNode.left = null;
         previousNode.right = null;
         reRender(previousNode.id);
+        return;
     }
     // delete node on childrenList
     var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey);
     var NodeCurrentIndex = currentNodeArrayData[1];
-    var NodeCurrentChildList = currentNodeArrayData[0];
-    if (NodeCurrentIndex != null) {
-        NodeCurrentChildList.splice(NodeCurrentIndex, 1);
+    var NodeCurrentchildrenList = currentNodeArrayData[0];
+    if (NodeCurrentchildrenList[NodeCurrentIndex].parentTree) {
+        var mainNodePosition = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.linkNode
+        if (mainNodePosition === "left") {
+            isPatient = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left.isPatient;
+            NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right = null;
+        } else if (mainNodePosition === "right") {
+            isPatient = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right.isPatient;
+            NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left = null;
+        }
+        if (object.part.data.mainFigure === "Square") {
+            newNode = getDefaultLogicUnitData(uuidv4(), "female");
+        } else if (object.part.data.mainFigure === "Circle") {
+            newNode = getDefaultLogicUnitData(uuidv4(), "male");
+        }
+
+        newNode.canBeDeleted = !isPatient;
+        newNode.isPatient = isPatient;
+
+        NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
+        NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, newNode);
         reRender(currentObjectKey);
+        return;
+    } else {
+        NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
+        reRender(currentObjectKey);
+        return;
     }
 
 }
@@ -344,8 +370,7 @@ function addPartner(e, object) {
             leftNode.canBeDeleted = false;
             leftNode.isPatient = true;
         }
-    }
-    else if (object.part.data.mainFigure === "Circle"){
+    } else if (object.part.data.mainFigure === "Circle"){
         leftNode = getDefaultLogicUnitData(uuidv4(), "male");
         rightNode = getDefaultLogicUnitData(uuidv4(), "female");
         linkNode = "right";
