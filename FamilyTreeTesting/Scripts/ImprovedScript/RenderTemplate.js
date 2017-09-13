@@ -305,8 +305,8 @@ function generateRightVerticalPanelWithBtn() {
         goObject(
             go.Panel,
             "Horizontal",
-            createBtn(null, "兒", null, 32),
-            createBtn(null, "女", null, 32)
+            createBtn(EventHandler.addSon, "兒", null, 32),
+            createBtn(EventHandler.addDaughter, "女", null, 32)
         )
     )
     return thempRightVerticalPanel;
