@@ -2,6 +2,11 @@
 var commentNodeKey;
 var multiIndividualNodeKey;
 var genderNodeKey;
+var globalState = {
+    tool: null,
+    LocX: -200,
+    LocY: 50,
+}
 
 var EventHandler = {
     deleteNode: deleteNode,
@@ -422,4 +427,21 @@ function addDaughter(e, object) {
     NodeCurrentchildrenList[NodeCurrentIndex].childrenList.push(daughter)
 
     reRender(currentObjectKey);
+}
+
+function addCarePerson(gender) {
+    var carePeronNode, categoryType
+    var setObjLoc = go.Point.stringify(new go.Point(globalState.LocX, globalState.LocY))
+
+    if (gender === "male")
+        categoryType = "careMale"
+    else if (gender === "female")
+        categoryType = "careFemale"
+
+    carePeronNode = { category: categoryType, loc: setObjLoc };
+    mainDiagram.model.addNodeData(carePeronNode);
+
+    // update globalLoc
+    globalState.LocX += 5
+    globalState.LocY += 5
 }

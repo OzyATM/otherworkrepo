@@ -26,6 +26,15 @@ function initializeDiagram() {
         generateLinkPointTemplate()
     );
 
+    mainDiagram.nodeTemplateMap.add(
+        "careMale",
+        generateCareTaker("male")
+    );
+    mainDiagram.nodeTemplateMap.add(
+        "careFemale",
+        generateCareTaker("female")
+        );
+
     mainDiagram.linkTemplate = generateParentLinkTemplate();
     mainDiagram.linkTemplateMap.add(
         "ChildrenLink",

@@ -359,7 +359,7 @@ function createDeleteBtn(event, btnText, btnWidth) {
                 inputText,
                 { font: "10pt sans-serif ", stroke: "white" }
             ),
-            new go.Binding("visible", "isDeleteBtnVisible"),
+            new go.Binding("visible", "isDeleteBtnVisible")
         )
     return deleteBtn
 }
@@ -458,3 +458,128 @@ function createStuffOnNaviBar() {
     $('#fontstyle').fontselect();
     $('#fontselect').addClass("disabledbutton");
 }
+
+//*********************************************
+// CareTaker Template Definition
+// gender
+//*********************************************
+//function generateCareTaker(gender) {
+//    var shapeForNode;
+//    if (gender === "male") {
+//        shapeForNode = "Square"
+//    }
+//    else if (gender === "female") {
+//        shapeForNode = "Circle"
+//    }
+//    var careTakerNodeTemplate = goObject(
+//        go.Node,
+//        "Spot",
+//        generateCareTakerNode(shapeForNode),
+//        {
+//            selectionAdornmentTemplate: generateCareTakerAdornment(shapeForNode)
+//        },
+//        generateTextBlockForCareTaker(),
+//        new go.Binding("location","loc", go.Point.parse)
+//    );
+//    return careTakerNodeTemplate;
+//}
+
+function generateCareTaker(gender) {
+    var shapeForNode;
+    if (gender === "male") {
+        shapeForNode = "Square"
+    }
+    else if (gender === "female") {
+        shapeForNode = "Circle"
+    }
+    var careTakerNodeTemplate = goObject(
+        go.Node,
+        "Spot",
+        goObject(
+            go.Shape,
+            "Circle",
+            { fill: "white", stroke: "black", strokeWidth: 3, maxSize: new go.Size(50, 50) }
+        ),
+        new go.Binding("location", "loc", go.Point.parse)
+    );
+    return careTakerNodeTemplate;
+}
+
+////*********************************************
+//// Main Shape for CareTaker
+////*********************************************
+//function generateCareTakerNode(shapeForNode) {
+//    var tempShape = goObject(
+//        go.Shape,
+//        {
+//            figure: shapeForNode,
+//            fill: "white",
+//            stroke: "black",
+//            strokeWidth: 5,
+//            maxSize: new go.Size(30, 30),
+//            cursor: "pointer"
+//        }
+//    )
+//}
+
+////*********************************************
+//// Text Block for CareTaker
+////*********************************************
+//function generateTextBlockForCareTaker() {
+//    var tempTextBlock = goObject(
+//        go.TextBlock,
+//        "照護員",
+//        {
+//            font: "8pt serif",
+//            stroke: "black",
+//            margin: new go.Margin(5, 0, 0, 0)
+//        }
+//    )
+//    return tempTextBlock;
+//}
+
+////*********************************************
+//// Generate CareTaker's Adornment
+////*********************************************
+//function generateCareTakerAdornment(adornmentShape) {
+//    var tempShapeForAdm = goObject(
+//        go.Adornment,
+//        "Spot",
+//        goObject(go.Placeholder),
+//        generateCareTakerAdornmentShape(adornmentShape),
+//        generateCareTakerHorizontalPanelWithDelBtn()
+//    )
+//    return tempShapeForAdm
+//}
+
+////*********************************************
+//// The Main Shape for the CareTaker's Adornment
+////*********************************************
+//function generateCareTakerAdornmentShape(adornmentShape) {
+//    var tempShapeForAdm = goObject(
+//        go.Shape,
+//        adornmentShape,
+//        {
+//            fill: null,
+//            stroke: "blue",
+//            strokeWidth: 3
+//        }
+//    )
+//    return tempShapeForAdm
+//}
+
+////*********************************************
+//// The HorizontalPanel to put Delete Btn for CareTaker
+////*********************************************
+//function generateCareTakerHorizontalPanelWithDelBtn() {
+//    var tempHorizontalPanel = goObject(
+//        go.Panel,
+//        "Horizontal",
+//        {
+//            alignment: go.Spot.Bottom,
+//            alignmentFocus: go.Spot.Top
+//        },
+//        createDeleteBtn(null, "刪除", 50)
+//    )
+//    return tempHorizontalPanel;
+//}
