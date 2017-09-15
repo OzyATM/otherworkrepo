@@ -74,10 +74,8 @@ function deleteNode(e, object) {
             return;
         } else if (mainNodePosition === "left") {
             newNode = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left;
-            NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right = null;
         } else if (mainNodePosition === "right") {
             newNode = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right;
-            NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left = null;
         }
 
         NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
