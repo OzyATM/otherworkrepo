@@ -39,6 +39,7 @@ function btnRegistration() {
     document.getElementById("increaseZoom").onclick = increaseZoom;
     document.getElementById("decreaseZoom").onclick = decreaseZoom;
     document.getElementById("zoomToFit").onclick = zoomToFit;
+    document.getElementById("freedraw").onclick = freeDraw;
 }
 
 // ***************************************
@@ -429,8 +430,12 @@ function addDaughter(e, object) {
     reRender(currentObjectKey);
 }
 
-function addCarePerson(gender) {
-    var carePeronNode, categoryType
+// ***************************************
+// Add CareTaker Event Handler
+// Add CareTaker On the Graph
+// ***************************************
+function addCareTaker(gender) {
+    var careTakerNode, categoryType
     var setObjLoc = go.Point.stringify(new go.Point(globalState.LocX, globalState.LocY))
 
     if (gender === "male")
@@ -438,10 +443,47 @@ function addCarePerson(gender) {
     else if (gender === "female")
         categoryType = "careFemale"
 
-    carePeronNode = { category: categoryType, loc: setObjLoc };
-    mainDiagram.model.addNodeData(carePeronNode);
+    careTakerNode = { category: categoryType, loc: setObjLoc };
+    mainDiagram.model.addNodeData(careTakerNode);
 
     // update globalLoc
     globalState.LocX += 5
     globalState.LocY += 5
+}
+
+// ***************************************
+// Save the Graph to Base64 (Image) string
+// ***************************************
+function saveImg() {
+    var ImgBaseString = mainDiagram.makeImageData({ background: "white" });
+    return ImgBaseString;
+}
+
+function freeDraw() {
+    mainDiagram.toolManager.panningTool.isEnabled = false;
+    // create drawing tool for myDiagram, defined in FreehandDrawingTool.js
+    var tool = new FreehandDrawingTool();
+    // provide the default JavaScript object for a new polygon in the model
+    tool.archetypePartData =
+        { stroke: "black", strokeWidth: 5, category: "FreehandDrawing" };
+    // allow the tool to start on top of an existing Part
+    tool.isBackgroundOnly = false;
+    // install as last mouse-move-tool
+    mainDiagram.toolManager.mouseMoveTools.add(tool);
+    globalState.tool = tool;
+    this.onclick = cancelFreeDraw;
+    document.getElementById("freedraw").innerHTML = '<img id="freedraw_img" width="20" height="20" style="margin:2px"/>' + " 完成"
+    document.getElementById("freedraw_img").src = APPLICATION_ROOT + "Content/done.png";
+    //this.src = APPLICATION_ROOT + "Content/done.png";
+
+}
+
+function cancelFreeDraw() {
+    mainDiagram.toolManager.panningTool.isEnabled = true;
+    mainDiagram.toolManager.mouseMoveTools.remove(globalState.tool);
+    globalState.tool = null;
+    this.onclick = freeDraw;
+    document.getElementById("freedraw").innerHTML = '<img id="freedraw_img" width="20" height="20" style="margin:2px"/>' + " 圈選同住者"
+    document.getElementById("freedraw_img").src = APPLICATION_ROOT + "Content/together.png";
+
 }

@@ -57,7 +57,6 @@ function generateMainShape() {
                     width: 30,
                     height: 30,
                     strokeWidth: 5,
-                    maxSize: new go.Size(40, 40),
                     cursor: "pointer"
                 },
                 new go.Binding("figure", "mainFigure"),
@@ -463,28 +462,7 @@ function createStuffOnNaviBar() {
 // CareTaker Template Definition
 // gender
 //*********************************************
-//function generateCareTaker(gender) {
-//    var shapeForNode;
-//    if (gender === "male") {
-//        shapeForNode = "Square"
-//    }
-//    else if (gender === "female") {
-//        shapeForNode = "Circle"
-//    }
-//    var careTakerNodeTemplate = goObject(
-//        go.Node,
-//        "Spot",
-//        generateCareTakerNode(shapeForNode),
-//        {
-//            selectionAdornmentTemplate: generateCareTakerAdornment(shapeForNode)
-//        },
-//        generateTextBlockForCareTaker(),
-//        new go.Binding("location","loc", go.Point.parse)
-//    );
-//    return careTakerNodeTemplate;
-//}
-
-function generateCareTaker(gender) {
+function generateCareTakerTemplate(gender) {
     var shapeForNode;
     if (gender === "male") {
         shapeForNode = "Square"
@@ -494,92 +472,142 @@ function generateCareTaker(gender) {
     }
     var careTakerNodeTemplate = goObject(
         go.Node,
-        "Spot",
-        goObject(
-            go.Shape,
-            "Circle",
-            { fill: "white", stroke: "black", strokeWidth: 3, maxSize: new go.Size(50, 50) }
-        ),
-        new go.Binding("location", "loc", go.Point.parse)
+        "Position",
+        generateCareTakerNodeShape(shapeForNode),
+        {
+            selectionAdornmentTemplate: generateCareTakerAdornment(shapeForNode)
+        },
+        generateTextBlockForCareTaker(),
+        new go.Binding("location","loc", go.Point.parse)
     );
     return careTakerNodeTemplate;
 }
 
-////*********************************************
-//// Main Shape for CareTaker
-////*********************************************
-//function generateCareTakerNode(shapeForNode) {
-//    var tempShape = goObject(
-//        go.Shape,
-//        {
-//            figure: shapeForNode,
-//            fill: "white",
-//            stroke: "black",
-//            strokeWidth: 5,
-//            maxSize: new go.Size(30, 30),
-//            cursor: "pointer"
-//        }
-//    )
-//}
+//*********************************************
+// Main Shape for CareTaker
+//*********************************************
+function generateCareTakerNodeShape(shapeForNode) {
+    var tempShape = goObject(
+        go.Shape,
+        {
+            figure: shapeForNode,
+            fill: "white",
+            stroke: "black",
+            strokeWidth: 5,
+            maxSize: new go.Size(30, 30),
+            cursor: "pointer"
+        }
+    )
+    return tempShape;
+}
 
-////*********************************************
-//// Text Block for CareTaker
-////*********************************************
-//function generateTextBlockForCareTaker() {
-//    var tempTextBlock = goObject(
-//        go.TextBlock,
-//        "照護員",
-//        {
-//            font: "8pt serif",
-//            stroke: "black",
-//            margin: new go.Margin(5, 0, 0, 0)
-//        }
-//    )
-//    return tempTextBlock;
-//}
+//*********************************************
+// Text Block for CareTaker
+//*********************************************
+function generateTextBlockForCareTaker() {
+    var tempTextBlock = goObject(
+        go.TextBlock,
+        "照護員",
+        {
+            font: "8pt serif",
+            stroke: "black",
+            position: new go.Point(0, 40)
+        }
+    )
+    return tempTextBlock;
+}
 
-////*********************************************
-//// Generate CareTaker's Adornment
-////*********************************************
-//function generateCareTakerAdornment(adornmentShape) {
-//    var tempShapeForAdm = goObject(
-//        go.Adornment,
-//        "Spot",
-//        goObject(go.Placeholder),
-//        generateCareTakerAdornmentShape(adornmentShape),
-//        generateCareTakerHorizontalPanelWithDelBtn()
-//    )
-//    return tempShapeForAdm
-//}
+//*********************************************
+// Generate CareTaker's Adornment
+//*********************************************
+function generateCareTakerAdornment() {
+    var tempShapeForAdm = goObject(
+        go.Adornment,
+        "Position",
+        goObject(go.Placeholder),
+        generateCareTakerAdornmentShape(),
+        generateCareTakerHorizontalPanelWithDelBtn()
+    )
+    return tempShapeForAdm
+}
 
-////*********************************************
-//// The Main Shape for the CareTaker's Adornment
-////*********************************************
-//function generateCareTakerAdornmentShape(adornmentShape) {
-//    var tempShapeForAdm = goObject(
-//        go.Shape,
-//        adornmentShape,
-//        {
-//            fill: null,
-//            stroke: "blue",
-//            strokeWidth: 3
-//        }
-//    )
-//    return tempShapeForAdm
-//}
+//*********************************************
+// The Main Shape for the CareTaker's Adornment
+//*********************************************
+function generateCareTakerAdornmentShape() {
+    var tempShapeForAdm = goObject(
+        go.Shape,
+        "Square",
+        {
+            maxSize: new go.Size(70, 70),
+            fill: null,
+            stroke: "blue",
+            strokeWidth: 3,
+            position: new go.Point(-19, -18)
+        }
+    )
+    return tempShapeForAdm
+}
 
-////*********************************************
-//// The HorizontalPanel to put Delete Btn for CareTaker
-////*********************************************
-//function generateCareTakerHorizontalPanelWithDelBtn() {
-//    var tempHorizontalPanel = goObject(
-//        go.Panel,
-//        "Horizontal",
-//        {
-//            alignment: go.Spot.Bottom,
-//            alignmentFocus: go.Spot.Top
-//        },
-//        createDeleteBtn(null, "刪除", 50)
-//    )
-//    return tempHorizontalPanel;
-//}
+//*********************************************
+// The HorizontalPanel to put Delete Btn for CareTaker
+//*********************************************
+function generateCareTakerHorizontalPanelWithDelBtn() {
+    var tempHorizontalPanel = goObject(
+        go.Panel,
+        "Horizontal",
+        {
+            position: new go.Point(-14, 55)
+        },
+        createDeleteBtn(null, "刪除", 50)
+    );
+    return tempHorizontalPanel;
+}
+
+//*********************************************
+// Free Draw Template Definition
+//*********************************************
+function generateFreeDrawTemplate() {
+    var tempFreeDrawTemplate = goObject(
+        go.Part,
+        generateMainShapeForFreeDrawObject(),
+        {
+            locationSpot: go.Spot.Center,
+            selectionAdornmentTemplate: generateFreeDrawAdornment()
+        },
+        new go.Binding("location", "loc")
+    );
+    return tempFreeDrawTemplate;
+}
+
+//*********************************************
+// Free Draw's Main Shape
+//*********************************************
+function generateMainShapeForFreeDrawObject() {
+    var mainShapeForFreeDraw = goObject(
+        go.Shape,
+        {
+            name: "SHAPE",
+            fill: "transparent",
+            strokeWidth: 1.5
+        },
+        new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
+        new go.Binding("angle").makeTwoWay(),
+        new go.Binding("geometryString", "geo").makeTwoWay(),
+        new go.Binding("strokeWidth")
+    )
+    return mainShapeForFreeDraw;
+}
+
+//*********************************************
+// Free Draw's Adornment
+//*********************************************
+function generateFreeDrawAdornment() {
+    var tempAdornmentForFreeDraw = goObject(
+        go.Adornment,
+        "Vertical",
+        goObject(go.Placeholder,  { margin: -1 }),
+        createDeleteBtn(null, "刪除", 50)
+    )
+    return tempAdornmentForFreeDraw;
+}
