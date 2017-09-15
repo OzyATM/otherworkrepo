@@ -27,17 +27,23 @@ function initializeDiagram() {
     );
 
     mainDiagram.nodeTemplateMap.add(
-        "careMale",
+        "CareMale",
         generateCareTakerTemplate("male")
     );
     mainDiagram.nodeTemplateMap.add(
-        "careFemale",
+        "CareFemale",
         generateCareTakerTemplate("female")
     );
     mainDiagram.nodeTemplateMap.add(
         "FreehandDrawing",
         generateFreeDrawTemplate()
     )
+    mainDiagram.nodeTemplateMap.add(
+        "CommentBox",
+        generateCommentBoxTemplate()
+    )
+
+    
 
     mainDiagram.linkTemplate = generateParentLinkTemplate();
     mainDiagram.linkTemplateMap.add(

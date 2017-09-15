@@ -22,6 +22,7 @@ function generateNodeTemplate() {
         "Position", // Alignment setting is not used, we manually set item position
         generateMainShape(),
         {
+            movable: false,
             selectionAdornmentTemplate: generateMainAdornment()
         },
         new go.Binding("location","loc", go.Point.parse),
@@ -574,8 +575,7 @@ function generateFreeDrawTemplate() {
         {
             locationSpot: go.Spot.Center,
             selectionAdornmentTemplate: generateFreeDrawAdornment()
-        },
-        new go.Binding("location", "loc")
+        }
     );
     return tempFreeDrawTemplate;
 }
@@ -587,9 +587,9 @@ function generateMainShapeForFreeDrawObject() {
     var mainShapeForFreeDraw = goObject(
         go.Shape,
         {
+            // must has this name idk y
             name: "SHAPE",
-            fill: "transparent",
-            strokeWidth: 1.5
+            fill: "transparent"
         },
         new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
         new go.Binding("angle").makeTwoWay(),
@@ -606,8 +606,62 @@ function generateFreeDrawAdornment() {
     var tempAdornmentForFreeDraw = goObject(
         go.Adornment,
         "Vertical",
-        goObject(go.Placeholder,  { margin: -1 }),
+        goObject(go.Placeholder),
         createDeleteBtn(null, "刪除", 50)
     )
     return tempAdornmentForFreeDraw;
+}
+
+//*********************************************
+// Comment Box Template Definition
+//*********************************************
+function generateCommentBoxTemplate() {
+    var tempCommentBoxTemplate = goObject(
+        go.Node,
+        "Position",
+        generateCommentBoxTextBlock(),
+        {
+            selectionAdornmentTemplate: generateCommentBoxAdornment()
+        },
+        new go.Binding("location", "loc", go.Point.parse)
+    )
+    return tempCommentBoxTemplate;
+}
+
+//*********************************************
+// Comment Box's Text Block  Definition
+//*********************************************
+function generateCommentBoxTextBlock() {
+    var tempTextBox = goObject(
+        go.TextBlock,
+        {
+            wrap: go.TextBlock.WrapFit,
+            editable: true,
+            textAlign: "center",
+            font: "12pt Helvetica, Arial, sans-serif",
+            stroke: "#000000",
+        },
+        new go.Binding("text"),
+        new go.Binding("stroke", "stroke"),
+        new go.Binding("font"),
+        new go.Binding("bold"),
+        new go.Binding("fontsize"),
+        new go.Binding("Italic"),
+        new go.Binding("isUnderline"),
+        new go.Binding("isStrikethrough")
+    )
+    return tempTextBox;
+}
+
+//*********************************************
+// Generate Comment Box's Adornment
+//*********************************************
+function generateCommentBoxAdornment() {
+    var tempCommentBoxAdornment = goObject(
+        go.Adornment,
+        "Vertical",
+        goObject(go.Placeholder),
+        createDeleteBtn(null, "刪除", 50)
+    )
+    return tempCommentBoxAdornment;
 }

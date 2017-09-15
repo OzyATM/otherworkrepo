@@ -40,6 +40,7 @@ function btnRegistration() {
     document.getElementById("decreaseZoom").onclick = decreaseZoom;
     document.getElementById("zoomToFit").onclick = zoomToFit;
     document.getElementById("freedraw").onclick = freeDraw;
+    document.getElementById("comment").onclick = addCommentBox;
 }
 
 // ***************************************
@@ -439,9 +440,9 @@ function addCareTaker(gender) {
     var setObjLoc = go.Point.stringify(new go.Point(globalState.LocX, globalState.LocY))
 
     if (gender === "male")
-        categoryType = "careMale"
+        categoryType = "CareMale"
     else if (gender === "female")
-        categoryType = "careFemale"
+        categoryType = "CareFemale"
 
     careTakerNode = { category: categoryType, loc: setObjLoc };
     mainDiagram.model.addNodeData(careTakerNode);
@@ -459,25 +460,28 @@ function saveImg() {
     return ImgBaseString;
 }
 
+// ***************************************
+// Add Free Draw Tool Event Handler 
+// ***************************************
 function freeDraw() {
     mainDiagram.toolManager.panningTool.isEnabled = false;
-    // create drawing tool for myDiagram, defined in FreehandDrawingTool.js
+    // create drawing tool for mainDiagram, defined in FreehandDrawingTool.js
     var tool = new FreehandDrawingTool();
     // provide the default JavaScript object for a new polygon in the model
     tool.archetypePartData =
         { stroke: "black", strokeWidth: 5, category: "FreehandDrawing" };
-    // allow the tool to start on top of an existing Part
-    tool.isBackgroundOnly = false;
     // install as last mouse-move-tool
     mainDiagram.toolManager.mouseMoveTools.add(tool);
     globalState.tool = tool;
     this.onclick = cancelFreeDraw;
     document.getElementById("freedraw").innerHTML = '<img id="freedraw_img" width="20" height="20" style="margin:2px"/>' + " 完成"
     document.getElementById("freedraw_img").src = APPLICATION_ROOT + "Content/done.png";
-    //this.src = APPLICATION_ROOT + "Content/done.png";
 
 }
 
+// ***************************************
+// Remove Free Draw Tool Event Handler 
+// ***************************************
 function cancelFreeDraw() {
     mainDiagram.toolManager.panningTool.isEnabled = true;
     mainDiagram.toolManager.mouseMoveTools.remove(globalState.tool);
@@ -486,4 +490,18 @@ function cancelFreeDraw() {
     document.getElementById("freedraw").innerHTML = '<img id="freedraw_img" width="20" height="20" style="margin:2px"/>' + " 圈選同住者"
     document.getElementById("freedraw_img").src = APPLICATION_ROOT + "Content/together.png";
 
+}
+
+// ***************************************
+// Add Comment Box Event Handler 
+// ***************************************
+function addCommentBox() {
+    var Comment_node
+    var setObjLoc = go.Point.stringify(new go.Point(globalState.LocX, globalState.LocY))
+
+    Comment_node = { category: "CommentBox", text: "請輸入文字", loc: setObjLoc };
+    mainDiagram.model.addNodeData(Comment_node);
+    // update globalLoc
+    globalState.LocX += 5
+    globalState.LocY += 5
 }
