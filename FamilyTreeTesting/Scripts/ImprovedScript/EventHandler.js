@@ -381,7 +381,7 @@ function addPartner(e, object) {
 
     NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
     NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, subTree);
-    reRender(null);
+    reRender(currentObjectKey);
 }
 
 // ***************************************

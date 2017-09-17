@@ -55,21 +55,17 @@ function initializeGlobalLogicData() {
 //*********************************************
 // Helper functions
 //*********************************************
-function findNode(id, logicData, resultNode) {
-    if (!resultNode) {
-        var resultNode = null;
-    }
-    resultNode = searchParentTreeForNode(logicData.parentTree, id, resultNode);
+function findNode(id, logicData) {
+    var resultNode = null;
+    resultNode = searchParentTreeForNode(logicData.parentTree, id);
     if (resultNode === null) {
-        resultNode = searchChildTreeForNode(logicData.childrenList,id, resultNode);
+        resultNode = searchChildTreeForNode(logicData.childrenList,id);
     }
     return resultNode;
 }
 
-function searchParentTreeForNode(currentBranchNode, inputId, resultNode) {
-    if (!resultNode) {
-        var resultNode = null;
-    }
+function searchParentTreeForNode(currentBranchNode, inputId) {
+     var resultNode = null;
     if (currentBranchNode.id === inputId) {
         resultNode = currentBranchNode;
     }
@@ -83,13 +79,14 @@ function searchParentTreeForNode(currentBranchNode, inputId, resultNode) {
     return resultNode;
 }
 
-function searchChildTreeForNode(childrenList, inputId ,resultNode) {
-    if (!resultNode) {
-        var resultNode = null;
-    }
+function searchChildTreeForNode(childrenList, inputId) {
+    var resultNode = null;
     childrenList.forEach((child) => {
         if (child.parentTree) {
-            resultNode = findNode(inputId, child, resultNode);
+            var tempNode = findNode(inputId, child);
+            if (tempNode != null) {
+                resultNode = tempNode;
+            }
         } else if (child.id === inputId) {
             resultNode = child;
         }
@@ -112,17 +109,14 @@ function searchParentTreeNodePreviousNode(currentBranchNode, inputId) {
     return resultNode;
 }
 
-function searchNodeCurrentArray(childrenList, inputId, resultListData) {
-    // prevent resultListData set to default if it has data inside
-    if (!resultListData){
-        var resultListData = [];
-    }
+function searchNodeCurrentArray(childrenList, inputId) {
+    var resultListData = [];
     childrenList.forEach(function(child,index){
         if (child.id === inputId){
             resultListData.push(childrenList);
             resultListData.push(index);
             return resultListData;
-        } else if (child.parentTree && child.childrenList) {
+        } else if (child.parentTree && child.childrenList && resultListData.length === 0) {
             if(child.parentTree.left.id === inputId || child.parentTree.right.id === inputId) {
                 resultListData.push(childrenList);
                 resultListData.push(index);
