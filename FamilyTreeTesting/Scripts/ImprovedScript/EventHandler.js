@@ -290,11 +290,7 @@ function addElderBrother(e, object) {
     var NodeCurrentIndex = currentNodeArrayData.index;
     var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
 
-    if (NodeCurrentIndex === 0) {
-        NodeCurrentchildrenList.unshift(elderBrother)
-    } else {
-        NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, elderBrother);
-    }
+    NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, elderBrother);
     reRender(currentObjectKey);
 }
 
@@ -309,11 +305,7 @@ function addElderSister(e, object) {
     var NodeCurrentIndex = currentNodeArrayData.index;
     var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
 
-    if (NodeCurrentIndex === 0) {
-        NodeCurrentchildrenList.unshift(elderSister)
-    } else {
-        NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, elderSister);
-    }
+    NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, elderSister);
     reRender(currentObjectKey);
 }
 
