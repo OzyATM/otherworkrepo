@@ -110,22 +110,29 @@ function searchParentTreeNodePreviousNode(currentBranchNode, inputId) {
 }
 
 function searchNodeCurrentArray(childrenList, inputId) {
-    var resultListData = [];
+    var result = {
+        childrenList: null,
+        index: -1
+    }
     childrenList.forEach(function(child,index){
-        if (child.id === inputId){
-            resultListData.push(childrenList);
-            resultListData.push(index);
-            return resultListData;
-        } else if (child.parentTree && child.childrenList && resultListData.length === 0) {
+        if (child.id === inputId) {
+            result.childrenList = childrenList;
+            result.index = index;
+            return result;
+        } else if (child.parentTree && child.childrenList && result.index < 0) {
             if(child.parentTree.left.id === inputId || child.parentTree.right.id === inputId) {
-                resultListData.push(childrenList);
-                resultListData.push(index);
-                return resultListData;
-            } else 
-                searchNodeCurrentArray(child.childrenList, inputId ,resultListData);
+                result.childrenList = childrenList;
+                result.index = index;
+                return result;
+            } else {
+                var subResult = searchNodeCurrentArray(child.childrenList, inputId);
+                if (subResult.index >= 0) {
+                    result = subResult;
+                }
+            }
         }
     })
-    return resultListData;
+    return result;
 }
 
 //***********************************************
