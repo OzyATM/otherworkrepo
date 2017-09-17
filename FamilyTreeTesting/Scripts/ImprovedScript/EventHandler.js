@@ -54,16 +54,20 @@ function deleteNode(e, object) {
 
     // delete node on childrenList
     var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey);
-    var NodeCurrentIndex = currentNodeArrayData[1];
-    var NodeCurrentchildrenList = currentNodeArrayData[0];
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
     if (NodeCurrentchildrenList[NodeCurrentIndex].parentTree) {
         var mainNodePosition = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.linkNode
-        if (mainNodePosition === "left") {
+        // check weather the node that want to be deleted is child or partner, if it is not partner delete the node, else delete the partner
+        if ((mainNodePosition === "left" && NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left.id === currentObjectKey) ||
+            (mainNodePosition === "right" && NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right.id === currentObjectKey)) {
+            NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
+            reRender(currentObjectKey);
+            return;
+        } else if (mainNodePosition === "left") {
             newNode = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left;
-            NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right = null;
         } else if (mainNodePosition === "right") {
             newNode = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right;
-            NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left = null;
         }
 
         NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
@@ -75,6 +79,7 @@ function deleteNode(e, object) {
         reRender(currentObjectKey);
         return;
     }
+
 
 }
 
@@ -282,14 +287,10 @@ function addElderBrother(e, object) {
     var currentObjectKey = object.part.data.key;
     var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
     var elderBrother = getDefaultLogicUnitData(uuidv4(), "male");
-    var NodeCurrentIndex = currentNodeArrayData[1];
-    var NodeCurrentchildrenList = currentNodeArrayData[0];
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
 
-    if (NodeCurrentIndex === 0) {
-        NodeCurrentchildrenList.unshift(elderBrother)
-    } else {
-        NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, elderBrother);
-    }
+    NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, elderBrother);
     reRender(currentObjectKey);
 }
 
@@ -301,14 +302,10 @@ function addElderSister(e, object) {
     var currentObjectKey = object.part.data.key;
     var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
     var elderSister = getDefaultLogicUnitData(uuidv4(), "female");
-    var NodeCurrentIndex = currentNodeArrayData[1];
-    var NodeCurrentchildrenList = currentNodeArrayData[0];
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
 
-    if (NodeCurrentIndex === 0) {
-        NodeCurrentchildrenList.unshift(elderSister)
-    } else {
-        NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, elderSister);
-    }
+    NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, elderSister);
     reRender(currentObjectKey);
 }
 
@@ -320,8 +317,8 @@ function addYoungerBrother(e, object) {
     var currentObjectKey = object.part.data.key;
     var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
     var youngerBrother = getDefaultLogicUnitData(uuidv4(), "male");
-    var NodeCurrentIndex = currentNodeArrayData[1];
-    var NodeCurrentchildrenList = currentNodeArrayData[0];
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
 
     NodeCurrentchildrenList.splice(NodeCurrentIndex + 1, 0, youngerBrother);
     reRender(currentObjectKey);
@@ -335,8 +332,8 @@ function addYoungerSister(e, object) {
     var currentObjectKey = object.part.data.key;
     var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
     var youngerSister = getDefaultLogicUnitData(uuidv4(), "female");
-    var NodeCurrentIndex = currentNodeArrayData[1];
-    var NodeCurrentchildrenList = currentNodeArrayData[0];
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
 
     NodeCurrentchildrenList.splice(NodeCurrentIndex + 1, 0, youngerSister);
     reRender(currentObjectKey);
@@ -352,8 +349,8 @@ function addPartner(e, object) {
     var leftNode, rightNode
     var linkNode;
     var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
-    var NodeCurrentIndex = currentNodeArrayData[1];
-    var NodeCurrentchildrenList = currentNodeArrayData[0];
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
 
     if (object.part.data.mainFigure === "Square") {
         leftNode = currentNodeDataOnGlobalLogicalData
@@ -391,8 +388,8 @@ function addPartner(e, object) {
 function addSon(e, object) {
     var currentObjectKey = object.part.data.key;
     var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
-    var NodeCurrentIndex = currentNodeArrayData[1];
-    var NodeCurrentchildrenList = currentNodeArrayData[0];
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
     var son = getDefaultLogicUnitData(uuidv4(), "male");
 
     // if it doesnt has partner it will automatically add partner
@@ -411,8 +408,8 @@ function addSon(e, object) {
 function addDaughter(e, object) {
     var currentObjectKey = object.part.data.key;
     var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
-    var NodeCurrentIndex = currentNodeArrayData[1];
-    var NodeCurrentchildrenList = currentNodeArrayData[0];
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
     var daughter = getDefaultLogicUnitData(uuidv4(), "female");
 
     // if it doesnt has partner it will automatically add partner
