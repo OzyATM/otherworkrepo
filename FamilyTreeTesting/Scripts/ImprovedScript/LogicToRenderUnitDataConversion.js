@@ -39,7 +39,9 @@ function getNodeData(inputData, pos) {
         isAdoptedSignVisible: inputData.isAdopted,
         loc: getPosString(pos),
         isDeleteBtnVisible: inputData.canBeDeleted,
-        isAddParentBtnVisible: !getParentBtnVisibility(inputData)
+        isAddParentBtnVisible: !getParentBtnVisibility(inputData),
+        isPregnantBtnVisible: getPregantBtnVisibility(inputData.multiInvididualText, inputData.gender),
+        isMultiInvididualTextBtnVisible: getMultiInvididualTextBtnVisibility(inputData.isPragnent)
     }
     return tempNode;
 }
@@ -96,4 +98,21 @@ function getParentBtnVisibility(inputData) {
         return true;
     else
         return false;
+}
+
+function getPregantBtnVisibility(multiText, gender) {
+    if (multiText != "" || gender === "male") {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+function getMultiInvididualTextBtnVisibility(isPragnent) {
+    if (isPragnent) {
+        return false;
+    } else {
+        return true;
+    }
 }

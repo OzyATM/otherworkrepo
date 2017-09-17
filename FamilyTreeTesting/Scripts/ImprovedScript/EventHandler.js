@@ -392,9 +392,12 @@ function addSon(e, object) {
     var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
     var son = getDefaultLogicUnitData(uuidv4(), "male");
 
-    if (NodeCurrentchildrenList[NodeCurrentIndex].childrenList) {
-        NodeCurrentchildrenList[NodeCurrentIndex].childrenList.push(son)
+    // if it doesnt has partner it will automatically add partner
+    if (!NodeCurrentchildrenList[NodeCurrentIndex].childrenList) {
+        addPartner(e, object);
     }
+    NodeCurrentchildrenList[NodeCurrentIndex].childrenList.push(son)
+
     reRender(currentObjectKey);
 }
 
@@ -409,8 +412,11 @@ function addDaughter(e, object) {
     var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
     var daughter = getDefaultLogicUnitData(uuidv4(), "female");
 
-    if (NodeCurrentchildrenList[NodeCurrentIndex].childrenList) {
-        NodeCurrentchildrenList[NodeCurrentIndex].childrenList.push(daughter)
+    // if it doesnt has partner it will automatically add partner
+    if (!NodeCurrentchildrenList[NodeCurrentIndex].childrenList) {
+        addPartner(e, object);
     }
+    NodeCurrentchildrenList[NodeCurrentIndex].childrenList.push(daughter)
+
     reRender(currentObjectKey);
 }
