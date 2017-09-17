@@ -12,7 +12,14 @@ var EventHandler = {
     loadComment: loadComment,
     loadMultiIndividual: loadMultiIndividual,
     loadGenderType: loadGenderType,
-    addParent: addParent
+    addParent: addParent,
+    addElderBrother: addElderBrother,
+    addYoungerBrother: addYoungerBrother,
+    addElderSister: addElderSister,
+    addYoungerSister: addYoungerSister,
+    addPartner: addPartner,
+    addSon: addSon,
+    addDaughter: addDaughter
 }
 
 // ***************************************
@@ -35,13 +42,45 @@ function btnRegistration() {
 // ***************************************
 function deleteNode(e, object) {
     var currentObjectKey = object.part.data.key;
-
+    var newNode;
+    //delete parentTree's Node
     var previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, currentObjectKey)
     if (previousNode != null) {
         previousNode.left = null;
         previousNode.right = null;
         reRender(previousNode.id);
+        return;
     }
+
+    // delete node on childrenList
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey);
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
+    if (NodeCurrentchildrenList[NodeCurrentIndex].parentTree) {
+        var mainNodePosition = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.linkNode
+        // check weather the node that want to be deleted is child or partner, if it is not partner delete the node, else delete the partner
+        if ((mainNodePosition === "left" && NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left.id === currentObjectKey) ||
+            (mainNodePosition === "right" && NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right.id === currentObjectKey)) {
+            NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
+            reRender(currentObjectKey);
+            return;
+        } else if (mainNodePosition === "left") {
+            newNode = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left;
+        } else if (mainNodePosition === "right") {
+            newNode = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right;
+        }
+
+        NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
+        NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, newNode);
+        reRender(currentObjectKey);
+        return;
+    } else {
+        NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
+        reRender(currentObjectKey);
+        return;
+    }
+
+
 }
 
 // Generate NodeData based on data storage
@@ -56,6 +95,7 @@ function deleteNode(e, object) {
 //  - isDead
 //  - isAdopted
 //  - notes (array)
+//  - canBeDeleted
 // ***************************************
 // Contain Gen Event Handler
 // Add a small black circle
@@ -236,5 +276,141 @@ function addParent(e, object) {
     var mom = getDefaultLogicUnitData(uuidv4(), "female");
     currentNode.left = dad;
     currentNode.right = mom;
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Add Sibling Event Handler
+// Add ElderBrother On the Graph
+// ***************************************
+function addElderBrother(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    var elderBrother = getDefaultLogicUnitData(uuidv4(), "male");
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
+
+    NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, elderBrother);
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Add Sibling Event Handler
+// Add ElderSister On the Graph
+// ***************************************
+function addElderSister(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    var elderSister = getDefaultLogicUnitData(uuidv4(), "female");
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
+
+    NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, elderSister);
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Add Sibling Event Handler
+// Add YoungerBrother On the Graph
+// ***************************************
+function addYoungerBrother(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    var youngerBrother = getDefaultLogicUnitData(uuidv4(), "male");
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
+
+    NodeCurrentchildrenList.splice(NodeCurrentIndex + 1, 0, youngerBrother);
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Add Sibling Event Handler
+// Add YoungerSister On the Graph
+// ***************************************
+function addYoungerSister(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    var youngerSister = getDefaultLogicUnitData(uuidv4(), "female");
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
+
+    NodeCurrentchildrenList.splice(NodeCurrentIndex + 1, 0, youngerSister);
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Add Partner Event Handler
+// Add Partner On the Graph
+// ***************************************
+function addPartner(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var currentNodeDataOnGlobalLogicalData = findNode(currentObjectKey, globalLogicData)
+    var leftNode, rightNode
+    var linkNode;
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
+
+    if (object.part.data.mainFigure === "Square") {
+        leftNode = currentNodeDataOnGlobalLogicalData
+        rightNode = getDefaultLogicUnitData(uuidv4(), "female");
+        linkNode = "left";
+    } else if (object.part.data.mainFigure === "Circle"){
+        leftNode = getDefaultLogicUnitData(uuidv4(), "male");
+        rightNode = currentNodeDataOnGlobalLogicalData
+        linkNode = "right";
+    }
+
+    var subTree = {};
+    subTree = {
+        parentTree: {
+            left:leftNode,
+            right: rightNode,
+            linkNode: linkNode,
+            relation: {
+                marriageStatus: "married",
+            }
+        },
+        childrenList: [
+        ]
+    }
+
+    NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
+    NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, subTree);
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Add Son Event Handler
+// Add Son On the Graph
+// ***************************************
+function addSon(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
+    var son = getDefaultLogicUnitData(uuidv4(), "male");
+
+    if (NodeCurrentchildrenList[NodeCurrentIndex].childrenList) {
+        NodeCurrentchildrenList[NodeCurrentIndex].childrenList.push(son)
+    }
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Add Daughter Event Handler
+// Add Daughter On the Graph
+// ***************************************
+function addDaughter(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    var NodeCurrentIndex = currentNodeArrayData.index;
+    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
+    var daughter = getDefaultLogicUnitData(uuidv4(), "female");
+
+    if (NodeCurrentchildrenList[NodeCurrentIndex].childrenList) {
+        NodeCurrentchildrenList[NodeCurrentIndex].childrenList.push(daughter)
+    }
     reRender(currentObjectKey);
 }
