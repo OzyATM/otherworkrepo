@@ -2,6 +2,11 @@
 var commentNodeKey;
 var multiIndividualNodeKey;
 var genderNodeKey;
+var globalState = {
+    tool: null,
+    LocX: -200,
+    LocY: 50,
+}
 
 var EventHandler = {
     deleteNode: deleteNode,
@@ -34,6 +39,8 @@ function btnRegistration() {
     document.getElementById("increaseZoom").onclick = increaseZoom;
     document.getElementById("decreaseZoom").onclick = decreaseZoom;
     document.getElementById("zoomToFit").onclick = zoomToFit;
+    document.getElementById("freedraw").onclick = freeDraw;
+    document.getElementById("comment").onclick = addCommentBox;
 }
 
 // ***************************************
@@ -60,7 +67,9 @@ function deleteNode(e, object) {
         var mainNodePosition = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.linkNode
         // check weather the node that want to be deleted is child or partner, if it is not partner delete the node, else delete the partner
         if ((mainNodePosition === "left" && NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left.id === currentObjectKey) ||
-            (mainNodePosition === "right" && NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right.id === currentObjectKey)) {
+            (mainNodePosition === "right" && NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right.id === currentObjectKey))
+        {
+
             NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
             reRender(currentObjectKey);
             return;
@@ -419,4 +428,79 @@ function addDaughter(e, object) {
     NodeCurrentchildrenList[NodeCurrentIndex].childrenList.push(daughter)
 
     reRender(currentObjectKey);
+}
+
+// ***************************************
+// Add CareTaker Event Handler
+// Add CareTaker On the Graph
+// ***************************************
+function addCareTaker(gender) {
+    var careTakerNode, categoryType
+    var setObjLoc = go.Point.stringify(new go.Point(globalState.LocX, globalState.LocY))
+
+    if (gender === "male")
+        categoryType = "CareMale"
+    else if (gender === "female")
+        categoryType = "CareFemale"
+
+    careTakerNode = { category: categoryType, loc: setObjLoc };
+    mainDiagram.model.addNodeData(careTakerNode);
+
+    // update globalLoc
+    globalState.LocX += 5
+    globalState.LocY += 5
+}
+
+// ***************************************
+// Save the Graph to Base64 (Image) string
+// ***************************************
+function saveImg() {
+    var ImgBaseString = mainDiagram.makeImageData({ background: "white" });
+    return ImgBaseString;
+}
+
+// ***************************************
+// Add Free Draw Tool Event Handler 
+// ***************************************
+function freeDraw() {
+    mainDiagram.toolManager.panningTool.isEnabled = false;
+    // create drawing tool for mainDiagram, defined in FreehandDrawingTool.js
+    var tool = new FreehandDrawingTool();
+    // provide the default JavaScript object for a new polygon in the model
+    tool.archetypePartData =
+        { stroke: "black", strokeWidth: 5, category: "FreehandDrawing" };
+    // install as last mouse-move-tool
+    mainDiagram.toolManager.mouseMoveTools.add(tool);
+    globalState.tool = tool;
+    this.onclick = cancelFreeDraw;
+    document.getElementById("freedraw").innerHTML = '<img id="freedraw_img" width="20" height="20" style="margin:2px"/>' + " 完成"
+    document.getElementById("freedraw_img").src = APPLICATION_ROOT + "Content/done.png";
+
+}
+
+// ***************************************
+// Remove Free Draw Tool Event Handler 
+// ***************************************
+function cancelFreeDraw() {
+    mainDiagram.toolManager.panningTool.isEnabled = true;
+    mainDiagram.toolManager.mouseMoveTools.remove(globalState.tool);
+    globalState.tool = null;
+    this.onclick = freeDraw;
+    document.getElementById("freedraw").innerHTML = '<img id="freedraw_img" width="20" height="20" style="margin:2px"/>' + " 圈選同住者"
+    document.getElementById("freedraw_img").src = APPLICATION_ROOT + "Content/together.png";
+
+}
+
+// ***************************************
+// Add Comment Box Event Handler 
+// ***************************************
+function addCommentBox() {
+    var Comment_node
+    var setObjLoc = go.Point.stringify(new go.Point(globalState.LocX, globalState.LocY))
+
+    Comment_node = { category: "CommentBox", text: "請輸入文字", loc: setObjLoc };
+    mainDiagram.model.addNodeData(Comment_node);
+    // update globalLoc
+    globalState.LocX += 5
+    globalState.LocY += 5
 }

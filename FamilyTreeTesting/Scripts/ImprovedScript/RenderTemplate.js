@@ -22,6 +22,7 @@ function generateNodeTemplate() {
         "Position", // Alignment setting is not used, we manually set item position
         generateMainShape(),
         {
+            movable: false,
             selectionAdornmentTemplate: generateMainAdornment()
         },
         new go.Binding("location","loc", go.Point.parse),
@@ -57,7 +58,6 @@ function generateMainShape() {
                     width: 30,
                     height: 30,
                     strokeWidth: 5,
-                    maxSize: new go.Size(40, 40),
                     cursor: "pointer"
                 },
                 new go.Binding("figure", "mainFigure"),
@@ -359,7 +359,7 @@ function createDeleteBtn(event, btnText, btnWidth) {
                 inputText,
                 { font: "10pt sans-serif ", stroke: "white" }
             ),
-            new go.Binding("visible", "isDeleteBtnVisible"),
+            new go.Binding("visible", "isDeleteBtnVisible")
         )
     return deleteBtn
 }
@@ -457,4 +457,211 @@ function createStuffOnNaviBar() {
     // created the font select btn
     $('#fontstyle').fontselect();
     $('#fontselect').addClass("disabledbutton");
+}
+
+//*********************************************
+// CareTaker Template Definition
+// gender
+//*********************************************
+function generateCareTakerTemplate(gender) {
+    var shapeForNode;
+    if (gender === "male") {
+        shapeForNode = "Square"
+    }
+    else if (gender === "female") {
+        shapeForNode = "Circle"
+    }
+    var careTakerNodeTemplate = goObject(
+        go.Node,
+        "Position",
+        generateCareTakerNodeShape(shapeForNode),
+        {
+            selectionAdornmentTemplate: generateCareTakerAdornment(shapeForNode)
+        },
+        generateTextBlockForCareTaker(),
+        new go.Binding("location","loc", go.Point.parse)
+    );
+    return careTakerNodeTemplate;
+}
+
+//*********************************************
+// Main Shape for CareTaker
+//*********************************************
+function generateCareTakerNodeShape(shapeForNode) {
+    var tempShape = goObject(
+        go.Shape,
+        {
+            figure: shapeForNode,
+            fill: "white",
+            stroke: "black",
+            strokeWidth: 5,
+            maxSize: new go.Size(30, 30),
+            cursor: "pointer"
+        }
+    )
+    return tempShape;
+}
+
+//*********************************************
+// Text Block for CareTaker
+//*********************************************
+function generateTextBlockForCareTaker() {
+    var tempTextBlock = goObject(
+        go.TextBlock,
+        "照護員",
+        {
+            font: "8pt serif",
+            stroke: "black",
+            position: new go.Point(0, 40)
+        }
+    )
+    return tempTextBlock;
+}
+
+//*********************************************
+// Generate CareTaker's Adornment
+//*********************************************
+function generateCareTakerAdornment() {
+    var tempShapeForAdm = goObject(
+        go.Adornment,
+        "Position",
+        goObject(go.Placeholder),
+        generateCareTakerAdornmentShape(),
+        generateCareTakerHorizontalPanelWithDelBtn()
+    )
+    return tempShapeForAdm
+}
+
+//*********************************************
+// The Main Shape for the CareTaker's Adornment
+//*********************************************
+function generateCareTakerAdornmentShape() {
+    var tempShapeForAdm = goObject(
+        go.Shape,
+        "Square",
+        {
+            maxSize: new go.Size(70, 70),
+            fill: null,
+            stroke: "blue",
+            strokeWidth: 3,
+            position: new go.Point(-19, -18)
+        }
+    )
+    return tempShapeForAdm
+}
+
+//*********************************************
+// The HorizontalPanel to put Delete Btn for CareTaker
+//*********************************************
+function generateCareTakerHorizontalPanelWithDelBtn() {
+    var tempHorizontalPanel = goObject(
+        go.Panel,
+        "Horizontal",
+        {
+            position: new go.Point(-14, 55)
+        },
+        createDeleteBtn(null, "刪除", 50)
+    );
+    return tempHorizontalPanel;
+}
+
+//*********************************************
+// Free Draw Template Definition
+//*********************************************
+function generateFreeDrawTemplate() {
+    var tempFreeDrawTemplate = goObject(
+        go.Part,
+        generateMainShapeForFreeDrawObject(),
+        {
+            locationSpot: go.Spot.Center,
+            selectionAdornmentTemplate: generateFreeDrawAdornment()
+        }
+    );
+    return tempFreeDrawTemplate;
+}
+
+//*********************************************
+// Free Draw's Main Shape
+//*********************************************
+function generateMainShapeForFreeDrawObject() {
+    var mainShapeForFreeDraw = goObject(
+        go.Shape,
+        {
+            // must has this name idk y
+            name: "SHAPE",
+            fill: "transparent"
+        },
+        new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
+        new go.Binding("angle").makeTwoWay(),
+        new go.Binding("geometryString", "geo").makeTwoWay(),
+        new go.Binding("strokeWidth")
+    )
+    return mainShapeForFreeDraw;
+}
+
+//*********************************************
+// Free Draw's Adornment
+//*********************************************
+function generateFreeDrawAdornment() {
+    var tempAdornmentForFreeDraw = goObject(
+        go.Adornment,
+        "Vertical",
+        goObject(go.Placeholder),
+        createDeleteBtn(null, "刪除", 50)
+    )
+    return tempAdornmentForFreeDraw;
+}
+
+//*********************************************
+// Comment Box Template Definition
+//*********************************************
+function generateCommentBoxTemplate() {
+    var tempCommentBoxTemplate = goObject(
+        go.Node,
+        "Position",
+        generateCommentBoxTextBlock(),
+        {
+            selectionAdornmentTemplate: generateCommentBoxAdornment()
+        },
+        new go.Binding("location", "loc", go.Point.parse)
+    )
+    return tempCommentBoxTemplate;
+}
+
+//*********************************************
+// Comment Box's Text Block  Definition
+//*********************************************
+function generateCommentBoxTextBlock() {
+    var tempTextBox = goObject(
+        go.TextBlock,
+        {
+            wrap: go.TextBlock.WrapFit,
+            editable: true,
+            textAlign: "center",
+            font: "12pt Helvetica, Arial, sans-serif",
+            stroke: "#000000",
+        },
+        new go.Binding("text"),
+        new go.Binding("stroke", "stroke"),
+        new go.Binding("font"),
+        new go.Binding("bold"),
+        new go.Binding("fontsize"),
+        new go.Binding("Italic"),
+        new go.Binding("isUnderline"),
+        new go.Binding("isStrikethrough")
+    )
+    return tempTextBox;
+}
+
+//*********************************************
+// Generate Comment Box's Adornment
+//*********************************************
+function generateCommentBoxAdornment() {
+    var tempCommentBoxAdornment = goObject(
+        go.Adornment,
+        "Vertical",
+        goObject(go.Placeholder),
+        createDeleteBtn(null, "刪除", 50)
+    )
+    return tempCommentBoxAdornment;
 }
