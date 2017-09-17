@@ -58,12 +58,16 @@ function deleteNode(e, object) {
     var NodeCurrentchildrenList = currentNodeArrayData[0];
     if (NodeCurrentchildrenList[NodeCurrentIndex].parentTree) {
         var mainNodePosition = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.linkNode
-        if (mainNodePosition === "left") {
+        // check weather the node that want to be deleted is child or partner, if it is not partner delete the node, else delete the partner
+        if ((mainNodePosition === "left" && NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left.id === currentObjectKey) ||
+            (mainNodePosition === "right" && NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right.id === currentObjectKey)) {
+            NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
+            reRender(currentObjectKey);
+            return;
+        } else if (mainNodePosition === "left") {
             newNode = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left;
-            NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right = null;
         } else if (mainNodePosition === "right") {
             newNode = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right;
-            NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left = null;
         }
 
         NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
@@ -75,6 +79,7 @@ function deleteNode(e, object) {
         reRender(currentObjectKey);
         return;
     }
+
 
 }
 
