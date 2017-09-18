@@ -165,16 +165,16 @@ function getPartenerLinkData(left, right, relationshipStatus) {
     if (relationshipStatus === "divorce") {
         result.linkNode = { key: result.linkName, category: "LinkLabel", visible: true, figure: "Capacitor"}
         result.nodeArray.push(result.linkNode);
-    } else if (relationshipStatus === "unmarried" || relationshipStatus === "married"){
+        strokeDashArrayStyle = [0,0];
+    } else if (relationshipStatus === "unmarried"){
         result.linkNode = { key: result.linkName, category: "LinkLabel" }
         result.nodeArray.push(result.linkNode);
-    }
-
-
-    if (relationshipStatus === "unmarried") {
         strokeDashArrayStyle = [5,2];
-    } else if (relationshipStatus === "married") {
+    } else if (relationshipStatus === "married"){
+        result.linkNode = { key: result.linkName, category: "LinkLabel" }
+        result.nodeArray.push(result.linkNode);
         strokeDashArrayStyle = [0,0];
+
     }
 
     result.linkArray.push(
