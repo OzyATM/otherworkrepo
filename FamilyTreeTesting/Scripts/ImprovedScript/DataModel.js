@@ -91,7 +91,7 @@ function searchChildTreeForNode(childrenList, inputId) {
     return resultNode;
 }
 
-    function searchParentTreeNodePreviousNode(currentBranchNode, inputId) {
+function searchParentTreeNodePreviousNode(currentBranchNode, inputId) {
     var resultNode = null;
     if (currentBranchNode.left.id === inputId || currentBranchNode.right.id === inputId) {
         resultNode = currentBranchNode;
