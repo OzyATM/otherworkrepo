@@ -24,7 +24,8 @@ var EventHandler = {
     addYoungerSister: addYoungerSister,
     addPartner: addPartner,
     addSon: addSon,
-    addDaughter: addDaughter
+    addDaughter: addDaughter,
+    changeMarriageStatusToUnmarriage: changeMarriageStatusToUnmarriage
 }
 
 // ***************************************
@@ -285,6 +286,7 @@ function addParent(e, object) {
     var mom = getDefaultLogicUnitData(uuidv4(), "female");
     currentNode.left = dad;
     currentNode.right = mom;
+    currentNode.marriageStatus = "married";
     reRender(currentObjectKey);
 }
 
@@ -377,9 +379,7 @@ function addPartner(e, object) {
             left:leftNode,
             right: rightNode,
             linkNode: linkNode,
-            relation: {
-                marriageStatus: "married",
-            }
+            marriageStatus: "married"
         },
         childrenList: [
         ]
@@ -503,4 +503,11 @@ function addCommentBox() {
     // update globalLoc
     globalState.LocX += 5
     globalState.LocY += 5
+}
+
+function changeMarriageStatusToUnmarriage(e, object) {
+    var leftNodeIDThatLinkFrom = object.part.data.from;
+    var previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, leftNodeIDThatLinkFrom);
+    previousNode.marriageStatus = "unmarried";
+    reRender(null);
 }

@@ -15,8 +15,10 @@ function generateParentLinkTemplate() {
             "Shape",
             {
                 stroke: "green",
-                strokeWidth: 2
-            }
+                strokeWidth: 2,
+                strokeDashArray: [0,0]
+            },
+            new go.Binding("strokeDashArray")
         )
     );
     return tempLinkTemplate
@@ -136,7 +138,7 @@ function generateHorizontalPanelWithBtn() {
         },
         createBtn(null, "結婚", null, 50),
         createBtn(null, "離婚", null, 50)                                                                                                                                                                                                                              ,
-        createBtn(null, "未婚", null, 50)
+        createBtn(EventHandler.changeMarriageStatusToUnmarriage, "未婚", null, 50)
     )
     return tempHorizontalPanel;
 }

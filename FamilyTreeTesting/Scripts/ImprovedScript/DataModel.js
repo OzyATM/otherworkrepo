@@ -40,9 +40,7 @@ function initializeGlobalLogicData() {
         parentTree: {
             left: dad,
             right: mom,
-            relation: {
-                marriageStatus: "married",
-            }
+            marriageStatus: "married"
         },
         childrenList: [
             patient
@@ -93,16 +91,16 @@ function searchChildTreeForNode(childrenList, inputId) {
     return resultNode;
 }
 
-function searchParentTreeNodePreviousNode(currentBranchNode, inputId) {
+    function searchParentTreeNodePreviousNode(parentTree, inputId) {
     var resultNode = null;
-    if (currentBranchNode.left.id === inputId || currentBranchNode.right.id === inputId) {
-        resultNode = currentBranchNode;
+    if (parentTree.left.id === inputId || parentTree.right.id === inputId) {
+        resultNode = parentTree;
     }
-    if (resultNode === null && currentBranchNode.left.left && currentBranchNode.left.right) {
-        resultNode = searchParentTreeNodePreviousNode(currentBranchNode.left, inputId);
+    if (resultNode === null && parentTree.left.left && parentTree.left.right) {
+        resultNode = searchParentTreeNodePreviousNode(parentTree.left, inputId);
     }
-    if (resultNode === null && currentBranchNode.right.left && currentBranchNode.right.right) {
-        resultNode = searchParentTreeNodePreviousNode(currentBranchNode.right, inputId);
+    if (resultNode === null && parentTree.right.left && parentTree.right.right) {
+        resultNode = searchParentTreeNodePreviousNode(parentTree.right, inputId);
     }
 
     return resultNode;
@@ -132,6 +130,21 @@ function searchNodeCurrentArray(childrenList, inputId) {
         }
     })
     return result;
+}
+
+function searchParentTreeNodePreviousNode(currentBranchNode, inputId) {
+    var resultNode = null;
+    if (currentBranchNode.left.id === inputId || currentBranchNode.right.id === inputId) {
+        resultNode = currentBranchNode;
+    }
+    if (resultNode === null && currentBranchNode.left.left && currentBranchNode.left.right) {
+        resultNode = searchParentTreeNodePreviousNode(currentBranchNode.left, inputId);
+    }
+    if (resultNode === null && currentBranchNode.right.left && currentBranchNode.right.right) {
+        resultNode = searchParentTreeNodePreviousNode(currentBranchNode.right, inputId);
+    }
+
+    return resultNode;
 }
 
 //***********************************************
