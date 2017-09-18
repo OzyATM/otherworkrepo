@@ -174,7 +174,6 @@ function getPartenerLinkData(left, right, relationshipStatus) {
         result.linkNode = { key: result.linkName, category: "LinkLabel" }
         result.nodeArray.push(result.linkNode);
         strokeDashArrayStyle = [0,0];
-
     }
 
     result.linkArray.push(

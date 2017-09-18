@@ -91,8 +91,6 @@ function deleteNode(e, object) {
         reRender(currentObjectKey);
         return;
     }
-
-
 }
 
 // Generate NodeData based on data storage
@@ -549,6 +547,10 @@ function changeMarriageStatusToMarriage(e, object) {
     reRender(null);
 }
 
+// ***************************************
+// Change Marriage Status Event Handler
+// Chnage The Marriage Status to Divorce, The Link will become Normal Line and The LinkLabel will change to Two Slash-Line
+// ***************************************
 function changeMarriageStatusToDivorce(e, object) {
     var previousNode = null
     var leftNodeIDThatLinkFrom = object.part.data.from;
