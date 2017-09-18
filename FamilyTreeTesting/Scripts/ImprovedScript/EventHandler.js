@@ -506,8 +506,18 @@ function addCommentBox() {
 }
 
 function changeMarriageStatusToUnmarriage(e, object) {
+    var previousNode = null
     var leftNodeIDThatLinkFrom = object.part.data.from;
-    var previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, leftNodeIDThatLinkFrom);
+    previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, leftNodeIDThatLinkFrom);
+    if (previousNode === null) {
+        var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, leftNodeIDThatLinkFrom)
+        var currentChildList = currentNodeArrayData.childrenList;
+        var currentNodeIndex = currentNodeArrayData.index;
+
+        currentChildList[currentNodeIndex].parentTree.marriageStatus = "unmarried";
+        reRender(null);
+        return;
+    }
     previousNode.marriageStatus = "unmarried";
     reRender(null);
 }

@@ -132,21 +132,6 @@ function searchNodeCurrentArray(childrenList, inputId) {
     return result;
 }
 
-function searchParentTreeNodePreviousNode(currentBranchNode, inputId) {
-    var resultNode = null;
-    if (currentBranchNode.left.id === inputId || currentBranchNode.right.id === inputId) {
-        resultNode = currentBranchNode;
-    }
-    if (resultNode === null && currentBranchNode.left.left && currentBranchNode.left.right) {
-        resultNode = searchParentTreeNodePreviousNode(currentBranchNode.left, inputId);
-    }
-    if (resultNode === null && currentBranchNode.right.left && currentBranchNode.right.right) {
-        resultNode = searchParentTreeNodePreviousNode(currentBranchNode.right, inputId);
-    }
-
-    return resultNode;
-}
-
 //***********************************************
 // Generate go data model from logic data model
 //***********************************************
