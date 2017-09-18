@@ -161,12 +161,17 @@ function getPartenerLinkData(left, right, relationshipStatus) {
     var result = { nodeArray: [], linkArray: [], linkNode: {} };
     var strokeDashArrayStyle;
     result.linkName = "" + left.key + "-" + right.key; // combine left and right id to make a readble id
-    result.linkNode = { key: result.linkName, category: "LinkLabel" }
-    result.nodeArray.push(result.linkNode);
 
     if (relationshipStatus === "divorce") {
+        result.linkNode = { key: result.linkName, category: "LinkLabel", visible: true, figure: "Capacitor"}
+        result.nodeArray.push(result.linkNode);
+    } else if (relationshipStatus === "unmarried" || relationshipStatus === "married"){
+        result.linkNode = { key: result.linkName, category: "LinkLabel" }
+        result.nodeArray.push(result.linkNode);
+    }
 
-    } else if (relationshipStatus === "unmarried") {
+
+    if (relationshipStatus === "unmarried") {
         strokeDashArrayStyle = [5,2];
     } else if (relationshipStatus === "married") {
         strokeDashArrayStyle = [0,0];

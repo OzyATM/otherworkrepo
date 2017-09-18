@@ -55,14 +55,18 @@ function generateLinkLabel() {
             },
             goObject(
                 "Shape",
-                "Ellipse",
                 {
-                    width: 3,
-                    height: 3,
+                    figure: "Ellipse",
+                    visible: false,
+                    width: 5,
+                    height: 20,
                     stroke: "black",
                     fill: "transparent",
-                    portId: ""
-                }
+                    portId: "",
+                    angle: 45
+                },
+                new go.Binding("figure"),
+                new go.Binding("visible")
             )
         );
     return linkLabelTemplate;
@@ -136,8 +140,8 @@ function generateHorizontalPanelWithBtn() {
         {
             alignment: go.Spot.Top, alignmentFocus: go.Spot.Bottom
         },
-        createBtn(null, "結婚", null, 50),
-        createBtn(null, "離婚", null, 50)                                                                                                                                                                                                                              ,
+        createBtn(EventHandler.changeMarriageStatusToMarriage, "結婚", null, 50),
+        createBtn(EventHandler.changeMarriageStatusToDivorce, "離婚", null, 50),
         createBtn(EventHandler.changeMarriageStatusToUnmarriage, "未婚", null, 50)
     )
     return tempHorizontalPanel;

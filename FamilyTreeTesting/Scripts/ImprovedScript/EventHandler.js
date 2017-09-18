@@ -25,7 +25,9 @@ var EventHandler = {
     addPartner: addPartner,
     addSon: addSon,
     addDaughter: addDaughter,
-    changeMarriageStatusToUnmarriage: changeMarriageStatusToUnmarriage
+    changeMarriageStatusToUnmarriage: changeMarriageStatusToUnmarriage,
+    changeMarriageStatusToMarriage: changeMarriageStatusToMarriage,
+    changeMarriageStatusToDivorce: changeMarriageStatusToDivorce
 }
 
 // ***************************************
@@ -505,6 +507,10 @@ function addCommentBox() {
     globalState.LocY += 5
 }
 
+// ***************************************
+// Change Marriage Status Event Handler
+// Chnage The Marriage Status to Unmarried, The Link will become Dash-Line
+// ***************************************
 function changeMarriageStatusToUnmarriage(e, object) {
     var previousNode = null
     var leftNodeIDThatLinkFrom = object.part.data.from;
@@ -519,5 +525,43 @@ function changeMarriageStatusToUnmarriage(e, object) {
         return;
     }
     previousNode.marriageStatus = "unmarried";
+    reRender(null);
+}
+
+// ***************************************
+// Change Marriage Status Event Handler
+// Chnage The Marriage Status to married, The Link will become Normal Line
+// ***************************************
+function changeMarriageStatusToMarriage(e, object) {
+    var previousNode = null
+    var leftNodeIDThatLinkFrom = object.part.data.from;
+    previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, leftNodeIDThatLinkFrom);
+    if (previousNode === null) {
+        var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, leftNodeIDThatLinkFrom)
+        var currentChildList = currentNodeArrayData.childrenList;
+        var currentNodeIndex = currentNodeArrayData.index;
+
+        currentChildList[currentNodeIndex].parentTree.marriageStatus = "married";
+        reRender(null);
+        return;
+    }
+    previousNode.marriageStatus = "married";
+    reRender(null);
+}
+
+function changeMarriageStatusToDivorce(e, object) {
+    var previousNode = null
+    var leftNodeIDThatLinkFrom = object.part.data.from;
+    previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, leftNodeIDThatLinkFrom);
+    if (previousNode === null) {
+        var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, leftNodeIDThatLinkFrom)
+        var currentChildList = currentNodeArrayData.childrenList;
+        var currentNodeIndex = currentNodeArrayData.index;
+
+        currentChildList[currentNodeIndex].parentTree.marriageStatus = "divorce";
+        reRender(null);
+        return;
+    }
+    previousNode.marriageStatus = "divorce";
     reRender(null);
 }
