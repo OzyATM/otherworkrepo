@@ -618,3 +618,215 @@ function isOwnChild(e, object) {
     node.gotAdopted = false;
     reRender(currentObjectKey);
 }
+
+// ***************************************
+// General Event Handler
+// Object Single Click
+// ***************************************
+function objectSingleClicked(e) {
+    var part = e.subject.part
+    commentBoxKey = part.data.key
+    if (part.data.category === "CommentBox") {
+        setDefaultNaviBar(part)
+    }
+}
+
+function backGroundSingleClicked(e) {
+    disableClickOnNaviBarForTextBlock();
+    if (commentBoxKey != -1) {
+        var currentIndex = findCurrentIndex(commentBoxKey);
+        if (mainDiagram.model.nodeDataArray[currentIndex].text === "") {
+            mainDiagram.model.nodeDataArray[currentIndex].text = "請輸入文字";
+        }
+    }
+    mainDiagram.rebuildParts();
+}
+
+function setDefaultNaviBar(nodePart) {
+    var part = nodePart
+    document.getElementById("bold").value = part.data.bold
+    document.getElementById("italic").value = part.data.Italic
+    document.getElementById("underline").value = part.data.isUnderline
+    document.getElementById("strikethrough").value = part.data.isStrikethrough
+    document.getElementById("fontsize").value = part.data.fontsize
+    $('#fontstyle2').text(part.data.fontstyle)
+
+    $("#bold").removeClass("disabled");
+    $("#italic").removeClass("disabled");
+    $("#underline").removeClass("disabled");
+    $("#strikethrough").removeClass("disabled");
+    $(".btn-md").removeClass("disabled");
+    $('#fontselect').removeClass("disabledbutton");
+    $('#fontselect-drop').removeClass("display");
+    document.getElementById("fontsize").disabled = false
+
+    changeNaviBarBtnColor(part, "bold")
+    changeNaviBarBtnColor(part, "italic")
+    changeNaviBarBtnColor(part, "underline")
+    changeNaviBarBtnColor(part, "strikethrough")
+
+    fontSizeTypeOnNaviBar(part, "fontsize", "12")
+    fontSizeTypeOnNaviBar(part, "fontstyle", "新細明體")
+
+}
+
+function changeNaviBarBtnColor(nodePart, textStyle) {
+    var part = nodePart
+    var inputTextStyle = textStyle
+
+    if (!part.data[inputTextStyle])
+        document.getElementById(inputTextStyle).style.backgroundColor = "white"
+    else
+        document.getElementById(inputTextStyle).style.backgroundColor = "#ff8c00"
+}
+
+function fontSizeTypeOnNaviBar(nodePart, fontSizeStyle, value) {
+    var part = nodePart
+    var inputSizeStype = fontSizeStyle
+    var inputValue = value
+    var fontStyleSetting;
+    if (fontSizeStyle === "fontstyle")
+        fontStyleSetting = $('#fontstyle2').text("新細明體");
+    else
+        fontStyleSetting = document.getElementById(inputSizeStype).value = inputValue
+
+    if (!part.data[inputSizeStype])
+        fontStyleSetting
+    else
+        document.getElementById(inputSizeStype).value = part.data[inputSizeStype]
+}
+
+function setDefaultNaviBar(nodePart) {
+    var part = nodePart
+    tempKey = part.data.key
+    document.getElementById("bold").value = part.data.bold
+    document.getElementById("italic").value = part.data.Italic
+    document.getElementById("underline").value = part.data.isUnderline
+    document.getElementById("strikethrough").value = part.data.isStrikethrough
+    document.getElementById("fontsize").value = part.data.fontsize
+    $('#fontstyle2').text(part.data.fontstyle)
+
+    $("#bold").removeClass("disabled");
+    $("#italic").removeClass("disabled");
+    $("#underline").removeClass("disabled");
+    $("#strikethrough").removeClass("disabled");
+    $(".btn-md").removeClass("disabled");
+    $('#fontselect').removeClass("disabledbutton");
+    $('#fontselect-drop').removeClass("display");
+    document.getElementById("fontsize").disabled = false
+
+    changeNaviBarBtnColor(part, "bold")
+    changeNaviBarBtnColor(part, "italic")
+    changeNaviBarBtnColor(part, "underline")
+    changeNaviBarBtnColor(part, "strikethrough")
+
+    fontSizeTypeOnNaviBar(part, "fontsize", "12")
+    fontSizeTypeOnNaviBar(part, "fontstyle", "新細明體")
+
+}
+
+function disableClickOnNaviBarForTextBlock() {
+    $("#bold").addClass("disabled");
+    $("#italic").addClass("disabled");
+    $("#underline").addClass("disabled");
+    $("#strikethrough").addClass("disabled");
+    $(".btn-md").addClass("disabled");
+    $('#fontselect').addClass("disabledbutton");
+    $('#fontselect-drop').addClass("display");
+    $('#fontstyle2').text("新細明體");
+    document.getElementById("bold").style.backgroundColor = "white"
+    document.getElementById("italic").style.backgroundColor = "white"
+    document.getElementById("underline").style.backgroundColor = "white"
+    document.getElementById("strikethrough").style.backgroundColor = "white"
+    document.getElementById("fontsize").value = "12"
+    document.getElementById("fontsize").disabled = true
+}
+
+function changetextbold() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (mainDiagram.model.nodeDataArray[currentIndex].bold) {
+        mainDiagram.model.nodeDataArray[currentIndex].bold = false
+    }
+    else {
+        mainDiagram.model.nodeDataArray[currentIndex].bold = true;
+    }
+
+    getRadio(mainDiagram.selection.Ca.value);
+}
+
+function changetextitalic() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (mainDiagram.model.nodeDataArray[currentIndex].Italic) {
+        mainDiagram.model.nodeDataArray[currentIndex].Italic = false
+    }
+    else {
+        mainDiagram.model.nodeDataArray[currentIndex].Italic = true;
+    }
+    getRadio(mainDiagram.selection.Ca.value);
+}
+
+function changetextunderline() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (mainDiagram.model.nodeDataArray[currentIndex].isUnderline) {
+        mainDiagram.model.nodeDataArray[currentIndex].isUnderline = false
+        document.getElementById("underline").style.backgroundColor = "white"
+    }
+    else {
+        mainDiagram.model.nodeDataArray[currentIndex].isUnderline = true;
+        document.getElementById("underline").style.backgroundColor = "#ff8c00"
+    }
+    mainDiagram.rebuildParts();
+}
+
+function changetextstrikethrough() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (mainDiagram.model.nodeDataArray[currentIndex].isStrikethrough) {
+        mainDiagram.model.nodeDataArray[currentIndex].isStrikethrough = false
+        document.getElementById("strikethrough").style.backgroundColor = "white"
+    }
+    else {
+        mainDiagram.model.nodeDataArray[currentIndex].isStrikethrough = true;
+        document.getElementById("strikethrough").style.backgroundColor = "#ff8c00"
+    }
+    mainDiagram.rebuildParts();
+}
+
+function clicktextsize() {
+    var fontsize = "";
+    document.getElementById("fontsize").value = fontsize;
+}
+
+function changetextsize() {
+    var currentIndex = findCurrentIndex(tempKey);
+    var fontsize = document.getElementById("fontsize").value;
+    mainDiagram.model.nodeDataArray[currentIndex].fontsize = fontsize;
+    getRadio(mainDiagram.selection.Ca.value);
+}
+
+function clicktextstyle() {
+    var fontstyle = "";
+    document.getElementById("fontstyle").value = fontstyle;
+}
+
+function changetextstyle() {
+    var currentIndex = findCurrentIndex(tempKey);
+    var fontstyle = document.getElementById("fontstyle").value;
+    mainDiagram.model.nodeDataArray[currentIndex].fontstyle = fontstyle;
+    getRadio(mainDiagram.selection.Ca.value);
+}
+
+function changetextColor(stroke) {
+    var currentIndex = findCurrentIndex(tempKey);
+    mainDiagram.model.nodeDataArray[currentIndex].stroke = stroke.value;
+    mainDiagram.rebuildParts();
+}
+
+function findCurrentIndex(inputKey) {
+    var tempIndex;
+    (mainDiagram.model.nodeDataArray).forEach(function (obj, index) {
+        if (obj.key === inputKey)
+            tempIndex = index
+    });
+    return tempIndex;
+
+}
