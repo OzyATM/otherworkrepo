@@ -580,6 +580,7 @@ function changeMarriageStatusToDivorce(e, object) {
 function isAdopted(e, object) {
     var currentObjectKey = object.part.data.key;
     var node = findNode(currentObjectKey, globalLogicData);
+    // if it doesn't have parent it will automatically add parent
     if (!node.left || !node.right) {
         addParent(e, object);
     }
@@ -595,6 +596,7 @@ function isAdopted(e, object) {
 function gotAdopted(e, object) {
     var currentObjectKey = object.part.data.key;
     var node = findNode(currentObjectKey, globalLogicData);
+    // if it doesn't have parent it will automatically add parent
     if (!node.left || !node.right) {
         addParent(e, object);
     }
