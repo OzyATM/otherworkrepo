@@ -137,17 +137,48 @@ function getIsOwnSonBtnVisibility(inputData) {
 }
 
 function getIsAdoptedBtnVisibility(inputData) {
-    if (!inputData.isAdopted) {
+    var isPartner = getIsPartner(inputData)
+    if (!inputData.isAdopted && !isPartner) {
         return true;
+    } else if (isPartner) {
+        return false;
     } else {
         return false;
     }
 }
 
 function getIsGotAdoptedBtnVisibility(inputData) {
-    if (!inputData.gotAdopted) {
+    var isPartner = getIsPartner(inputData)
+    if (!inputData.gotAdopted && !isPartner) {
         return true;
+    } else if (isPartner) {
+        return false;
     } else {
         return false;
+    }
+}
+
+function getIsPartner(inputData) {
+    var resultNode = null;
+    var isPartnerChecker = false;
+    var resultNode = searchParentTreeForNode(globalLogicData.parentTree, inputData.id);
+
+    if (resultNode === null) {
+        var nodeCurrentArrayDate = searchNodeCurrentArray(globalLogicData.childrenList, inputData.id);
+        var nodeCurrentChildList = nodeCurrentArrayDate.childrenList;
+        var nodeCurrentIndex = nodeCurrentArrayDate.index;
+        if (nodeCurrentChildList[nodeCurrentIndex].parentTree) {
+            var linkNodePosition = nodeCurrentChildList[nodeCurrentIndex].parentTree.linkNode;
+            var leftNodeId = nodeCurrentChildList[nodeCurrentIndex].parentTree.left.id;
+            var rightNodeId = nodeCurrentChildList[nodeCurrentIndex].parentTree.right.id;
+            if (linkNodePosition === "left" && inputData.id === rightNodeId) {
+                isPartnerChecker = true;
+            } else if (linkNodePosition === "right" && inputData.id === leftNodeId) {
+                isPartnerChecker = true;
+            }
+            return isPartnerChecker;
+        }
+    } else {
+        return isPartnerChecker;
     }
 }
