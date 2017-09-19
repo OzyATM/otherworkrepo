@@ -61,6 +61,8 @@ function deleteNode(e, object) {
     if (previousNode != null) {
         previousNode.left = null;
         previousNode.right = null;
+        previousNode.isAdopted = false;
+        previousNode.gotAdopted = false;
         reRender(previousNode.id);
         return;
     }
@@ -578,6 +580,9 @@ function changeMarriageStatusToDivorce(e, object) {
 function isAdopted(e, object) {
     var currentObjectKey = object.part.data.key;
     var node = findNode(currentObjectKey, globalLogicData);
+    if (!node.left || !node.right) {
+        addParent(e, object);
+    }
     node.isAdopted = true;
     node.gotAdopted = false;
     reRender(currentObjectKey);
@@ -590,6 +595,9 @@ function isAdopted(e, object) {
 function gotAdopted(e, object) {
     var currentObjectKey = object.part.data.key;
     var node = findNode(currentObjectKey, globalLogicData);
+    if (!node.left || !node.right) {
+        addParent(e, object);
+    }
     node.gotAdopted = true;
     node.isAdopted = false;
     reRender(currentObjectKey);
