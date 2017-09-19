@@ -9,13 +9,16 @@ function generateParentLinkTemplate() {
         {
             relinkableFrom: false,
             relinkableTo: false,
-            selectionAdornmentTemplate: generateLinkAdornment()
+            selectionAdornmentTemplate: generateLinkAdornment(),
+            mouseEnter: function (e, link) { link.findObject("linkBetweenParent").stroke = "#227700"; },
+            mouseLeave: function (e, link) { link.findObject("linkBetweenParent").stroke = "#000000"; }
         },
         goObject(
             "Shape",
             {
-                stroke: "green",
-                strokeWidth: 2,
+                name: "linkBetweenParent",
+                stroke: "black",
+                strokeWidth: 3,
                 strokeDashArray: [0,0]
             },
             new go.Binding("strokeDashArray")

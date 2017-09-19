@@ -49,6 +49,12 @@ function initializeDiagram() {
         generateChildLinkTemplate()
     )
     mainDiagram.model = logicModelToGoModel(logicModel);
+
+    mainDiagram.commandHandler.selectAll = false;
+    mainDiagram.toolManager.dragSelectingTool.isEnabled = false;
+    mainDiagram.commandHandler.doKeyDown = disableDeleteBtnOnKeybored
+    myDiagram.doFocu = disableHTMLAutoFocusCanvasToMiddle
+
     btnRegistration();
     createStuffOnNaviBar();
 }

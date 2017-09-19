@@ -618,3 +618,16 @@ function isOwnChild(e, object) {
     node.gotAdopted = false;
     reRender(currentObjectKey);
 }
+
+function disableDeleteBtnOnKeybored(e) {
+    var e = mainDiagram.lastInput;
+    if (e.key == "Del") return;
+    if (e.ur.keyCode == 17) return;
+}
+
+function disableHTMLAutoFocusCanvasToMiddle() {
+    var x = window.scrollX || window.pageXOffset;
+    var y = window.scrollY || window.pageYOffset;
+    go.mainDiagram.prototype.doFocus.call(this);
+    window.scrollTo(x, y);
+}
