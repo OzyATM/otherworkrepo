@@ -2,6 +2,7 @@
 var commentNodeKey;
 var multiIndividualNodeKey;
 var genderNodeKey;
+var commentBoxKey = -1
 var globalState = {
     tool: null,
     LocX: -200,
