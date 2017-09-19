@@ -42,6 +42,13 @@ function initializeDiagram() {
         "CommentBox",
         generateCommentBoxTemplate()
     )
+    mainDiagram.addDiagramListener("ObjectSingleClicked",
+        objectSingleClicked
+    );
+
+    mainDiagram.addDiagramListener("BackgroundSingleClicked",
+        backGroundSingleClicked
+    );
 
     mainDiagram.linkTemplate = generateParentLinkTemplate();
     mainDiagram.linkTemplateMap.add(
