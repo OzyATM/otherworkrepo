@@ -230,6 +230,7 @@
     <Content Include="Scripts\GeometryReshapingTool.js" />
     <Content Include="Scripts\go-1.7.7-debug.js" />
     <Content Include="Scripts\go-1.7.7.js" />
+    <Content Include="Scripts\ImprovedScript\changetexttype.js" />
     <Content Include="Scripts\ImprovedScript\FreehandDrawingTool.js" />
     <Content Include="Scripts\ImprovedScript\LogicToRenderGraphDataConversion.js" />
     <Content Include="Scripts\ImprovedScript\LogicToRenderUnitDataConversion.js" />

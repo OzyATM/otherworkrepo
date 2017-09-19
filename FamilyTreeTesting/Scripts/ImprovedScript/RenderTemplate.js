@@ -644,7 +644,7 @@ function generateCommentBoxTextBlock() {
             font: "12pt Helvetica, Arial, sans-serif",
             stroke: "#000000",
         },
-        new go.Binding("text").makeTwoWay(),,
+        new go.Binding("text").makeTwoWay(),
         new go.Binding("stroke", "stroke"),
         new go.Binding("font"),
         new go.Binding("bold"),
