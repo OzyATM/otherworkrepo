@@ -458,7 +458,7 @@ function addCareTaker(gender) {
     else if (gender === "female")
         categoryType = "CareFemale"
 
-    careTakerNode = { category: categoryType, loc: setObjLoc };
+    careTakerNode = { category: categoryType, loc: setObjLoc, key: uuidv4() };
     mainDiagram.model.addNodeData(careTakerNode);
 
     // update globalLoc
@@ -483,7 +483,7 @@ function freeDraw() {
     var tool = new FreehandDrawingTool();
     // provide the default JavaScript object for a new polygon in the model
     tool.archetypePartData =
-        { stroke: "black", strokeWidth: 5, category: "FreehandDrawing" };
+        { stroke: "black", strokeWidth: 5, category: "FreehandDrawing", key: uuidv4() };
     // install as last mouse-move-tool
     mainDiagram.toolManager.mouseMoveTools.add(tool);
     globalState.tool = tool;
@@ -513,7 +513,7 @@ function addCommentBox() {
     var Comment_node
     var setObjLoc = go.Point.stringify(new go.Point(globalState.LocX, globalState.LocY))
 
-    Comment_node = { category: "CommentBox", text: "請輸入文字", loc: setObjLoc };
+    Comment_node = { category: "CommentBox", text: "請輸入文字", loc: setObjLoc, key: uuidv4() };
     mainDiagram.model.addNodeData(Comment_node);
     // update globalLoc
     globalState.LocX += 5
