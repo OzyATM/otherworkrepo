@@ -48,6 +48,15 @@ function btnRegistration() {
     document.getElementById("zoomToFit").onclick = zoomToFit;
     document.getElementById("freedraw").onclick = freeDraw;
     document.getElementById("comment").onclick = addCommentBox;
+
+    document.getElementById("bold").onclick = changetextbold;
+    document.getElementById("italic").onclick = changetextitalic;
+    document.getElementById("underline").onclick = changetextunderline;
+    document.getElementById("strikethrough").onclick = changetextstrikethrough;
+    document.getElementById("fontsize").onclick = clicktextsize;
+    document.getElementById("fontsize").onchange = changetextsize;
+    document.getElementById("fontstyle").onclick = clicktextstyle;
+    document.getElementById("fontstyle").onchange = changetextstyle;
 }
 
 // ***************************************
