@@ -618,6 +618,7 @@ function isOwnChild(e, object) {
     node.gotAdopted = false;
     reRender(currentObjectKey);
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 
 // ***************************************
@@ -843,6 +844,8 @@ function disableHTMLAutoFocusCanvasToMiddle() {
     var y = window.scrollY || window.pageYOffset;
     go.mainDiagram.prototype.doFocus.call(this);
     window.scrollTo(x, y);
+=======
+>>>>>>> parent of f391d40... finished
 =======
 >>>>>>> parent of f391d40... finished
 }
