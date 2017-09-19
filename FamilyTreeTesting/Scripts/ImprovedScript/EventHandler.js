@@ -580,8 +580,9 @@ function changeMarriageStatusToDivorce(e, object) {
 function isAdopted(e, object) {
     var currentObjectKey = object.part.data.key;
     var node = findNode(currentObjectKey, globalLogicData);
-    // if it doesn't have parent it will automatically add parent
-    if (!node.left || !node.right) {
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    // if it doesn't have parent and it is not in a child List it will automatically add parent
+    if ((!node.left || !node.right) && currentNodeArrayData.childrenList === null) {
         addParent(e, object);
     }
     node.isAdopted = true;
@@ -596,8 +597,9 @@ function isAdopted(e, object) {
 function gotAdopted(e, object) {
     var currentObjectKey = object.part.data.key;
     var node = findNode(currentObjectKey, globalLogicData);
-    // if it doesn't have parent it will automatically add parent
-    if (!node.left || !node.right) {
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    // if it doesn't have parent and it is not in a child List it will automatically add parent
+    if ((!node.left || !node.right) && currentNodeArrayData.childrenList === null) {
         addParent(e, object);
     }
     node.gotAdopted = true;
