@@ -2,7 +2,6 @@
 var commentNodeKey;
 var multiIndividualNodeKey;
 var genderNodeKey;
-var commentBoxKey = -1
 var globalState = {
     tool: null,
     LocX: -200,
@@ -48,15 +47,6 @@ function btnRegistration() {
     document.getElementById("zoomToFit").onclick = zoomToFit;
     document.getElementById("freedraw").onclick = freeDraw;
     document.getElementById("comment").onclick = addCommentBox;
-
-    document.getElementById("bold").onclick = changetextbold;
-    document.getElementById("italic").onclick = changetextitalic;
-    document.getElementById("underline").onclick = changetextunderline;
-    document.getElementById("strikethrough").onclick = changetextstrikethrough;
-    document.getElementById("fontsize").onclick = clicktextsize;
-    document.getElementById("fontsize").onchange = changetextsize;
-    document.getElementById("fontstyle").onclick = clicktextstyle;
-    document.getElementById("fontstyle").onchange = changetextstyle;
 }
 
 // ***************************************
@@ -458,7 +448,7 @@ function addCareTaker(gender) {
     else if (gender === "female")
         categoryType = "CareFemale"
 
-    careTakerNode = { category: categoryType, loc: setObjLoc, key: uuidv4() };
+    careTakerNode = { category: categoryType, loc: setObjLoc };
     mainDiagram.model.addNodeData(careTakerNode);
 
     // update globalLoc
@@ -483,7 +473,7 @@ function freeDraw() {
     var tool = new FreehandDrawingTool();
     // provide the default JavaScript object for a new polygon in the model
     tool.archetypePartData =
-        { stroke: "black", strokeWidth: 5, category: "FreehandDrawing", key: uuidv4() };
+        { stroke: "black", strokeWidth: 5, category: "FreehandDrawing" };
     // install as last mouse-move-tool
     mainDiagram.toolManager.mouseMoveTools.add(tool);
     globalState.tool = tool;
@@ -513,7 +503,7 @@ function addCommentBox() {
     var Comment_node
     var setObjLoc = go.Point.stringify(new go.Point(globalState.LocX, globalState.LocY))
 
-    Comment_node = { category: "CommentBox", text: "請輸入文字", loc: setObjLoc, key: uuidv4() };
+    Comment_node = { category: "CommentBox", text: "請輸入文字", loc: setObjLoc };
     mainDiagram.model.addNodeData(Comment_node);
     // update globalLoc
     globalState.LocX += 5
@@ -627,6 +617,7 @@ function isOwnChild(e, object) {
     node.isAdopted = false;
     node.gotAdopted = false;
     reRender(currentObjectKey);
+<<<<<<< HEAD
 }
 
 // ***************************************
@@ -852,4 +843,6 @@ function disableHTMLAutoFocusCanvasToMiddle() {
     var y = window.scrollY || window.pageYOffset;
     go.mainDiagram.prototype.doFocus.call(this);
     window.scrollTo(x, y);
+=======
+>>>>>>> parent of f391d40... finished
 }

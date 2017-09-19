@@ -275,7 +275,7 @@ function init() {
                 font: "12pt Helvetica, Arial, sans-serif",
                 stroke: "#000000",
             },
-            new go.Binding("text"),
+            new go.Binding("text").makeTwoWay(),
             new go.Binding("stroke", "stroke"),
             new go.Binding("font"),
             new go.Binding("bold"),
@@ -359,8 +359,7 @@ function init() {
         function (e) {
 
             disableClickOnNaviBarForTextBlock();
-            var currentComment = findCurrentIndex(tempKey)
-            myDiagram.model.nodeDataArray[currentComment]
+
             if (jQuery.type(myDiagram.model.nodeDataArray[currentComment]) !== "undefined") {
                 var currentComment = findCurrentIndex(tempKey)
                 if (myDiagram.model.nodeDataArray[currentComment].text === "") {
