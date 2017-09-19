@@ -284,6 +284,11 @@ function getRequiredNodeGap(item) {
 
 function getChildLinkData(childNode, linkNode, basePos, initHeight) {
     var result = { nodeArray: [], linkArray: [], linkNode: {} };
+    var strokeDashArrayStyle = [0,0];
+
+    if (!childNode.isAdoptedBtnVisible){
+        strokeDashArrayStyle = [5,2];
+    }
 
     var mainDropPos = { x: basePos.x, y: basePos.y + initHeight };
     var subDropPos = { x: getPosFromString(childNode.loc).x, y: mainDropPos.y };
@@ -302,14 +307,16 @@ function getChildLinkData(childNode, linkNode, basePos, initHeight) {
         from: linkNode.key,
         to: mainPosNode.key,
         category: "ChildrenLink",
-        childKey: childNode.key
+        childKey: childNode.key,
+        strokeDashArray: strokeDashArrayStyle
     }
 
     var mainPosNodeToSubPosNodeLink = {
         from: mainPosNode.key,
         to: subPosNode.key,
         category: "ChildrenLink",
-        childKey: childNode.key
+        childKey: childNode.key,
+        strokeDashArray: strokeDashArrayStyle
     }
 
     var subPosNodeToChildLink = {
@@ -317,7 +324,8 @@ function getChildLinkData(childNode, linkNode, basePos, initHeight) {
         to: childNode.key,
         toPort: "T",
         category: "ChildrenLink",
-        childKey: childNode.key
+        childKey: childNode.key,
+        strokeDashArray: strokeDashArrayStyle
     }
 
     result.nodeArray.push(mainPosNode);
