@@ -35,8 +35,8 @@ function generateChildLinkTemplate() {
         goObject(
             "Shape",
             {
-                stroke: "blue",
-                strokeWidth: 2
+                stroke: "black",
+                strokeWidth: 3
             },
             new go.Binding("strokeDashArray")
         )
@@ -79,18 +79,18 @@ function generateLinkPointTemplate() {
             go.Node,
             "Position",
             {
-                selectable: true,
+                selectable: false,
                 layerName: "Foreground"
             },
             new go.Binding("location", "loc", go.Point.parse),
             goObject(
                 go.Shape,
-                "Ellipse",
+                "Square",
                 {
                     width: 2,
                     height: 2,
-                    stroke: "blue",
-                    fill: "blue"
+                    stroke: "black",
+                    fill: "black"
                 },
                 new go.Binding("width"),
                 new go.Binding("height")
