@@ -635,8 +635,8 @@ function isOwnChild(e, object) {
 // ***************************************
 function objectSingleClicked(e) {
     var part = e.subject.part
-    commentBoxKey = part.data.key
     if (part.data.category === "CommentBox") {
+        commentBoxKey = part.data.key
         setDefaultNaviBar(part)
     }
 }
