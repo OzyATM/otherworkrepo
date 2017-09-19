@@ -37,7 +37,8 @@ function generateChildLinkTemplate() {
             {
                 stroke: "blue",
                 strokeWidth: 2
-            }
+            },
+            new go.Binding("strokeDashArray")
         )
     );
     return tempLinkTemplate

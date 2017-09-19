@@ -27,7 +27,10 @@ var EventHandler = {
     addDaughter: addDaughter,
     changeMarriageStatusToUnmarriage: changeMarriageStatusToUnmarriage,
     changeMarriageStatusToMarriage: changeMarriageStatusToMarriage,
-    changeMarriageStatusToDivorce: changeMarriageStatusToDivorce
+    changeMarriageStatusToDivorce: changeMarriageStatusToDivorce,
+    isAdopted: isAdopted,
+    gotAdopted: gotAdopted,
+    isOwnChild: isOwnChild
 }
 
 // ***************************************
@@ -566,4 +569,40 @@ function changeMarriageStatusToDivorce(e, object) {
     }
     previousNode.marriageStatus = "divorce";
     reRender(null);
+}
+
+// ***************************************
+// Change Child Status Event Handler
+// Chnage Child Status to isAdpoted
+// ***************************************
+function isAdopted(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var node = findNode(currentObjectKey, globalLogicData);
+    node.isAdopted = true;
+    node.gotAdopted = false;
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Change Child Status Event Handler
+// Chnage Child Status to gotAdopted
+// ***************************************
+function gotAdopted(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var node = findNode(currentObjectKey, globalLogicData);
+    node.gotAdopted = true;
+    node.isAdopted = false;
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Change Child Status Event Handler
+// Chnage Child Status to isOwnChild
+// ***************************************
+function isOwnChild(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var node = findNode(currentObjectKey, globalLogicData);
+    node.isAdopted = false;
+    node.gotAdopted = false;
+    reRender(currentObjectKey);
 }

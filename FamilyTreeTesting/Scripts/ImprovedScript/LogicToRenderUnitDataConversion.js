@@ -36,12 +36,15 @@ function getNodeData(inputData, pos) {
         noteOne: inputData.notes[0],
         noteTwo: inputData.notes[1],
         noteThree: inputData.notes[2],
-        isAdoptedSignVisible: inputData.isAdopted,
+        isAdoptedSignVisible: getIsAdoptedSignVisible(inputData),
         loc: getPosString(pos),
         isDeleteBtnVisible: inputData.canBeDeleted,
         isAddParentBtnVisible: !getParentBtnVisibility(inputData),
         isPregnantBtnVisible: getPregantBtnVisibility(inputData.multiInvididualText, inputData.gender),
-        isMultiInvididualTextBtnVisible: getMultiInvididualTextBtnVisibility(inputData.isPragnent)
+        isMultiInvididualTextBtnVisible: getMultiInvididualTextBtnVisibility(inputData.isPragnent),
+        isOwnSonVisible: getIsOwnSonBtnVisibility(inputData),
+        isAdoptedBtnVisible: getIsAdoptedBtnVisibility(inputData),
+        isGotAdoptedBtnVisible: getIsGotAdoptedBtnVisibility(inputData)
     }
     return tempNode;
 }
@@ -114,5 +117,37 @@ function getMultiInvididualTextBtnVisibility(isPragnent) {
         return false;
     } else {
         return true;
+    }
+}
+
+function getIsAdoptedSignVisible(inputData) {
+    if (inputData.isAdopted || inputData.gotAdopted) {
+        return true
+    } else {
+        return false
+    }
+}
+
+function getIsOwnSonBtnVisibility(inputData) {
+    if (!inputData.isAdopted && !inputData.gotAdopted) {
+        return false;
+    } else if (inputData.isAdopted || inputData.gotAdopted) {
+        return true;
+    }
+}
+
+function getIsAdoptedBtnVisibility(inputData) {
+    if (!inputData.isAdopted) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function getIsGotAdoptedBtnVisibility(inputData) {
+    if (!inputData.gotAdopted) {
+        return true;
+    } else {
+        return false;
     }
 }

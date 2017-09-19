@@ -102,6 +102,7 @@ function getParentBranchRenderData(pos, distance, height, logicData) {
 }
 
 function getParentNodeRenderData(pos, distance, logicData, leftLinkNode, rightLinkNode) {
+    var strokeDashArrayStyle = [0,0]
     var leftPos = {
         x: pos.x - (distance / 2),
         y: pos.y,
@@ -118,28 +119,36 @@ function getParentNodeRenderData(pos, distance, logicData, leftLinkNode, rightLi
 
     var leftPNode = getNodeData(logicData.left, leftPos);
     if (leftLinkNode && leftLinkNode.key) {
+        if (logicData.left.isAdopted){
+            strokeDashArrayStyle = [5,2];
+        }
         var leftLink = {
             from: leftLinkNode.key,
             fromPort: "B",
             to: leftPNode.key,
             toPort: "T",
             category: "ChildrenLink",
-            childKey: leftPNode.key
+            childKey: leftPNode.key,
+            strokeDashArray: strokeDashArrayStyle
         }
         result.linkArray.push(leftLink);
     }
 
     var rightPNode = getNodeData(logicData.right, rightPos);
     if (rightLinkNode && rightLinkNode.key) {
-        var leftLink = {
+        if (logicData.right.isAdopted){
+            strokeDashArrayStyle = [5,2];
+        }
+        var rightLink = {
             from: rightLinkNode.key,
             fromPort: "B",
             to: rightPNode.key,
             toPort: "T",
             category: "ChildrenLink",
-            childKey: rightPNode.key
+            childKey: rightPNode.key,
+            strokeDashArray: strokeDashArrayStyle
         }
-        result.linkArray.push(leftLink);
+        result.linkArray.push(rightLink);
     }
 
     var linkData = getPartenerLinkData(leftPNode, rightPNode, logicData.marriageStatus);
