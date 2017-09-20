@@ -16,6 +16,10 @@ function initializeDiagram() {
             "animationManager.isEnabled": false // disable the animation when redraw
         }
     )
+    mainDiagram.commandHandler.selectAll = false;
+    mainDiagram.toolManager.dragSelectingTool.isEnabled = false;
+    mainDiagram.commandHandler.doKeyDown = disableDeleteBtnOnKeybored
+
     mainDiagram.nodeTemplate = generateNodeTemplate();
     mainDiagram.nodeTemplateMap.add(
         "LinkLabel",
@@ -56,6 +60,7 @@ function initializeDiagram() {
         generateChildLinkTemplate()
     )
     mainDiagram.model = logicModelToGoModel(logicModel);
+
     btnRegistration();
     createStuffOnNaviBar();
 }

@@ -855,3 +855,10 @@ function changetextColor(stroke) {
     mainDiagram.rebuildParts();
     return;
 }
+
+function disableDeleteBtnOnKeybored(e) {
+    var e = mainDiagram.lastInput;
+    if (e.key == "Del") return;
+    if (e.ur.keyCode == 17) return;
+    return;
+}
