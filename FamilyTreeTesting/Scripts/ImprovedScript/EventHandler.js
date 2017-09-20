@@ -519,11 +519,11 @@ function changeMarriageStatusToUnmarriage(e, object) {
         var currentNodeIndex = currentNodeArrayData.index;
 
         currentChildList[currentNodeIndex].parentTree.marriageStatus = "unmarried";
-        reRender(null);
-        return;
+    } else {
+        previousNode.marriageStatus = "unmarried";
     }
-    previousNode.marriageStatus = "unmarried";
     reRender(null);
+    return;
 }
 
 // ***************************************
@@ -540,11 +540,11 @@ function changeMarriageStatusToMarriage(e, object) {
         var currentNodeIndex = currentNodeArrayData.index;
 
         currentChildList[currentNodeIndex].parentTree.marriageStatus = "married";
-        reRender(null);
-        return;
+    } else {
+        previousNode.marriageStatus = "married";
     }
-    previousNode.marriageStatus = "married";
     reRender(null);
+    return;
 }
 
 // ***************************************
@@ -561,9 +561,9 @@ function changeMarriageStatusToDivorce(e, object) {
         var currentNodeIndex = currentNodeArrayData.index;
 
         currentChildList[currentNodeIndex].parentTree.marriageStatus = "divorce";
-        reRender(null);
-        return;
+    } else {
+        previousNode.marriageStatus = "divorce";
     }
-    previousNode.marriageStatus = "divorce";
     reRender(null);
+    return;
 }
