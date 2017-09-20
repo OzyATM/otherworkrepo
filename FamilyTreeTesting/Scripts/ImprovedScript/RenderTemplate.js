@@ -22,7 +22,7 @@ function generateNodeTemplate() {
         "Position", // Alignment setting is not used, we manually set item position
         generateMainShape(),
         {
-            movable: true,
+            movable: false,
             selectionAdornmentTemplate: generateMainAdornment()
         },
         new go.Binding("location","loc", go.Point.parse),
