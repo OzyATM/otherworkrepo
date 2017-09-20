@@ -2,6 +2,7 @@
 var commentNodeKey;
 var multiIndividualNodeKey;
 var genderNodeKey;
+var commentBoxKey = -1
 var globalState = {
     tool: null,
     LocX: -200,
@@ -47,6 +48,15 @@ function btnRegistration() {
     document.getElementById("zoomToFit").onclick = zoomToFit;
     document.getElementById("freedraw").onclick = freeDraw;
     document.getElementById("comment").onclick = addCommentBox;
+
+    document.getElementById("bold").onclick = changetextbold;
+    document.getElementById("italic").onclick = changetextitalic;
+    document.getElementById("underline").onclick = changetextunderline;
+    document.getElementById("strikethrough").onclick = changetextstrikethrough;
+    document.getElementById("fontsize").onclick = clicktextsize;
+    document.getElementById("fontsize").onchange = changetextsize;
+    document.getElementById("fontstyle").onclick = clicktextstyle;
+    document.getElementById("fontstyle").onchange = changetextstyle;
 }
 
 // ***************************************
@@ -55,6 +65,14 @@ function btnRegistration() {
 // ***************************************
 function deleteNode(e, object) {
     var currentObjectKey = object.part.data.key;
+    var currentObjectCategory = object.part.data.category
+
+    if (currentObjectCategory === "CareMale" || currentObjectCategory === "CareFemale" || currentObjectCategory === "FreehandDrawing" || currentObjectCategory === "CommentBox") {
+        mainDiagram.commandHandler.deleteSelection();
+        commentBoxKey = -1;
+        return
+    }
+
     var newNode;
     //delete parentTree's Node
     var previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, currentObjectKey)
@@ -448,7 +466,7 @@ function addCareTaker(gender) {
     else if (gender === "female")
         categoryType = "CareFemale"
 
-    careTakerNode = { category: categoryType, loc: setObjLoc };
+    careTakerNode = { category: categoryType, loc: setObjLoc, key: uuidv4() };
     mainDiagram.model.addNodeData(careTakerNode);
 
     // update globalLoc
@@ -473,7 +491,7 @@ function freeDraw() {
     var tool = new FreehandDrawingTool();
     // provide the default JavaScript object for a new polygon in the model
     tool.archetypePartData =
-        { stroke: "black", strokeWidth: 5, category: "FreehandDrawing" };
+        { stroke: "black", strokeWidth: 5, category: "FreehandDrawing", key: uuidv4() };
     // install as last mouse-move-tool
     mainDiagram.toolManager.mouseMoveTools.add(tool);
     globalState.tool = tool;
@@ -503,7 +521,7 @@ function addCommentBox() {
     var Comment_node
     var setObjLoc = go.Point.stringify(new go.Point(globalState.LocX, globalState.LocY))
 
-    Comment_node = { category: "CommentBox", text: "請輸入文字", loc: setObjLoc };
+    Comment_node = { category: "CommentBox", text: "請輸入文字", loc: setObjLoc, key: uuidv4() };
     mainDiagram.model.addNodeData(Comment_node);
     // update globalLoc
     globalState.LocX += 5
@@ -617,5 +635,223 @@ function isOwnChild(e, object) {
     node.isAdopted = false;
     node.gotAdopted = false;
     reRender(currentObjectKey);
+    return;
+}
+
+// ***************************************
+// General Event Handler
+// Object Single Click
+// ***************************************
+function objectSingleClicked(e) {
+    var part = e.subject.part
+    if (part.data.category === "CommentBox") {
+        commentBoxKey = part.data.key
+        setDefaultNaviBar(part)
+    }
+}
+
+// ***************************************
+// General Event Handler
+// Background Single Click
+// ***************************************
+function backGroundSingleClicked(e) {
+    disableClickOnNaviBarForTextBlock();
+    if (commentBoxKey != -1) {
+        var currentIndex = findCurrentIndex(commentBoxKey);
+        if (mainDiagram.model.nodeDataArray[currentIndex].text === "") {
+            mainDiagram.model.nodeDataArray[currentIndex].text = "請輸入文字";
+        }
+    }
+    mainDiagram.rebuildParts();
+}
+
+// ***************************************
+// Chnage The Button Color on the Top Navi-Bar 
+// ***************************************
+function changeNaviBarBtnColor(nodePart, textStyle) {
+    var part = nodePart
+    var inputTextStyle = textStyle
+
+    if (!part.data[inputTextStyle])
+        document.getElementById(inputTextStyle).style.backgroundColor = "white"
+    else
+        document.getElementById(inputTextStyle).style.backgroundColor = "#ff8c00"
+}
+
+// ***************************************
+// FontSize and Type on Navi-Bar 
+// ***************************************
+function fontSizeTypeOnNaviBar(nodePart, fontSizeStyle, value) {
+    var part = nodePart
+    var inputSizeStype = fontSizeStyle
+    var inputValue = value
+    var fontStyleSetting;
+    if (fontSizeStyle === "fontstyle")
+        fontStyleSetting = $('#fontstyle2').text("新細明體");
+    else
+        fontStyleSetting = document.getElementById(inputSizeStype).value = inputValue
+
+    if (!part.data[inputSizeStype])
+        fontStyleSetting
+    else
+        document.getElementById(inputSizeStype).value = part.data[inputSizeStype]
+}
+
+// ***************************************
+// Set The Navi-Bar on top to Default
+// ***************************************
+function setDefaultNaviBar(nodePart) {
+    var part = nodePart
+    tempKey = part.data.key
+    document.getElementById("bold").value = part.data.bold
+    document.getElementById("italic").value = part.data.Italic
+    document.getElementById("underline").value = part.data.isUnderline
+    document.getElementById("strikethrough").value = part.data.isStrikethrough
+    document.getElementById("fontsize").value = part.data.fontsize
+    $('#fontstyle2').text(part.data.fontstyle)
+
+    $("#bold").removeClass("disabled");
+    $("#italic").removeClass("disabled");
+    $("#underline").removeClass("disabled");
+    $("#strikethrough").removeClass("disabled");
+    $(".btn-md").removeClass("disabled");
+    $('#fontselect').removeClass("disabledbutton");
+    $('#fontselect-drop').removeClass("display");
+    document.getElementById("fontsize").disabled = false
+
+    changeNaviBarBtnColor(part, "bold")
+    changeNaviBarBtnColor(part, "italic")
+    changeNaviBarBtnColor(part, "underline")
+    changeNaviBarBtnColor(part, "strikethrough")
+
+    fontSizeTypeOnNaviBar(part, "fontsize", "12")
+    fontSizeTypeOnNaviBar(part, "fontstyle", "新細明體")
+
+}
+
+// ***************************************
+// Disable Navi-Bar If it is not Select The Text Block 
+// ***************************************
+function disableClickOnNaviBarForTextBlock() {
+    $("#bold").addClass("disabled");
+    $("#italic").addClass("disabled");
+    $("#underline").addClass("disabled");
+    $("#strikethrough").addClass("disabled");
+    $(".btn-md").addClass("disabled");
+    $('#fontselect').addClass("disabledbutton");
+    $('#fontselect-drop').addClass("display");
+    $('#fontstyle2').text("新細明體");
+    document.getElementById("bold").style.backgroundColor = "white"
+    document.getElementById("italic").style.backgroundColor = "white"
+    document.getElementById("underline").style.backgroundColor = "white"
+    document.getElementById("strikethrough").style.backgroundColor = "white"
+    document.getElementById("fontsize").value = "12"
+    document.getElementById("fontsize").disabled = true
+}
+
+// ***************************************
+// Chnage Text to Bold 
+// ***************************************
+function changetextbold() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (mainDiagram.model.nodeDataArray[currentIndex].bold) {
+        mainDiagram.model.nodeDataArray[currentIndex].bold = false
+    }
+    else {
+        mainDiagram.model.nodeDataArray[currentIndex].bold = true;
+    }
+
+    getRadio(mainDiagram.selection.Ca.value);
+}
+
+// ***************************************
+// Chnage Text to Italic
+// ***************************************
+function changetextitalic() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (mainDiagram.model.nodeDataArray[currentIndex].Italic) {
+        mainDiagram.model.nodeDataArray[currentIndex].Italic = false
+    }
+    else {
+        mainDiagram.model.nodeDataArray[currentIndex].Italic = true;
+    }
+    getRadio(mainDiagram.selection.Ca.value);
+}
+
+// ***************************************
+// Chnage Text to UnderLine
+// ***************************************
+function changetextunderline() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (mainDiagram.model.nodeDataArray[currentIndex].isUnderline) {
+        mainDiagram.model.nodeDataArray[currentIndex].isUnderline = false
+        document.getElementById("underline").style.backgroundColor = "white"
+    }
+    else {
+        mainDiagram.model.nodeDataArray[currentIndex].isUnderline = true;
+        document.getElementById("underline").style.backgroundColor = "#ff8c00"
+    }
+    mainDiagram.rebuildParts();
+}
+
+// ***************************************
+// Chnage Text to StrikeThrough
+// ***************************************
+function changetextstrikethrough() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (mainDiagram.model.nodeDataArray[currentIndex].isStrikethrough) {
+        mainDiagram.model.nodeDataArray[currentIndex].isStrikethrough = false
+        document.getElementById("strikethrough").style.backgroundColor = "white"
+    }
+    else {
+        mainDiagram.model.nodeDataArray[currentIndex].isStrikethrough = true;
+        document.getElementById("strikethrough").style.backgroundColor = "#ff8c00"
+    }
+    mainDiagram.rebuildParts();
+}
+
+// ***************************************
+// Set Default Number for Text Size
+// ***************************************
+function clicktextsize() {
+    var fontsize = "";
+    document.getElementById("fontsize").value = fontsize;
+}
+
+// ***************************************
+// Chnage Text to Italic
+// ***************************************
+function changetextsize() {
+    var currentIndex = findCurrentIndex(tempKey);
+    var fontsize = document.getElementById("fontsize").value;
+    mainDiagram.model.nodeDataArray[currentIndex].fontsize = fontsize;
+    getRadio(mainDiagram.selection.Ca.value);
+}
+
+// ***************************************
+// Set Default Text Style
+// ***************************************
+function clicktextstyle() {
+    var fontstyle = "";
+    document.getElementById("fontstyle").value = fontstyle;
+}
+
+// ***************************************
+// Change Text Style
+// ***************************************
+function changetextstyle() {
+    var currentIndex = findCurrentIndex(tempKey);
+    var fontstyle = document.getElementById("fontstyle").value;
+    mainDiagram.model.nodeDataArray[currentIndex].fontstyle = fontstyle;
+    getRadio(mainDiagram.selection.Ca.value);
+}
+
+// ***************************************
+// Chnage Text Color
+// ***************************************
+function changetextColor(stroke) {
+    var currentIndex = findCurrentIndex(tempKey);
+    mainDiagram.model.nodeDataArray[currentIndex].stroke = stroke.value;
+    mainDiagram.rebuildParts();
     return;
 }

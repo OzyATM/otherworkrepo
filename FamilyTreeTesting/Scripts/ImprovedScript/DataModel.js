@@ -133,6 +133,17 @@ function searchNodeCurrentArray(childrenList, inputId) {
     return result;
 }
 
+// only CommentBox use this function
+function findCurrentIndex(inputKey) {
+    var tempIndex;
+    (mainDiagram.model.nodeDataArray).forEach(function (obj, index) {
+        if (obj.key === inputKey)
+            tempIndex = index
+    });
+    return tempIndex;
+
+}
+
 //***********************************************
 // Generate go data model from logic data model
 //***********************************************

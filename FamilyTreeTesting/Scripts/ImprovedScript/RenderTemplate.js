@@ -563,7 +563,7 @@ function generateCareTakerHorizontalPanelWithDelBtn() {
         {
             position: new go.Point(-14, 55)
         },
-        createDeleteBtn(null, "刪除", 50)
+        createDeleteBtn(EventHandler.deleteNode, "刪除", 50)
     );
     return tempHorizontalPanel;
 }
@@ -611,7 +611,7 @@ function generateFreeDrawAdornment() {
         go.Adornment,
         "Vertical",
         goObject(go.Placeholder),
-        createDeleteBtn(null, "刪除", 50)
+        createDeleteBtn(EventHandler.deleteNode, "刪除", 50)
     )
     return tempAdornmentForFreeDraw;
 }
@@ -645,7 +645,7 @@ function generateCommentBoxTextBlock() {
             font: "12pt Helvetica, Arial, sans-serif",
             stroke: "#000000",
         },
-        new go.Binding("text"),
+        new go.Binding("text").makeTwoWay(),
         new go.Binding("stroke", "stroke"),
         new go.Binding("font"),
         new go.Binding("bold"),
@@ -665,7 +665,7 @@ function generateCommentBoxAdornment() {
         go.Adornment,
         "Vertical",
         goObject(go.Placeholder),
-        createDeleteBtn(null, "刪除", 50)
+        createDeleteBtn(EventHandler.deleteNode, "刪除", 50)
     )
     return tempCommentBoxAdornment;
 }

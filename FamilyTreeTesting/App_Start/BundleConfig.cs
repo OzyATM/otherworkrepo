@@ -43,7 +43,8 @@ namespace FamilyTreeTesting
                       "~/Scripts/ImprovedScript/RenderTemplate.js",
                       "~/Scripts/ImprovedScript/LinkTemplate.js",
                       "~/Scripts/ImprovedScript/FamilyTreeMain.js",
-                      "~/Scripts/ImprovedScript/FreehandDrawingTool.js"));
+                      "~/Scripts/ImprovedScript/FreehandDrawingTool.js",
+                      "~/Scripts/ImprovedScript/changetexttype.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/GoJS").Include(
                       "~/Scripts/go-1.7.7-debug.js",
