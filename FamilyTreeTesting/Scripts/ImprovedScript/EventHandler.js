@@ -64,56 +64,70 @@ function btnRegistration() {
 // Remove specific node from DataModel, then re-render
 // ***************************************
 function deleteNode(e, object) {
-    var currentObjectKey = object.part.data.key;
-    var currentObjectCategory = object.part.data.category
+    swal({
+        title: "確定要刪除？",
+        type: "warning",
+        showCancelButton: true,
+        cancelButtonText: "取消",
+        confirmButtonClass: "btn-danger",
+        confirmButtonText: "確定",
+        closeOnConfirm: true
+    },
 
-    if (currentObjectCategory === "CareMale" || currentObjectCategory === "CareFemale" || currentObjectCategory === "FreehandDrawing" || currentObjectCategory === "CommentBox") {
-        mainDiagram.commandHandler.deleteSelection();
-        commentBoxKey = -1;
-        return
-    }
+       function (isConfirm) {
+           if (isConfirm) {
+               var currentObjectKey = object.part.data.key;
+               var currentObjectCategory = object.part.data.category
 
-    var newNode;
-    //delete parentTree's Node
-    var previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, currentObjectKey)
-    if (previousNode != null) {
-        previousNode.left = null;
-        previousNode.right = null;
-        previousNode.isAdopted = false;
-        previousNode.gotAdopted = false;
-        reRender(previousNode.id);
-        return;
-    }
+               if (currentObjectCategory === "CareMale" || currentObjectCategory === "CareFemale" || currentObjectCategory === "FreehandDrawing" || currentObjectCategory === "CommentBox") {
+                   mainDiagram.commandHandler.deleteSelection();
+                   commentBoxKey = -1;
+                   return
+               }
 
-    // delete node on childrenList
-    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey);
-    var NodeCurrentIndex = currentNodeArrayData.index;
-    var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
-    if (NodeCurrentchildrenList[NodeCurrentIndex].parentTree) {
-        var mainNodePosition = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.linkNode
-        // check weather the node that want to be deleted is child or partner, if it is not partner delete the node, else delete the partner
-        if ((mainNodePosition === "left" && NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left.id === currentObjectKey) ||
-            (mainNodePosition === "right" && NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right.id === currentObjectKey))
-        {
+               var newNode;
+               //delete parentTree's Node
+               var previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, currentObjectKey)
+               if (previousNode != null) {
+                   previousNode.left = null;
+                   previousNode.right = null;
+                   reRender(previousNode.id);
+                   return;
+               }
 
-            NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
-            reRender(currentObjectKey);
-            return;
-        } else if (mainNodePosition === "left") {
-            newNode = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left;
-        } else if (mainNodePosition === "right") {
-            newNode = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right;
-        }
+               // delete node on childrenList
+               var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey);
+               var NodeCurrentIndex = currentNodeArrayData.index;
+               var NodeCurrentchildrenList = currentNodeArrayData.childrenList;
+               if (NodeCurrentchildrenList[NodeCurrentIndex].parentTree) {
+                   var mainNodePosition = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.linkNode
+                   // check weather the node that want to be deleted is child or partner, if it is not partner delete the node, else delete the partner
+                   if ((mainNodePosition === "left" && NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left.id === currentObjectKey) ||
+                       (mainNodePosition === "right" && NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right.id === currentObjectKey)) {
 
-        NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
-        NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, newNode);
-        reRender(currentObjectKey);
-        return;
-    } else {
-        NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
-        reRender(currentObjectKey);
-        return;
-    }
+                       NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
+                       reRender(currentObjectKey);
+                       return;
+                   } else if (mainNodePosition === "left") {
+                       newNode = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.left;
+                   } else if (mainNodePosition === "right") {
+                       newNode = NodeCurrentchildrenList[NodeCurrentIndex].parentTree.right;
+                   }
+
+                   NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
+                   NodeCurrentchildrenList.splice(NodeCurrentIndex, 0, newNode);
+                   reRender(currentObjectKey);
+                   return;
+               } else {
+                   NodeCurrentchildrenList.splice(NodeCurrentIndex, 1);
+                   reRender(currentObjectKey);
+                   return;
+               }
+           } else {
+               return false;
+           }
+       }
+    );
 }
 
 // Generate NodeData based on data storage

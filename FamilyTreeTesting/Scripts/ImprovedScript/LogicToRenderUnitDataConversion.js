@@ -41,10 +41,15 @@ function getNodeData(inputData, pos) {
         isDeleteBtnVisible: inputData.canBeDeleted,
         isAddParentBtnVisible: !getParentBtnVisibility(inputData),
         isPregnantBtnVisible: getPregantBtnVisibility(inputData.multiInvididualText, inputData.gender),
-        isMultiInvididualTextBtnVisible: getMultiInvididualTextBtnVisibility(inputData.isPragnent),
+        isMultiInvididualTextBtnVisible: getMultiInvididualTextBtnVisibility(inputData.isPragnent, inputData.hasSameDisease, inputData.containGen), 
         isOwnSonVisible: getIsOwnSonBtnVisibility(inputData),
         isAdoptedBtnVisible: getIsAdoptedBtnVisibility(inputData),
-        isGotAdoptedBtnVisible: getIsGotAdoptedBtnVisibility(inputData)
+        isGotAdoptedBtnVisible: getIsGotAdoptedBtnVisibility(inputData),
+        isSameDiseaseBtnVisible: getSameDiseaseBtnVisibility(inputData.multiInvididualText),
+        isContainGenBtnVisible: getContainGenBtnVisibility(inputData.multiInvididualText),
+        isAddPartnerBtnVisible: getPartnerBtnVisibility(inputData),
+        isAddChildBtnVisible: getChildBtnVisibility(inputData),
+        isAddSiblingBtnVisible: getSiblingBtnVisibility(inputData)
     }
     return tempNode;
 }
@@ -97,7 +102,8 @@ function getMultiTextVisibility(multiText) {
 }
 
 function getParentBtnVisibility(inputData) {
-    if (inputData.left || inputData.right || inputData.isPatient)
+    var hasParent = getHasParent(inputData.id)
+    if (inputData.left || inputData.right || hasParent)
         return true;
     else
         return false;
@@ -180,5 +186,98 @@ function getIsPartner(inputData) {
         }
     } else {
         return isPartnerChecker;
+    }
+}
+
+function getPartnerBtnVisibility(inputData) {
+    // check if the node is on the upper part or not, if it is on the upper part hide the add partner button
+    var isOnUpperPart = getNodeIsOnUpperPart(inputData.id)
+    var hasUnderPartner = findUnderPartnerExist(inputData)
+
+    if (isOnUpperPart || hasUnderPartner)
+        return false;
+    else
+        return true;
+}
+
+function getNodeIsOnUpperPart(id) {
+    var resultNode = null;
+    var isUpperPart = false;
+    resultNode = searchParentTreeForNode(globalLogicData.parentTree, id);
+    if (resultNode != null) {
+        isUpperPart = true
+    }
+    return isUpperPart;
+}
+
+function findUnderPartnerExist(inputData) {
+    var previousNode = null
+    previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, inputData.id)
+    if (previousNode === null) {
+        var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, inputData.id)
+        var currentNodeArray = currentNodeArrayData.childrenList;
+        var currentNodeIndex = currentNodeArrayData.index;
+        var hasUnderPartner = false
+        if (currentNodeArray[currentNodeIndex].childrenList) {
+            hasUnderPartner = true
+        }
+        else {
+            return hasUnderPartner
+        }
+    }
+    return hasUnderPartner
+}
+
+function getSiblingBtnVisibility(inputData) {
+    var previousNode = null
+    previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, inputData.id)
+    if (previousNode === null) {
+        var ispartner = getIsPartner(inputData)
+        if (ispartner) {
+            return false
+        }
+        else {
+            return true
+        }
+    }
+    else {
+        return false;
+    }
+}
+
+function getChildBtnVisibility(inputData) {
+    resultNode = searchChildTreeForNode(globalLogicData.childrenList, inputData.id);
+    if (resultNode == null) {
+        return false
+    }
+    else {
+        return true
+    }
+}
+
+function getHasParent(id) {
+    var hasParent = false;
+    var previousNode = null
+    previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, id)
+    if (previousNode === null) {
+        if ((id.childrenList === undefined) || (id = "B100")) {
+            hasParent = true;
+        }
+    }
+    return hasParent;
+}
+
+function getSameDiseaseBtnVisibility(multiText) {
+    if (multiText != "") {
+        return false;
+    } else {
+        return true;
+    }
+}
+function getContainGenBtnVisibility(multiText) {
+    if (multiText != "") {
+        return false;
+    } else {
+        return true;
     }
 }

@@ -289,24 +289,24 @@ function generateRightVerticalPanelWithBtn() {
         },
         createBtn(EventHandler.loadGenderType, "換性別", null, null),
         createVisibleBtn(EventHandler.addParent, "父　母", null, null, "isAddParentBtnVisible"),
-        createBtn(EventHandler.addPartner, "配　偶", null, null),
+        createVisibleBtn(EventHandler.addPartner, "配　偶", null, null, "isAddPartnerBtnVisible"),
         goObject(
             go.Panel,
             "Horizontal",
-            createBtn(EventHandler.addElderBrother, "兄", null, 32),
-            createBtn(EventHandler.addYoungerBrother, "弟", null, 32)
+            createVisibleBtn(EventHandler.addElderBrother, "兄", null, 32, "isAddSiblingBtnVisible"),
+            createVisibleBtn(EventHandler.addYoungerBrother, "弟", null, 32, "isAddSiblingBtnVisible")
         ),
         goObject(
             go.Panel,
             "Horizontal",
-            createBtn(EventHandler.addElderSister, "姊", null, 32),
-            createBtn(EventHandler.addYoungerSister, "妹", null, 32)
+            createVisibleBtn(EventHandler.addElderSister, "姊", null, 32, "isAddSiblingBtnVisible"),
+            createVisibleBtn(EventHandler.addYoungerSister, "妹", null, 32, "isAddSiblingBtnVisible")
         ),
         goObject(
             go.Panel,
             "Horizontal",
-            createBtn(EventHandler.addSon, "兒", null, 32),
-            createBtn(EventHandler.addDaughter, "女", null, 32)
+            createVisibleBtn(EventHandler.addSon, "兒", null, 32, "isAddChildBtnVisible"),
+            createVisibleBtn(EventHandler.addDaughter, "女", null, 32, "isAddChildBtnVisible")
         ),
         createVisibleBtn(EventHandler.isOwnChild, "親生", null, null, "isOwnSonVisible"),
         createVisibleBtn(EventHandler.isAdopted, "領養進來", null, null, "isAdoptedBtnVisible"),
@@ -325,8 +325,8 @@ function generateLeftVerticalPanelWithBtn() {
         {
             position: new go.Point(-86, -100)
         },
-        createBtn(EventHandler.sameDisease, "相同疾病", "#FFBD9D", 80),
-        createBtn(EventHandler.containGen, "帶基因者", "#FFBD9D", 80),
+        createVisibleBtn(EventHandler.sameDisease, "相同疾病", "#FFBD9D", 80, "isSameDiseaseBtnVisible"),
+        createVisibleBtn(EventHandler.containGen, "帶基因者", "#FFBD9D", 80, "isContainGenBtnVisible"),
         createVisibleBtn(EventHandler.isPregnant, "懷   孕", "#FFBD9D", 80, "isPregnantBtnVisible"),
         createVisibleBtn(EventHandler.loadMultiIndividual, "多個體", "#FFBD9D", 80, "isMultiInvididualTextBtnVisible"),
         createBtn(EventHandler.isDead, "死   亡", "#FFBD9D", 80),
