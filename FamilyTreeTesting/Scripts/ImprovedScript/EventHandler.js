@@ -24,7 +24,10 @@ var EventHandler = {
     addYoungerSister: addYoungerSister,
     addPartner: addPartner,
     addSon: addSon,
-    addDaughter: addDaughter
+    addDaughter: addDaughter,
+    changeMarriageStatusToUnmarriage: changeMarriageStatusToUnmarriage,
+    changeMarriageStatusToMarriage: changeMarriageStatusToMarriage,
+    changeMarriageStatusToDivorce: changeMarriageStatusToDivorce
 }
 
 // ***************************************
@@ -88,8 +91,6 @@ function deleteNode(e, object) {
         reRender(currentObjectKey);
         return;
     }
-
-
 }
 
 // Generate NodeData based on data storage
@@ -285,6 +286,7 @@ function addParent(e, object) {
     var mom = getDefaultLogicUnitData(uuidv4(), "female");
     currentNode.left = dad;
     currentNode.right = mom;
+    currentNode.marriageStatus = "married";
     reRender(currentObjectKey);
 }
 
@@ -377,9 +379,7 @@ function addPartner(e, object) {
             left:leftNode,
             right: rightNode,
             linkNode: linkNode,
-            relation: {
-                marriageStatus: "married",
-            }
+            marriageStatus: "married"
         },
         childrenList: [
         ]
@@ -503,4 +503,67 @@ function addCommentBox() {
     // update globalLoc
     globalState.LocX += 5
     globalState.LocY += 5
+}
+
+// ***************************************
+// Change Marriage Status Event Handler
+// Chnage The Marriage Status to Unmarried, The Link will become Dash-Line
+// ***************************************
+function changeMarriageStatusToUnmarriage(e, object) {
+    var previousNode = null
+    var leftNodeIDThatLinkFrom = object.part.data.from;
+    previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, leftNodeIDThatLinkFrom);
+    if (previousNode === null) {
+        var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, leftNodeIDThatLinkFrom)
+        var currentChildList = currentNodeArrayData.childrenList;
+        var currentNodeIndex = currentNodeArrayData.index;
+
+        currentChildList[currentNodeIndex].parentTree.marriageStatus = "unmarried";
+    } else {
+        previousNode.marriageStatus = "unmarried";
+    }
+    reRender(null);
+    return;
+}
+
+// ***************************************
+// Change Marriage Status Event Handler
+// Chnage The Marriage Status to married, The Link will become Normal Line
+// ***************************************
+function changeMarriageStatusToMarriage(e, object) {
+    var previousNode = null
+    var leftNodeIDThatLinkFrom = object.part.data.from;
+    previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, leftNodeIDThatLinkFrom);
+    if (previousNode === null) {
+        var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, leftNodeIDThatLinkFrom)
+        var currentChildList = currentNodeArrayData.childrenList;
+        var currentNodeIndex = currentNodeArrayData.index;
+
+        currentChildList[currentNodeIndex].parentTree.marriageStatus = "married";
+    } else {
+        previousNode.marriageStatus = "married";
+    }
+    reRender(null);
+    return;
+}
+
+// ***************************************
+// Change Marriage Status Event Handler
+// Chnage The Marriage Status to Divorce, The Link will become Normal Line and The LinkLabel will change to Two Slash-Line
+// ***************************************
+function changeMarriageStatusToDivorce(e, object) {
+    var previousNode = null
+    var leftNodeIDThatLinkFrom = object.part.data.from;
+    previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, leftNodeIDThatLinkFrom);
+    if (previousNode === null) {
+        var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, leftNodeIDThatLinkFrom)
+        var currentChildList = currentNodeArrayData.childrenList;
+        var currentNodeIndex = currentNodeArrayData.index;
+
+        currentChildList[currentNodeIndex].parentTree.marriageStatus = "divorce";
+    } else {
+        previousNode.marriageStatus = "divorce";
+    }
+    reRender(null);
+    return;
 }

@@ -40,9 +40,7 @@ function initializeGlobalLogicData() {
         parentTree: {
             left: dad,
             right: mom,
-            relation: {
-                marriageStatus: "married",
-            }
+            marriageStatus: "married"
         },
         childrenList: [
             patient

@@ -142,7 +142,7 @@ function getParentNodeRenderData(pos, distance, logicData, leftLinkNode, rightLi
         result.linkArray.push(rightLink);
     }
 
-    var linkData = getPartenerLinkData(leftPNode, rightPNode);
+    var linkData = getPartenerLinkData(leftPNode, rightPNode, logicData.marriageStatus);
 
     result.nodeArray.push(leftPNode);
     result.nodeArray.push(rightPNode);
@@ -157,12 +157,24 @@ function getParentNodeRenderData(pos, distance, logicData, leftLinkNode, rightLi
     return result;
 }
 
-function getPartenerLinkData(left, right) {
+function getPartenerLinkData(left, right, relationshipStatus) {
     var result = { nodeArray: [], linkArray: [], linkNode: {} };
-
+    var strokeDashArrayStyle;
     result.linkName = "" + left.key + "-" + right.key; // combine left and right id to make a readble id
-    result.linkNode = { key: result.linkName, category: "LinkLabel" }
-    result.nodeArray.push(result.linkNode);
+
+    if (relationshipStatus === "divorce") {
+        result.linkNode = { key: result.linkName, category: "LinkLabel", visible: true, figure: "Capacitor"}
+        result.nodeArray.push(result.linkNode);
+        strokeDashArrayStyle = [0,0];
+    } else if (relationshipStatus === "unmarried"){
+        result.linkNode = { key: result.linkName, category: "LinkLabel" }
+        result.nodeArray.push(result.linkNode);
+        strokeDashArrayStyle = [5,2];
+    } else if (relationshipStatus === "married"){
+        result.linkNode = { key: result.linkName, category: "LinkLabel" }
+        result.nodeArray.push(result.linkNode);
+        strokeDashArrayStyle = [0,0];
+    }
 
     result.linkArray.push(
         {
@@ -170,7 +182,8 @@ function getPartenerLinkData(left, right) {
             fromPort: "R",
             to: right.key,
             toPort: "L",
-            labelKeys: [result.linkName]
+            labelKeys: [result.linkName],
+            strokeDashArray: strokeDashArrayStyle
         }
     )
     return result;

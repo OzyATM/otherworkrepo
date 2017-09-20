@@ -43,8 +43,6 @@ function initializeDiagram() {
         generateCommentBoxTemplate()
     )
 
-    
-
     mainDiagram.linkTemplate = generateParentLinkTemplate();
     mainDiagram.linkTemplateMap.add(
         "ChildrenLink",
