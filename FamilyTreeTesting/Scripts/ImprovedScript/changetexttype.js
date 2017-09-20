@@ -1,6 +1,6 @@
 ﻿function getRadio(obj) {
 
-    myDiagram.startTransaction("commit");
+    mainDiagram.startTransaction("commit");
     var commit = obj.part;
     var nodedata = commit.part;
     var insertdata = commit.data;
@@ -68,6 +68,6 @@
 
     //var type = "Helvetica, Arial, sans-serif";
     var font = ''.concat(Italic, bold, size, fontstyle);
-    myDiagram.model.setDataProperty(insertdata, "font", font);
-    myDiagram.commitTransaction("commit");
+    mainDiagram.model.setDataProperty(insertdata, "font", font);
+    mainDiagram.commitTransaction("commit");
 }
