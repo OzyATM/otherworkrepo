@@ -307,7 +307,10 @@ function generateRightVerticalPanelWithBtn() {
             "Horizontal",
             createBtn(EventHandler.addSon, "兒", null, 32),
             createBtn(EventHandler.addDaughter, "女", null, 32)
-        )
+        ),
+        createVisibleBtn(EventHandler.isOwnChild, "親生", null, null, "isOwnSonVisible"),
+        createVisibleBtn(EventHandler.isAdopted, "領養進來", null, null, "isAdoptedBtnVisible"),
+        createVisibleBtn(EventHandler.gotAdopted, "被領養走", null, null, "isGotAdoptedBtnVisible")
     )
     return thempRightVerticalPanel;
 }

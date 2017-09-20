@@ -16,8 +16,9 @@ function getDefaultLogicUnitData(inputId, inputGender) {
         multiInvididualText: "",
         isDead: false,
         isAdopted: false,
+        gotAdopted: false,
         notes: ["", "", ""],
-        canBeDeleted: true,
+        canBeDeleted: true
     }
     return tempStorageTemplate;
 }
@@ -40,9 +41,7 @@ function initializeGlobalLogicData() {
         parentTree: {
             left: dad,
             right: mom,
-            relation: {
-                marriageStatus: "married",
-            }
+            marriageStatus: "married"
         },
         childrenList: [
             patient

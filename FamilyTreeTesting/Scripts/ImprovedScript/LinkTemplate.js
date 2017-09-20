@@ -9,14 +9,19 @@ function generateParentLinkTemplate() {
         {
             relinkableFrom: false,
             relinkableTo: false,
-            selectionAdornmentTemplate: generateLinkAdornment()
+            selectionAdornmentTemplate: generateLinkAdornment(),
+            mouseEnter: function (e, link) { link.findObject("linkBetweenParent").stroke = "#227700"; },
+            mouseLeave: function (e, link) { link.findObject("linkBetweenParent").stroke = "#000000"; }
         },
         goObject(
             "Shape",
             {
-                stroke: "green",
-                strokeWidth: 2
-            }
+                name: "linkBetweenParent",
+                stroke: "black",
+                strokeWidth: 3,
+                strokeDashArray: [0,0]
+            },
+            new go.Binding("strokeDashArray")
         )
     );
     return tempLinkTemplate
@@ -33,9 +38,10 @@ function generateChildLinkTemplate() {
         goObject(
             "Shape",
             {
-                stroke: "blue",
-                strokeWidth: 2
-            }
+                stroke: "black",
+                strokeWidth: 3
+            },
+            new go.Binding("strokeDashArray")
         )
     );
     return tempLinkTemplate
@@ -53,14 +59,18 @@ function generateLinkLabel() {
             },
             goObject(
                 "Shape",
-                "Ellipse",
                 {
-                    width: 3,
-                    height: 3,
+                    figure: "Ellipse",
+                    visible: false,
+                    width: 5,
+                    height: 20,
                     stroke: "black",
                     fill: "transparent",
-                    portId: ""
-                }
+                    portId: "",
+                    angle: 45
+                },
+                new go.Binding("figure"),
+                new go.Binding("visible")
             )
         );
     return linkLabelTemplate;
@@ -72,18 +82,18 @@ function generateLinkPointTemplate() {
             go.Node,
             "Position",
             {
-                selectable: true,
+                selectable: false,
                 layerName: "Foreground"
             },
             new go.Binding("location", "loc", go.Point.parse),
             goObject(
                 go.Shape,
-                "Ellipse",
+                "Square",
                 {
                     width: 2,
                     height: 2,
-                    stroke: "blue",
-                    fill: "blue"
+                    stroke: "black",
+                    fill: "black"
                 },
                 new go.Binding("width"),
                 new go.Binding("height")
@@ -134,9 +144,9 @@ function generateHorizontalPanelWithBtn() {
         {
             alignment: go.Spot.Top, alignmentFocus: go.Spot.Bottom
         },
-        createBtn(null, "結婚", null, 50),
-        createBtn(null, "離婚", null, 50)                                                                                                                                                                                                                              ,
-        createBtn(null, "未婚", null, 50)
+        createBtn(EventHandler.changeMarriageStatusToMarriage, "結婚", null, 50),
+        createBtn(EventHandler.changeMarriageStatusToDivorce, "離婚", null, 50),
+        createBtn(EventHandler.changeMarriageStatusToUnmarriage, "未婚", null, 50)
     )
     return tempHorizontalPanel;
 }

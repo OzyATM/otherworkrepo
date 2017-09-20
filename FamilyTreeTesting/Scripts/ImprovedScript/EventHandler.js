@@ -24,7 +24,13 @@ var EventHandler = {
     addYoungerSister: addYoungerSister,
     addPartner: addPartner,
     addSon: addSon,
-    addDaughter: addDaughter
+    addDaughter: addDaughter,
+    changeMarriageStatusToUnmarriage: changeMarriageStatusToUnmarriage,
+    changeMarriageStatusToMarriage: changeMarriageStatusToMarriage,
+    changeMarriageStatusToDivorce: changeMarriageStatusToDivorce,
+    isAdopted: isAdopted,
+    gotAdopted: gotAdopted,
+    isOwnChild: isOwnChild
 }
 
 // ***************************************
@@ -55,6 +61,8 @@ function deleteNode(e, object) {
     if (previousNode != null) {
         previousNode.left = null;
         previousNode.right = null;
+        previousNode.isAdopted = false;
+        previousNode.gotAdopted = false;
         reRender(previousNode.id);
         return;
     }
@@ -88,8 +96,6 @@ function deleteNode(e, object) {
         reRender(currentObjectKey);
         return;
     }
-
-
 }
 
 // Generate NodeData based on data storage
@@ -285,6 +291,7 @@ function addParent(e, object) {
     var mom = getDefaultLogicUnitData(uuidv4(), "female");
     currentNode.left = dad;
     currentNode.right = mom;
+    currentNode.marriageStatus = "married";
     reRender(currentObjectKey);
 }
 
@@ -377,9 +384,7 @@ function addPartner(e, object) {
             left:leftNode,
             right: rightNode,
             linkNode: linkNode,
-            relation: {
-                marriageStatus: "married",
-            }
+            marriageStatus: "married"
         },
         childrenList: [
         ]
@@ -503,4 +508,344 @@ function addCommentBox() {
     // update globalLoc
     globalState.LocX += 5
     globalState.LocY += 5
+}
+
+// ***************************************
+// Change Marriage Status Event Handler
+// Chnage The Marriage Status to Unmarried, The Link will become Dash-Line
+// ***************************************
+function changeMarriageStatusToUnmarriage(e, object) {
+    var previousNode = null
+    var leftNodeIDThatLinkFrom = object.part.data.from;
+    previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, leftNodeIDThatLinkFrom);
+    if (previousNode === null) {
+        var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, leftNodeIDThatLinkFrom)
+        var currentChildList = currentNodeArrayData.childrenList;
+        var currentNodeIndex = currentNodeArrayData.index;
+
+        currentChildList[currentNodeIndex].parentTree.marriageStatus = "unmarried";
+        reRender(null);
+        return;
+    }
+    previousNode.marriageStatus = "unmarried";
+    reRender(null);
+}
+
+// ***************************************
+// Change Marriage Status Event Handler
+// Chnage The Marriage Status to married, The Link will become Normal Line
+// ***************************************
+function changeMarriageStatusToMarriage(e, object) {
+    var previousNode = null
+    var leftNodeIDThatLinkFrom = object.part.data.from;
+    previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, leftNodeIDThatLinkFrom);
+    if (previousNode === null) {
+        var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, leftNodeIDThatLinkFrom)
+        var currentChildList = currentNodeArrayData.childrenList;
+        var currentNodeIndex = currentNodeArrayData.index;
+
+        currentChildList[currentNodeIndex].parentTree.marriageStatus = "married";
+        reRender(null);
+        return;
+    }
+    previousNode.marriageStatus = "married";
+    reRender(null);
+}
+
+// ***************************************
+// Change Marriage Status Event Handler
+// Chnage The Marriage Status to Divorce, The Link will become Normal Line and The LinkLabel will change to Two Slash-Line
+// ***************************************
+function changeMarriageStatusToDivorce(e, object) {
+    var previousNode = null
+    var leftNodeIDThatLinkFrom = object.part.data.from;
+    previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, leftNodeIDThatLinkFrom);
+    if (previousNode === null) {
+        var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, leftNodeIDThatLinkFrom)
+        var currentChildList = currentNodeArrayData.childrenList;
+        var currentNodeIndex = currentNodeArrayData.index;
+
+        currentChildList[currentNodeIndex].parentTree.marriageStatus = "divorce";
+        reRender(null);
+        return;
+    }
+    previousNode.marriageStatus = "divorce";
+    reRender(null);
+}
+
+// ***************************************
+// Change Child Status Event Handler
+// Chnage Child Status to isAdpoted
+// ***************************************
+function isAdopted(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var node = findNode(currentObjectKey, globalLogicData);
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    // if it doesn't have parent and it is not in a child List it will automatically add parent
+    if ((!node.left || !node.right) && currentNodeArrayData.childrenList === null) {
+        addParent(e, object);
+    }
+    node.isAdopted = true;
+    node.gotAdopted = false;
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Change Child Status Event Handler
+// Chnage Child Status to gotAdopted
+// ***************************************
+function gotAdopted(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var node = findNode(currentObjectKey, globalLogicData);
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    // if it doesn't have parent and it is not in a child List it will automatically add parent
+    if ((!node.left || !node.right) && currentNodeArrayData.childrenList === null) {
+        addParent(e, object);
+    }
+    node.gotAdopted = true;
+    node.isAdopted = false;
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Change Child Status Event Handler
+// Chnage Child Status to isOwnChild
+// ***************************************
+function isOwnChild(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var node = findNode(currentObjectKey, globalLogicData);
+    node.isAdopted = false;
+    node.gotAdopted = false;
+    reRender(currentObjectKey);
+<<<<<<< HEAD
+<<<<<<< HEAD
+}
+
+// ***************************************
+// General Event Handler
+// Object Single Click
+// ***************************************
+function objectSingleClicked(e) {
+    var part = e.subject.part
+    commentBoxKey = part.data.key
+    if (part.data.category === "CommentBox") {
+        setDefaultNaviBar(part)
+    }
+}
+
+function backGroundSingleClicked(e) {
+    disableClickOnNaviBarForTextBlock();
+    if (commentBoxKey != -1) {
+        var currentIndex = findCurrentIndex(commentBoxKey);
+        if (mainDiagram.model.nodeDataArray[currentIndex].text === "") {
+            mainDiagram.model.nodeDataArray[currentIndex].text = "請輸入文字";
+        }
+    }
+    mainDiagram.rebuildParts();
+}
+
+function setDefaultNaviBar(nodePart) {
+    var part = nodePart
+    document.getElementById("bold").value = part.data.bold
+    document.getElementById("italic").value = part.data.Italic
+    document.getElementById("underline").value = part.data.isUnderline
+    document.getElementById("strikethrough").value = part.data.isStrikethrough
+    document.getElementById("fontsize").value = part.data.fontsize
+    $('#fontstyle2').text(part.data.fontstyle)
+
+    $("#bold").removeClass("disabled");
+    $("#italic").removeClass("disabled");
+    $("#underline").removeClass("disabled");
+    $("#strikethrough").removeClass("disabled");
+    $(".btn-md").removeClass("disabled");
+    $('#fontselect').removeClass("disabledbutton");
+    $('#fontselect-drop').removeClass("display");
+    document.getElementById("fontsize").disabled = false
+
+    changeNaviBarBtnColor(part, "bold")
+    changeNaviBarBtnColor(part, "italic")
+    changeNaviBarBtnColor(part, "underline")
+    changeNaviBarBtnColor(part, "strikethrough")
+
+    fontSizeTypeOnNaviBar(part, "fontsize", "12")
+    fontSizeTypeOnNaviBar(part, "fontstyle", "新細明體")
+
+}
+
+function changeNaviBarBtnColor(nodePart, textStyle) {
+    var part = nodePart
+    var inputTextStyle = textStyle
+
+    if (!part.data[inputTextStyle])
+        document.getElementById(inputTextStyle).style.backgroundColor = "white"
+    else
+        document.getElementById(inputTextStyle).style.backgroundColor = "#ff8c00"
+}
+
+function fontSizeTypeOnNaviBar(nodePart, fontSizeStyle, value) {
+    var part = nodePart
+    var inputSizeStype = fontSizeStyle
+    var inputValue = value
+    var fontStyleSetting;
+    if (fontSizeStyle === "fontstyle")
+        fontStyleSetting = $('#fontstyle2').text("新細明體");
+    else
+        fontStyleSetting = document.getElementById(inputSizeStype).value = inputValue
+
+    if (!part.data[inputSizeStype])
+        fontStyleSetting
+    else
+        document.getElementById(inputSizeStype).value = part.data[inputSizeStype]
+}
+
+function setDefaultNaviBar(nodePart) {
+    var part = nodePart
+    tempKey = part.data.key
+    document.getElementById("bold").value = part.data.bold
+    document.getElementById("italic").value = part.data.Italic
+    document.getElementById("underline").value = part.data.isUnderline
+    document.getElementById("strikethrough").value = part.data.isStrikethrough
+    document.getElementById("fontsize").value = part.data.fontsize
+    $('#fontstyle2').text(part.data.fontstyle)
+
+    $("#bold").removeClass("disabled");
+    $("#italic").removeClass("disabled");
+    $("#underline").removeClass("disabled");
+    $("#strikethrough").removeClass("disabled");
+    $(".btn-md").removeClass("disabled");
+    $('#fontselect').removeClass("disabledbutton");
+    $('#fontselect-drop').removeClass("display");
+    document.getElementById("fontsize").disabled = false
+
+    changeNaviBarBtnColor(part, "bold")
+    changeNaviBarBtnColor(part, "italic")
+    changeNaviBarBtnColor(part, "underline")
+    changeNaviBarBtnColor(part, "strikethrough")
+
+    fontSizeTypeOnNaviBar(part, "fontsize", "12")
+    fontSizeTypeOnNaviBar(part, "fontstyle", "新細明體")
+
+}
+
+function disableClickOnNaviBarForTextBlock() {
+    $("#bold").addClass("disabled");
+    $("#italic").addClass("disabled");
+    $("#underline").addClass("disabled");
+    $("#strikethrough").addClass("disabled");
+    $(".btn-md").addClass("disabled");
+    $('#fontselect').addClass("disabledbutton");
+    $('#fontselect-drop').addClass("display");
+    $('#fontstyle2').text("新細明體");
+    document.getElementById("bold").style.backgroundColor = "white"
+    document.getElementById("italic").style.backgroundColor = "white"
+    document.getElementById("underline").style.backgroundColor = "white"
+    document.getElementById("strikethrough").style.backgroundColor = "white"
+    document.getElementById("fontsize").value = "12"
+    document.getElementById("fontsize").disabled = true
+}
+
+function changetextbold() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (mainDiagram.model.nodeDataArray[currentIndex].bold) {
+        mainDiagram.model.nodeDataArray[currentIndex].bold = false
+    }
+    else {
+        mainDiagram.model.nodeDataArray[currentIndex].bold = true;
+    }
+
+    getRadio(mainDiagram.selection.Ca.value);
+}
+
+function changetextitalic() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (mainDiagram.model.nodeDataArray[currentIndex].Italic) {
+        mainDiagram.model.nodeDataArray[currentIndex].Italic = false
+    }
+    else {
+        mainDiagram.model.nodeDataArray[currentIndex].Italic = true;
+    }
+    getRadio(mainDiagram.selection.Ca.value);
+}
+
+function changetextunderline() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (mainDiagram.model.nodeDataArray[currentIndex].isUnderline) {
+        mainDiagram.model.nodeDataArray[currentIndex].isUnderline = false
+        document.getElementById("underline").style.backgroundColor = "white"
+    }
+    else {
+        mainDiagram.model.nodeDataArray[currentIndex].isUnderline = true;
+        document.getElementById("underline").style.backgroundColor = "#ff8c00"
+    }
+    mainDiagram.rebuildParts();
+}
+
+function changetextstrikethrough() {
+    var currentIndex = findCurrentIndex(tempKey);
+    if (mainDiagram.model.nodeDataArray[currentIndex].isStrikethrough) {
+        mainDiagram.model.nodeDataArray[currentIndex].isStrikethrough = false
+        document.getElementById("strikethrough").style.backgroundColor = "white"
+    }
+    else {
+        mainDiagram.model.nodeDataArray[currentIndex].isStrikethrough = true;
+        document.getElementById("strikethrough").style.backgroundColor = "#ff8c00"
+    }
+    mainDiagram.rebuildParts();
+}
+
+function clicktextsize() {
+    var fontsize = "";
+    document.getElementById("fontsize").value = fontsize;
+}
+
+function changetextsize() {
+    var currentIndex = findCurrentIndex(tempKey);
+    var fontsize = document.getElementById("fontsize").value;
+    mainDiagram.model.nodeDataArray[currentIndex].fontsize = fontsize;
+    getRadio(mainDiagram.selection.Ca.value);
+}
+
+function clicktextstyle() {
+    var fontstyle = "";
+    document.getElementById("fontstyle").value = fontstyle;
+}
+
+function changetextstyle() {
+    var currentIndex = findCurrentIndex(tempKey);
+    var fontstyle = document.getElementById("fontstyle").value;
+    mainDiagram.model.nodeDataArray[currentIndex].fontstyle = fontstyle;
+    getRadio(mainDiagram.selection.Ca.value);
+}
+
+function changetextColor(stroke) {
+    var currentIndex = findCurrentIndex(tempKey);
+    mainDiagram.model.nodeDataArray[currentIndex].stroke = stroke.value;
+    mainDiagram.rebuildParts();
+}
+
+function findCurrentIndex(inputKey) {
+    var tempIndex;
+    (mainDiagram.model.nodeDataArray).forEach(function (obj, index) {
+        if (obj.key === inputKey)
+            tempIndex = index
+    });
+    return tempIndex;
+
+}
+
+function disableDeleteBtnOnKeybored(e) {
+    var e = mainDiagram.lastInput;
+    if (e.key == "Del") return;
+    if (e.ur.keyCode == 17) return;
+}
+
+function disableHTMLAutoFocusCanvasToMiddle() {
+    var x = window.scrollX || window.pageXOffset;
+    var y = window.scrollY || window.pageYOffset;
+    go.mainDiagram.prototype.doFocus.call(this);
+    window.scrollTo(x, y);
+=======
+>>>>>>> parent of f391d40... finished
+=======
+>>>>>>> parent of f391d40... finished
 }
