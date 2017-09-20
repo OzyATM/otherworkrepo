@@ -56,7 +56,17 @@ function initializeDiagram() {
 }
 
 function reRender(key) {
-    mainDiagram.model = logicModelToGoModel(globalLogicData);
+    var nodeData = mainDiagram.model.nodeDataArray;
+    var position = mainDiagram.model.modelData.position;
+    var modelJson = mainDiagram.model.toJson();
+    var drawData = [];
+    nodeData.forEach((node) => {
+        if (node.category === "FreehandDrawing") {
+            drawData.push(node);
+        }
+    });
+
+    mainDiagram.model = logicModelToGoModel(globalLogicData, drawData);
     if (key) {
         var node = mainDiagram.findNodeForKey(key);
         if (node !== null) node.isSelected = true;
