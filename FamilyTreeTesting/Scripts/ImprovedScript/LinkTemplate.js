@@ -10,7 +10,7 @@ function generateParentLinkTemplate() {
             relinkableFrom: false,
             relinkableTo: false,
             selectionAdornmentTemplate: generateLinkAdornment(),
-            mouseEnter: function (e, link) { link.findObject("linkBetweenParent").stroke = "#227700"; },
+            mouseEnter: function (e, link) { link.findObject("linkBetweenParent").stroke = "red"; },
             mouseLeave: function (e, link) { link.findObject("linkBetweenParent").stroke = "#000000"; }
         },
         goObject(
@@ -33,7 +33,8 @@ function generateChildLinkTemplate() {
         go.Link,
         {
             relinkableFrom: false,
-            relinkableTo: false
+            relinkableTo: false,
+            selectable: false
         },
         goObject(
             "Shape",
