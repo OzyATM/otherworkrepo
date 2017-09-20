@@ -65,6 +65,14 @@ function btnRegistration() {
 // ***************************************
 function deleteNode(e, object) {
     var currentObjectKey = object.part.data.key;
+    var currentObjectCategory = object.part.data.category
+
+    if (currentObjectCategory === "CareMale" || currentObjectCategory === "CareFemale" || currentObjectCategory === "FreehandDrawing" || currentObjectCategory === "CommentBox") {
+        mainDiagram.commandHandler.deleteSelection();
+        commentBoxKey = -1;
+        return
+    }
+
     var newNode;
     //delete parentTree's Node
     var previousNode = searchParentTreeNodePreviousNode(globalLogicData.parentTree, currentObjectKey)
