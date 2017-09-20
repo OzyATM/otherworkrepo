@@ -131,7 +131,7 @@ function getParentNodeRenderData(pos, distance, logicData, leftLinkNode, rightLi
 
     var rightPNode = getNodeData(logicData.right, rightPos);
     if (rightLinkNode && rightLinkNode.key) {
-        var leftLink = {
+        var rightLink = {
             from: rightLinkNode.key,
             fromPort: "B",
             to: rightPNode.key,
@@ -139,7 +139,7 @@ function getParentNodeRenderData(pos, distance, logicData, leftLinkNode, rightLi
             category: "ChildrenLink",
             childKey: rightPNode.key
         }
-        result.linkArray.push(leftLink);
+        result.linkArray.push(rightLink);
     }
 
     var linkData = getPartenerLinkData(leftPNode, rightPNode);
