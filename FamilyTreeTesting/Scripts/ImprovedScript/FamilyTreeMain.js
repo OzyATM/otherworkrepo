@@ -16,6 +16,10 @@ function initializeDiagram() {
             "animationManager.isEnabled": false // disable the animation when redraw
         }
     )
+    mainDiagram.commandHandler.selectAll = false;
+    mainDiagram.toolManager.dragSelectingTool.isEnabled = false;
+    mainDiagram.commandHandler.doKeyDown = disableDeleteBtnOnKeybored
+
     mainDiagram.nodeTemplate = generateNodeTemplate();
     mainDiagram.nodeTemplateMap.add(
         "LinkLabel",
@@ -57,18 +61,44 @@ function initializeDiagram() {
     )
     mainDiagram.model = logicModelToGoModel(logicModel);
 
-    mainDiagram.commandHandler.selectAll = false;
-    mainDiagram.toolManager.dragSelectingTool.isEnabled = false;
-    mainDiagram.commandHandler.doKeyDown = disableDeleteBtnOnKeybored
-
     btnRegistration();
     createStuffOnNaviBar();
 }
 
 function reRender(key) {
-    mainDiagram.model = logicModelToGoModel(globalLogicData);
+    var savedJson = save();
+    load(savedJson);
     if (key) {
         var node = mainDiagram.findNodeForKey(key);
         if (node !== null) node.isSelected = true;
     }
+}
+
+function save() {
+    var modelJson = mainDiagram.model.toJson();
+    var nodeData = JSON.parse(modelJson).nodeDataArray;
+    var drawDataArray = [];
+    nodeData.forEach((node) => {
+        if (node.category === "FreehandDrawing") {
+            drawDataArray.push(node);
+        } else if (node.category === "CommentBox") {
+            drawDataArray.push(node);
+        } else if (node.category === "CareMale") {
+            drawDataArray.push(node);
+        } else if (node.category === "CareFemale") {
+            drawDataArray.push(node);
+        }
+    });
+
+    var save = {
+        logicData: globalLogicData,
+        drawData: drawDataArray,
+        position: go.Point.stringify(mainDiagram.position)
+    }
+    return save;
+}
+
+function load(inputJson) {
+    mainDiagram.model = logicModelToGoModel(inputJson.logicData, inputJson.drawData);
+    mainDiagram.initialPosition = go.Point.parse(inputJson.position);
 }

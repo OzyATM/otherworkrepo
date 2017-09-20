@@ -556,11 +556,11 @@ function changeMarriageStatusToUnmarriage(e, object) {
         var currentNodeIndex = currentNodeArrayData.index;
 
         currentChildList[currentNodeIndex].parentTree.marriageStatus = "unmarried";
-        reRender(null);
-        return;
+    } else {
+        previousNode.marriageStatus = "unmarried";
     }
-    previousNode.marriageStatus = "unmarried";
     reRender(null);
+    return;
 }
 
 // ***************************************
@@ -577,11 +577,11 @@ function changeMarriageStatusToMarriage(e, object) {
         var currentNodeIndex = currentNodeArrayData.index;
 
         currentChildList[currentNodeIndex].parentTree.marriageStatus = "married";
-        reRender(null);
-        return;
+    } else {
+        previousNode.marriageStatus = "married";
     }
-    previousNode.marriageStatus = "married";
     reRender(null);
+    return;
 }
 
 // ***************************************
@@ -598,11 +598,11 @@ function changeMarriageStatusToDivorce(e, object) {
         var currentNodeIndex = currentNodeArrayData.index;
 
         currentChildList[currentNodeIndex].parentTree.marriageStatus = "divorce";
-        reRender(null);
-        return;
+    } else {
+        previousNode.marriageStatus = "divorce";
     }
-    previousNode.marriageStatus = "divorce";
     reRender(null);
+    return;
 }
 
 // ***************************************
@@ -649,6 +649,7 @@ function isOwnChild(e, object) {
     node.isAdopted = false;
     node.gotAdopted = false;
     reRender(currentObjectKey);
+    return;
 }
 
 // ***************************************
@@ -866,10 +867,12 @@ function changetextColor(stroke) {
     var currentIndex = findCurrentIndex(tempKey);
     mainDiagram.model.nodeDataArray[currentIndex].stroke = stroke.value;
     mainDiagram.rebuildParts();
+    return;
 }
 
 function disableDeleteBtnOnKeybored(e) {
     var e = mainDiagram.lastInput;
     if (e.key == "Del") return;
     if (e.ur.keyCode == 17) return;
+    return;
 }
