@@ -66,9 +66,39 @@ function initializeDiagram() {
 }
 
 function reRender(key) {
-    mainDiagram.model = logicModelToGoModel(globalLogicData);
+    var savedJson = save();
+    load(savedJson);
     if (key) {
         var node = mainDiagram.findNodeForKey(key);
         if (node !== null) node.isSelected = true;
     }
+}
+
+function save() {
+    var modelJson = mainDiagram.model.toJson();
+    var nodeData = JSON.parse(modelJson).nodeDataArray;
+    var drawDataArray = [];
+    nodeData.forEach((node) => {
+        if (node.category === "FreehandDrawing") {
+            drawDataArray.push(node);
+        } else if (node.category === "CommentBox") {
+            drawDataArray.push(node);
+        } else if (node.category === "CareMale") {
+            drawDataArray.push(node);
+        } else if (node.category === "CareFemale") {
+            drawDataArray.push(node);
+        }
+    });
+
+    var save = {
+        logicData: globalLogicData,
+        drawData: drawDataArray,
+        position: go.Point.stringify(mainDiagram.position)
+    }
+    return save;
+}
+
+function load(inputJson) {
+    mainDiagram.model = logicModelToGoModel(inputJson.logicData, inputJson.drawData);
+    mainDiagram.initialPosition = go.Point.parse(inputJson.position);
 }

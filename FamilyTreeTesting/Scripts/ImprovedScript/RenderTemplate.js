@@ -482,7 +482,7 @@ function generateCareTakerTemplate(gender) {
             selectionAdornmentTemplate: generateCareTakerAdornment(shapeForNode)
         },
         generateTextBlockForCareTaker(),
-        new go.Binding("location","loc", go.Point.parse)
+        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify)
     );
     return careTakerNodeTemplate;
 }
@@ -578,7 +578,8 @@ function generateFreeDrawTemplate() {
         {
             locationSpot: go.Spot.Center,
             selectionAdornmentTemplate: generateFreeDrawAdornment()
-        }
+        },
+        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify)
     );
     return tempFreeDrawTemplate;
 }
@@ -626,7 +627,7 @@ function generateCommentBoxTemplate() {
         {
             selectionAdornmentTemplate: generateCommentBoxAdornment()
         },
-        new go.Binding("location", "loc", go.Point.parse)
+        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify)
     )
     return tempCommentBoxTemplate;
 }

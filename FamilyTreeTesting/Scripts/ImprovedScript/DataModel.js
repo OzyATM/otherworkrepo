@@ -147,13 +147,14 @@ function findCurrentIndex(inputKey) {
 //***********************************************
 // Generate go data model from logic data model
 //***********************************************
-function logicModelToGoModel(logicData) {
+function logicModelToGoModel(logicData, additionalNodeData) {
     var initialPosition = { x: 0, y: 0 };
     var renderData = logicDataToRenderData(logicData, initialPosition);
-    return renderDataToGoModel(renderData);
+    return renderDataToGoModel(renderData, additionalNodeData);
 }
 
-function renderDataToGoModel(renderData) {
+function renderDataToGoModel(renderData, additionalNodeData) {
+    var tempNodeArray;
     var model = goObject(go.GraphLinksModel,
         // Supporting link from line to line
         { linkLabelKeysProperty: "labelKeys" }
@@ -163,13 +164,19 @@ function renderDataToGoModel(renderData) {
     model.linkToPortIdProperty = "toPort"
 
     // Apply offset based on Render Template
-    model.nodeDataArray = renderData.nodeArray.map((item) => {
+    tempNodeArray = renderData.nodeArray.map((item) => {
         if (item.category) {
             return item;
         } else {
             return applyOffSet(item, getMainShapeOffSet());
         }
     });
+
+    if (additionalNodeData) {
+        model.nodeDataArray = tempNodeArray.concat(additionalNodeData);
+    } else {
+        model.nodeDataArray = tempNodeArray;
+    }
 
     model.linkDataArray = renderData.linkArray;
     return model;
