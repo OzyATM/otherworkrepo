@@ -649,6 +649,10 @@ function objectSingleClicked(e) {
     }
 }
 
+// ***************************************
+// General Event Handler
+// Background Single Click
+// ***************************************
 function backGroundSingleClicked(e) {
     disableClickOnNaviBarForTextBlock();
     if (commentBoxKey != -1) {
@@ -660,34 +664,9 @@ function backGroundSingleClicked(e) {
     mainDiagram.rebuildParts();
 }
 
-function setDefaultNaviBar(nodePart) {
-    var part = nodePart
-    document.getElementById("bold").value = part.data.bold
-    document.getElementById("italic").value = part.data.Italic
-    document.getElementById("underline").value = part.data.isUnderline
-    document.getElementById("strikethrough").value = part.data.isStrikethrough
-    document.getElementById("fontsize").value = part.data.fontsize
-    $('#fontstyle2').text(part.data.fontstyle)
-
-    $("#bold").removeClass("disabled");
-    $("#italic").removeClass("disabled");
-    $("#underline").removeClass("disabled");
-    $("#strikethrough").removeClass("disabled");
-    $(".btn-md").removeClass("disabled");
-    $('#fontselect').removeClass("disabledbutton");
-    $('#fontselect-drop').removeClass("display");
-    document.getElementById("fontsize").disabled = false
-
-    changeNaviBarBtnColor(part, "bold")
-    changeNaviBarBtnColor(part, "italic")
-    changeNaviBarBtnColor(part, "underline")
-    changeNaviBarBtnColor(part, "strikethrough")
-
-    fontSizeTypeOnNaviBar(part, "fontsize", "12")
-    fontSizeTypeOnNaviBar(part, "fontstyle", "新細明體")
-
-}
-
+// ***************************************
+// Chnage The Button Color on the Top Navi-Bar 
+// ***************************************
 function changeNaviBarBtnColor(nodePart, textStyle) {
     var part = nodePart
     var inputTextStyle = textStyle
@@ -698,6 +677,9 @@ function changeNaviBarBtnColor(nodePart, textStyle) {
         document.getElementById(inputTextStyle).style.backgroundColor = "#ff8c00"
 }
 
+// ***************************************
+// FontSize and Type on Navi-Bar 
+// ***************************************
 function fontSizeTypeOnNaviBar(nodePart, fontSizeStyle, value) {
     var part = nodePart
     var inputSizeStype = fontSizeStyle
@@ -714,6 +696,9 @@ function fontSizeTypeOnNaviBar(nodePart, fontSizeStyle, value) {
         document.getElementById(inputSizeStype).value = part.data[inputSizeStype]
 }
 
+// ***************************************
+// Set The Navi-Bar on top to Default
+// ***************************************
 function setDefaultNaviBar(nodePart) {
     var part = nodePart
     tempKey = part.data.key
@@ -743,6 +728,9 @@ function setDefaultNaviBar(nodePart) {
 
 }
 
+// ***************************************
+// Disable Navi-Bar If it is not Select The Text Block 
+// ***************************************
 function disableClickOnNaviBarForTextBlock() {
     $("#bold").addClass("disabled");
     $("#italic").addClass("disabled");
@@ -760,6 +748,9 @@ function disableClickOnNaviBarForTextBlock() {
     document.getElementById("fontsize").disabled = true
 }
 
+// ***************************************
+// Chnage Text to Bold 
+// ***************************************
 function changetextbold() {
     var currentIndex = findCurrentIndex(tempKey);
     if (mainDiagram.model.nodeDataArray[currentIndex].bold) {
@@ -772,6 +763,9 @@ function changetextbold() {
     getRadio(mainDiagram.selection.Ca.value);
 }
 
+// ***************************************
+// Chnage Text to Italic
+// ***************************************
 function changetextitalic() {
     var currentIndex = findCurrentIndex(tempKey);
     if (mainDiagram.model.nodeDataArray[currentIndex].Italic) {
@@ -783,6 +777,9 @@ function changetextitalic() {
     getRadio(mainDiagram.selection.Ca.value);
 }
 
+// ***************************************
+// Chnage Text to UnderLine
+// ***************************************
 function changetextunderline() {
     var currentIndex = findCurrentIndex(tempKey);
     if (mainDiagram.model.nodeDataArray[currentIndex].isUnderline) {
@@ -796,6 +793,9 @@ function changetextunderline() {
     mainDiagram.rebuildParts();
 }
 
+// ***************************************
+// Chnage Text to StrikeThrough
+// ***************************************
 function changetextstrikethrough() {
     var currentIndex = findCurrentIndex(tempKey);
     if (mainDiagram.model.nodeDataArray[currentIndex].isStrikethrough) {
@@ -809,11 +809,17 @@ function changetextstrikethrough() {
     mainDiagram.rebuildParts();
 }
 
+// ***************************************
+// Set Default Number for Text Size
+// ***************************************
 function clicktextsize() {
     var fontsize = "";
     document.getElementById("fontsize").value = fontsize;
 }
 
+// ***************************************
+// Chnage Text to Italic
+// ***************************************
 function changetextsize() {
     var currentIndex = findCurrentIndex(tempKey);
     var fontsize = document.getElementById("fontsize").value;
@@ -821,11 +827,17 @@ function changetextsize() {
     getRadio(mainDiagram.selection.Ca.value);
 }
 
+// ***************************************
+// Set Default Text Style
+// ***************************************
 function clicktextstyle() {
     var fontstyle = "";
     document.getElementById("fontstyle").value = fontstyle;
 }
 
+// ***************************************
+// Change Text Style
+// ***************************************
 function changetextstyle() {
     var currentIndex = findCurrentIndex(tempKey);
     var fontstyle = document.getElementById("fontstyle").value;
@@ -833,20 +845,13 @@ function changetextstyle() {
     getRadio(mainDiagram.selection.Ca.value);
 }
 
+// ***************************************
+// Chnage Text Color
+// ***************************************
 function changetextColor(stroke) {
     var currentIndex = findCurrentIndex(tempKey);
     mainDiagram.model.nodeDataArray[currentIndex].stroke = stroke.value;
     mainDiagram.rebuildParts();
-}
-
-function findCurrentIndex(inputKey) {
-    var tempIndex;
-    (mainDiagram.model.nodeDataArray).forEach(function (obj, index) {
-        if (obj.key === inputKey)
-            tempIndex = index
-    });
-    return tempIndex;
-
 }
 
 function disableDeleteBtnOnKeybored(e) {
