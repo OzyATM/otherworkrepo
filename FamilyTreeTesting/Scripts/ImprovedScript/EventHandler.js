@@ -848,3 +848,9 @@ function findCurrentIndex(inputKey) {
     return tempIndex;
 
 }
+
+function disableDeleteBtnOnKeybored(e) {
+    var e = mainDiagram.lastInput;
+    if (e.key == "Del") return;
+    if (e.ur.keyCode == 17) return;
+}
