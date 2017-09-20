@@ -63,7 +63,7 @@
             fontstyle = "Microsoft YaHei";
             break;
         default:
-            fontstyle = "PMingLiU"
+            fontstyle = fontstyle
     }
 
     //var type = "Helvetica, Arial, sans-serif";
