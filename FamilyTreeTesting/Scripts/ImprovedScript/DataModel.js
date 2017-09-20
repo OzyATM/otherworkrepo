@@ -173,7 +173,7 @@ function renderDataToGoModel(renderData, additionalNodeData) {
     });
 
     if (additionalNodeData) {
-        model.nodeDataArray = tempNodeArray.concat(additionalNodeData);
+        model.nodeDataArray = additionalNodeData.concat(tempNodeArray);
     } else {
         model.nodeDataArray = tempNodeArray;
     }
