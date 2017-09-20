@@ -27,7 +27,10 @@ var EventHandler = {
     addDaughter: addDaughter,
     changeMarriageStatusToUnmarriage: changeMarriageStatusToUnmarriage,
     changeMarriageStatusToMarriage: changeMarriageStatusToMarriage,
-    changeMarriageStatusToDivorce: changeMarriageStatusToDivorce
+    changeMarriageStatusToDivorce: changeMarriageStatusToDivorce,
+    isAdopted: isAdopted,
+    gotAdopted: gotAdopted,
+    isOwnChild: isOwnChild
 }
 
 // ***************************************
@@ -58,6 +61,8 @@ function deleteNode(e, object) {
     if (previousNode != null) {
         previousNode.left = null;
         previousNode.right = null;
+        previousNode.isAdopted = false;
+        previousNode.gotAdopted = false;
         reRender(previousNode.id);
         return;
     }
@@ -565,5 +570,52 @@ function changeMarriageStatusToDivorce(e, object) {
         previousNode.marriageStatus = "divorce";
     }
     reRender(null);
+    return;
+}
+
+// ***************************************
+// Change Child Status Event Handler
+// Chnage Child Status to isAdpoted
+// ***************************************
+function isAdopted(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var node = findNode(currentObjectKey, globalLogicData);
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    // if it doesn't have parent and it is not in a child List it will automatically add parent
+    if ((!node.left || !node.right) && currentNodeArrayData.childrenList === null) {
+        addParent(e, object);
+    }
+    node.isAdopted = true;
+    node.gotAdopted = false;
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Change Child Status Event Handler
+// Chnage Child Status to gotAdopted
+// ***************************************
+function gotAdopted(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var node = findNode(currentObjectKey, globalLogicData);
+    var currentNodeArrayData = searchNodeCurrentArray(globalLogicData.childrenList, currentObjectKey)
+    // if it doesn't have parent and it is not in a child List it will automatically add parent
+    if ((!node.left || !node.right) && currentNodeArrayData.childrenList === null) {
+        addParent(e, object);
+    }
+    node.gotAdopted = true;
+    node.isAdopted = false;
+    reRender(currentObjectKey);
+}
+
+// ***************************************
+// Change Child Status Event Handler
+// Chnage Child Status to isOwnChild
+// ***************************************
+function isOwnChild(e, object) {
+    var currentObjectKey = object.part.data.key;
+    var node = findNode(currentObjectKey, globalLogicData);
+    node.isAdopted = false;
+    node.gotAdopted = false;
+    reRender(currentObjectKey);
     return;
 }

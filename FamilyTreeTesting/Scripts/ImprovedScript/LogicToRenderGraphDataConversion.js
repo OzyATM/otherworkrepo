@@ -102,6 +102,7 @@ function getParentBranchRenderData(pos, distance, height, logicData) {
 }
 
 function getParentNodeRenderData(pos, distance, logicData, leftLinkNode, rightLinkNode) {
+    var strokeDashArrayStyle = [0,0]
     var leftPos = {
         x: pos.x - (distance / 2),
         y: pos.y,
@@ -118,26 +119,38 @@ function getParentNodeRenderData(pos, distance, logicData, leftLinkNode, rightLi
 
     var leftPNode = getNodeData(logicData.left, leftPos);
     if (leftLinkNode && leftLinkNode.key) {
+        if (logicData.left.isAdopted){
+            strokeDashArrayStyle = [5,2];
+        } else{
+            strokeDashArrayStyle = [0,0];
+        }
         var leftLink = {
             from: leftLinkNode.key,
             fromPort: "B",
             to: leftPNode.key,
             toPort: "T",
             category: "ChildrenLink",
-            childKey: leftPNode.key
+            childKey: leftPNode.key,
+            strokeDashArray: strokeDashArrayStyle
         }
         result.linkArray.push(leftLink);
     }
 
     var rightPNode = getNodeData(logicData.right, rightPos);
     if (rightLinkNode && rightLinkNode.key) {
+        if (logicData.right.isAdopted){
+            strokeDashArrayStyle = [5,2];
+        } else {
+            strokeDashArrayStyle = [0,0];
+        }
         var rightLink = {
             from: rightLinkNode.key,
             fromPort: "B",
             to: rightPNode.key,
             toPort: "T",
             category: "ChildrenLink",
-            childKey: rightPNode.key
+            childKey: rightPNode.key,
+            strokeDashArray: strokeDashArrayStyle
         }
         result.linkArray.push(rightLink);
     }
@@ -271,6 +284,11 @@ function getRequiredNodeGap(item) {
 
 function getChildLinkData(childNode, linkNode, basePos, initHeight) {
     var result = { nodeArray: [], linkArray: [], linkNode: {} };
+    var strokeDashArrayStyle = [0,0];
+
+    if (!childNode.isAdoptedBtnVisible){
+        strokeDashArrayStyle = [5,2];
+    }
 
     var mainDropPos = { x: basePos.x, y: basePos.y + initHeight };
     var subDropPos = { x: getPosFromString(childNode.loc).x, y: mainDropPos.y };
@@ -289,14 +307,16 @@ function getChildLinkData(childNode, linkNode, basePos, initHeight) {
         from: linkNode.key,
         to: mainPosNode.key,
         category: "ChildrenLink",
-        childKey: childNode.key
+        childKey: childNode.key,
+        strokeDashArray: strokeDashArrayStyle
     }
 
     var mainPosNodeToSubPosNodeLink = {
         from: mainPosNode.key,
         to: subPosNode.key,
         category: "ChildrenLink",
-        childKey: childNode.key
+        childKey: childNode.key,
+        strokeDashArray: strokeDashArrayStyle
     }
 
     var subPosNodeToChildLink = {
@@ -304,7 +324,8 @@ function getChildLinkData(childNode, linkNode, basePos, initHeight) {
         to: childNode.key,
         toPort: "T",
         category: "ChildrenLink",
-        childKey: childNode.key
+        childKey: childNode.key,
+        strokeDashArray: strokeDashArrayStyle
     }
 
     result.nodeArray.push(mainPosNode);
