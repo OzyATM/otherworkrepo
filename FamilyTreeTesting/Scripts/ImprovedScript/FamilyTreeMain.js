@@ -75,6 +75,8 @@ function save() {
             drawDataArray.push(node);
         } else if (node.category === "CareMale") {
             drawDataArray.push(node);
+        } else if (node.category === "CareFemale") {
+            drawDataArray.push(node);
         }
     });
 
