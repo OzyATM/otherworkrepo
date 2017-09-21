@@ -118,8 +118,8 @@ function getPregantBtnVisibility(multiText, gender) {
     }
 }
 
-function getMultiInvididualTextBtnVisibility(isPragnent) {
-    if (isPragnent) {
+function getMultiInvididualTextBtnVisibility(isPragnent, hasSameDisease, containGen) {
+    if (isPragnent || hasSameDisease || containGen) {
         return false;
     } else {
         return true;
