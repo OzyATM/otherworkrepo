@@ -36,6 +36,7 @@ function initializeGlobalLogicData() {
     var patient = getDefaultLogicUnitData("B100", "male");
     patient.isPatient = true;
     patient.canBeDeleted = false;
+    patient.hasSameDisease = true;
 
     globalLogicData = {
         parentTree: {

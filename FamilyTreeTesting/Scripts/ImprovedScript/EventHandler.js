@@ -66,6 +66,7 @@ function btnRegistration() {
 function deleteNode(e, object) {
     swal({
         title: "確定要刪除？",
+        text: "由他/她生長出來的親屬皆一併刪除",
         type: "warning",
         showCancelButton: true,
         cancelButtonText: "取消",
@@ -756,7 +757,7 @@ function disableClickOnNaviBarForTextBlock() {
     $(".btn-md").addClass("disabled");
     $('#fontselect').addClass("disabledbutton");
     $('#fontselect-drop').addClass("display");
-    $('#fontstyle2').text("select a font");
+    $('#fontstyle2').text("Select a font");
     document.getElementById("bold").style.backgroundColor = "white"
     document.getElementById("italic").style.backgroundColor = "white"
     document.getElementById("underline").style.backgroundColor = "white"

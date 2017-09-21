@@ -3,9 +3,9 @@
 // ************************************************
 // Global Base Setting
 // ************************************************
-var baseChildHeight = 50;
+var baseChildHeight = 70;
 var baseParentDistance = 100;
-var baseParentHeight = 70;
+var baseParentHeight = 90;
 var baseChildGap = 100;
 var childNodeSecondHeight = 40;
 
