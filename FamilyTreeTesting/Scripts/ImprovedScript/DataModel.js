@@ -15,8 +15,7 @@ function getDefaultLogicUnitData(inputId, inputGender) {
         isPragnent: false,
         multiInvididualText: "",
         isDead: false,
-        isAdopted: false,
-        gotAdopted: false,
+        childStatus: "ownChild",
         notes: ["", "", ""],
         canBeDeleted: true
     }
@@ -36,6 +35,7 @@ function initializeGlobalLogicData() {
     var patient = getDefaultLogicUnitData("B100", "male");
     patient.isPatient = true;
     patient.canBeDeleted = false;
+    patient.hasSameDisease = true;
 
     globalLogicData = {
         parentTree: {

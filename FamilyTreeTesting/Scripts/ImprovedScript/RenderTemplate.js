@@ -32,9 +32,9 @@ function generateNodeTemplate() {
         generateMultiIndividualTextBlock(),
         generateArrowPointToPatient(),
         generateAdoptSignInPanel(),
-        generateTextBlockForNote(50, "noteOne"),
-        generateTextBlockForNote(65, "noteTwo"),
-        generateTextBlockForNote(80, "noteThree")
+        generateTextBlockForNote(40, "noteOne"),
+        generateTextBlockForNote(55, "noteTwo"),
+        generateTextBlockForNote(70, "noteThree")
     );
     return personNodeTemplate;
 }
@@ -170,7 +170,7 @@ function generateArrowPointToPatient() {
         {
             font: "10pt sans-serif",
             stroke: "black",
-            position: new go.Point(0, 35)
+            position: new go.Point(-10, 35)
         },
         new go.Binding("visible", "isPatient")
     )

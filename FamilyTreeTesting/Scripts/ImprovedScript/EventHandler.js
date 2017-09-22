@@ -66,6 +66,7 @@ function btnRegistration() {
 function deleteNode(e, object) {
     swal({
         title: "確定要刪除？",
+        text: "由他/她生長出來的親屬皆一併刪除",
         type: "warning",
         showCancelButton: true,
         cancelButtonText: "取消",
@@ -509,6 +510,7 @@ function freeDraw() {
     // install as last mouse-move-tool
     mainDiagram.toolManager.mouseMoveTools.add(tool);
     globalState.tool = tool;
+    mainDiagram.allowSelect = false;
     this.onclick = cancelFreeDraw;
     document.getElementById("freedraw").innerHTML = '<img id="freedraw_img" width="20" height="20" style="margin:2px"/>' + " 完成"
     document.getElementById("freedraw_img").src = APPLICATION_ROOT + "Content/done.png";
@@ -520,6 +522,7 @@ function freeDraw() {
 // ***************************************
 function cancelFreeDraw() {
     mainDiagram.toolManager.panningTool.isEnabled = true;
+    mainDiagram.allowSelect = true;
     mainDiagram.toolManager.mouseMoveTools.remove(globalState.tool);
     globalState.tool = null;
     this.onclick = freeDraw;
@@ -617,8 +620,7 @@ function isAdopted(e, object) {
     if ((!node.left || !node.right) && currentNodeArrayData.childrenList === null) {
         addParent(e, object);
     }
-    node.isAdopted = true;
-    node.gotAdopted = false;
+    node.childStatus = "adopted";
     reRender(currentObjectKey);
 }
 
@@ -634,8 +636,7 @@ function gotAdopted(e, object) {
     if ((!node.left || !node.right) && currentNodeArrayData.childrenList === null) {
         addParent(e, object);
     }
-    node.gotAdopted = true;
-    node.isAdopted = false;
+    node.childStatus = "gotAdopted"
     reRender(currentObjectKey);
 }
 
@@ -646,8 +647,7 @@ function gotAdopted(e, object) {
 function isOwnChild(e, object) {
     var currentObjectKey = object.part.data.key;
     var node = findNode(currentObjectKey, globalLogicData);
-    node.isAdopted = false;
-    node.gotAdopted = false;
+    node.childStatus = "ownChild"
     reRender(currentObjectKey);
     return;
 }
@@ -669,8 +669,8 @@ function objectSingleClicked(e) {
 // Background Single Click
 // ***************************************
 function backGroundSingleClicked(e) {
-    disableClickOnNaviBarForTextBlock();
     if (commentBoxKey != -1) {
+        disableClickOnNaviBarForTextBlock();
         var currentIndex = findCurrentIndex(commentBoxKey);
         if (mainDiagram.model.nodeDataArray[currentIndex].text === "") {
             mainDiagram.model.nodeDataArray[currentIndex].text = "請輸入文字";
@@ -754,12 +754,12 @@ function disableClickOnNaviBarForTextBlock() {
     $(".btn-md").addClass("disabled");
     $('#fontselect').addClass("disabledbutton");
     $('#fontselect-drop').addClass("display");
-    $('#fontstyle2').text("新細明體");
+    $('#fontstyle2').text("Select a font");
     document.getElementById("bold").style.backgroundColor = "white"
     document.getElementById("italic").style.backgroundColor = "white"
     document.getElementById("underline").style.backgroundColor = "white"
     document.getElementById("strikethrough").style.backgroundColor = "white"
-    document.getElementById("fontsize").value = "12"
+    document.getElementById("fontsize").value = ""
     document.getElementById("fontsize").disabled = true
 }
 

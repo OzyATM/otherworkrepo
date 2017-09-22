@@ -118,8 +118,8 @@ function getPregantBtnVisibility(multiText, gender) {
     }
 }
 
-function getMultiInvididualTextBtnVisibility(isPragnent) {
-    if (isPragnent) {
+function getMultiInvididualTextBtnVisibility(isPragnent, hasSameDisease, containGen) {
+    if (isPragnent || hasSameDisease || containGen) {
         return false;
     } else {
         return true;
@@ -127,7 +127,7 @@ function getMultiInvididualTextBtnVisibility(isPragnent) {
 }
 
 function getIsAdoptedSignVisible(inputData) {
-    if (inputData.isAdopted || inputData.gotAdopted) {
+    if (inputData.childStatus === "adopted" || inputData.childStatus === "gotAdopted") {
         return true
     } else {
         return false
@@ -135,16 +135,16 @@ function getIsAdoptedSignVisible(inputData) {
 }
 
 function getIsOwnSonBtnVisibility(inputData) {
-    if (!inputData.isAdopted && !inputData.gotAdopted) {
-        return false;
-    } else if (inputData.isAdopted || inputData.gotAdopted) {
+    if (inputData.childStatus === "adopted" || inputData.childStatus === "gotAdopted") {
         return true;
+    } else if (inputData.childStatus === "ownChild") {
+        return false;
     }
 }
 
 function getIsAdoptedBtnVisibility(inputData) {
     var isPartner = getIsPartner(inputData)
-    if (!inputData.isAdopted && !isPartner) {
+    if (inputData.childStatus != "adopted" && !isPartner) {
         return true;
     } else if (isPartner) {
         return false;
@@ -155,7 +155,7 @@ function getIsAdoptedBtnVisibility(inputData) {
 
 function getIsGotAdoptedBtnVisibility(inputData) {
     var isPartner = getIsPartner(inputData)
-    if (!inputData.gotAdopted && !isPartner) {
+    if (inputData.childStatus != "gotAdopted" && !isPartner) {
         return true;
     } else if (isPartner) {
         return false;
