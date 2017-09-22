@@ -15,8 +15,7 @@ function getDefaultLogicUnitData(inputId, inputGender) {
         isPragnent: false,
         multiInvididualText: "",
         isDead: false,
-        isAdopted: false,
-        gotAdopted: false,
+        childStatus: "ownChild",
         notes: ["", "", ""],
         canBeDeleted: true
     }

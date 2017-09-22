@@ -119,7 +119,7 @@ function getParentNodeRenderData(pos, distance, logicData, leftLinkNode, rightLi
 
     var leftPNode = getNodeData(logicData.left, leftPos);
     if (leftLinkNode && leftLinkNode.key) {
-        if (logicData.left.isAdopted){
+        if (logicData.left.childStatus === "adopted"){
             strokeDashArrayStyle = [5,2];
         } else{
             strokeDashArrayStyle = [0,0];
@@ -138,7 +138,7 @@ function getParentNodeRenderData(pos, distance, logicData, leftLinkNode, rightLi
 
     var rightPNode = getNodeData(logicData.right, rightPos);
     if (rightLinkNode && rightLinkNode.key) {
-        if (logicData.right.isAdopted){
+        if (logicData.right.childStatus === "adopted"){
             strokeDashArrayStyle = [5,2];
         } else {
             strokeDashArrayStyle = [0,0];

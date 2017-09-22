@@ -620,8 +620,7 @@ function isAdopted(e, object) {
     if ((!node.left || !node.right) && currentNodeArrayData.childrenList === null) {
         addParent(e, object);
     }
-    node.isAdopted = true;
-    node.gotAdopted = false;
+    node.childStatus = "adopted";
     reRender(currentObjectKey);
 }
 
@@ -637,8 +636,7 @@ function gotAdopted(e, object) {
     if ((!node.left || !node.right) && currentNodeArrayData.childrenList === null) {
         addParent(e, object);
     }
-    node.gotAdopted = true;
-    node.isAdopted = false;
+    node.childStatus = "gotAdopted"
     reRender(currentObjectKey);
 }
 
@@ -649,8 +647,7 @@ function gotAdopted(e, object) {
 function isOwnChild(e, object) {
     var currentObjectKey = object.part.data.key;
     var node = findNode(currentObjectKey, globalLogicData);
-    node.isAdopted = false;
-    node.gotAdopted = false;
+    node.childStatus = "ownChild"
     reRender(currentObjectKey);
     return;
 }
