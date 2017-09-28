@@ -293,8 +293,8 @@ function changeGenderType() {
 
 // ***************************************
 // The Zooming function
-// incraseZoom - increaase zoom
-// decraseZoom - decrease zoom
+// incraseZoom - increaase zoom// decraseZoom - decrease zoom
+
 // zoomToFit - move the oject to center
 // ***************************************
 function increaseZoom() {
@@ -306,9 +306,16 @@ function decreaseZoom() {
     mainDiagram.commandHandler.increaseZoom(decreaseZoomOriginalSize);
 }
 function zoomToFit() {
-    mainDiagram.zoomToFit();
-    mainDiagram.contentAlignment = go.Spot.Center;
-    mainDiagram.contentAlignment = go.Spot.Default;
+    var a = mainDiagram.model.findNodeDataForKey("B100")
+    var b = go.Point.parse(a.loc)
+
+    var data = mainDiagram.model.nodeDataArray[2]
+    var node = mainDiagram.findNodeForData(data);
+    mainDiagram.centerRect(node.actualBounds);
+    mainDiagram.contentAlignment = go.Spot.Center
+    mainDiagram.contentAlignment = go.Spot.Default
+    //mainDiagram.contentAlignment = go.Spot(0 ,0);
+
 }
 
 // ***************************************
